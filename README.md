@@ -17,7 +17,7 @@
 ## 开发环境
 
 - Android Studio 2022.1.1
-- TargetSDK 33 (MinSDK: 24)
+- TargetSDK 33 (MinSDK 24)
 
 ## 截图预览
 
