@@ -19,6 +19,11 @@
 - 电脑版（跨平台）：[ohos-dev/hap-viewer](https://gitee.com/ohos-dev/hap-viewer)
 - **手机版（Android）**：[ohos-dev/hap-viewer-android](https://gitee.com/ohos-dev/hap-viewer-android)
 
+## 下载安装
+
+- https://gitee.com/ohos-dev/hap-viewer-android/releases
+- 酷安（即将上架）...
+
 ## 开发环境
 
 - Android Studio 2022.1.1
