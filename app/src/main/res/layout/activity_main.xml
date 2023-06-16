@@ -1,0 +1,264 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".MainActivity">
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/floatingActionButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="16dp"
+        android:layout_marginBottom="16dp"
+        android:clickable="true"
+        android:contentDescription="选择"
+        android:focusable="true"
+        android:onClick="fabClick"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:srcCompat="@drawable/ic_folder"
+        />
+
+    <ImageView
+        android:id="@+id/imageView"
+        android:layout_width="128dp"
+        android:layout_height="128dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="16dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@drawable/ic_default_new" />
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginBottom="16dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/imageView"
+        app:layout_constraintVertical_bias="0.43">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <!-- 1 -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="horizontal"
+                android:onClick="itemClick">
+
+                <TextView
+                    android:id="@+id/textViewLabel1"
+                    android:layout_width="wrap_content"
+                    android:layout_height="40dp"
+                    android:gravity="center_vertical|left"
+                    android:text="应用名称："
+                    android:tag="key"
+                    android:textSize="16sp" />
+
+                <TextView
+                    android:id="@+id/textView1"
+                    android:layout_width="match_parent"
+                    android:layout_height="40dp"
+                    android:layout_weight="1"
+                    android:gravity="center_vertical|left"
+                    android:text=""
+                    android:tag="val"
+                    android:lines="2"
+                    android:ellipsize="end"
+                    android:textSize="16sp" />
+            </LinearLayout>
+
+            <!-- 2 -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="horizontal"
+                android:onClick="itemClick">
+
+                <TextView
+                    android:id="@+id/textViewLabel2"
+                    android:layout_width="wrap_content"
+                    android:layout_height="40dp"
+                    android:gravity="center_vertical|left"
+                    android:text="应用包名："
+                    android:tag="key"
+                    android:textSize="16sp" />
+
+                <TextView
+                    android:id="@+id/textView2"
+                    android:layout_width="match_parent"
+                    android:layout_height="40dp"
+                    android:layout_weight="1"
+                    android:gravity="center_vertical|left"
+                    android:text=""
+                    android:tag="val"
+                    android:lines="2"
+                    android:ellipsize="end"
+                    android:textSize="16sp" />
+            </LinearLayout>
+
+            <!-- 3 -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="horizontal"
+                android:onClick="itemClick">
+
+                <TextView
+                    android:id="@+id/textViewLabel3"
+                    android:layout_width="wrap_content"
+                    android:layout_height="40dp"
+                    android:gravity="center_vertical|left"
+                    android:text="版本名称："
+                    android:tag="key"
+                    android:textSize="16sp" />
+
+                <TextView
+                    android:id="@+id/textView3"
+                    android:layout_width="match_parent"
+                    android:layout_height="40dp"
+                    android:layout_weight="1"
+                    android:gravity="center_vertical|left"
+                    android:text=""
+                    android:tag="val"
+                    android:lines="2"
+                    android:ellipsize="end"
+                    android:textSize="16sp" />
+            </LinearLayout>
+
+            <!-- 4 -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="horizontal"
+                android:onClick="itemClick">
+
+                <TextView
+                    android:id="@+id/textViewLabel4"
+                    android:layout_width="wrap_content"
+                    android:layout_height="40dp"
+                    android:gravity="center_vertical|left"
+                    android:text="版本号码："
+                    android:tag="key"
+                    android:textSize="16sp" />
+
+                <TextView
+                    android:id="@+id/textView4"
+                    android:layout_width="match_parent"
+                    android:layout_height="40dp"
+                    android:layout_weight="1"
+                    android:gravity="center_vertical|left"
+                    android:text=""
+                    android:tag="val"
+                    android:lines="2"
+                    android:ellipsize="end"
+                    android:textSize="16sp" />
+            </LinearLayout>
+
+            <!-- 5 -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="horizontal"
+                android:onClick="itemClick">
+
+                <TextView
+                    android:id="@+id/textViewLabel5"
+                    android:layout_width="wrap_content"
+                    android:layout_height="40dp"
+                    android:gravity="center_vertical|left"
+                    android:text="编译目标："
+                    android:tag="key"
+                    android:textSize="16sp" />
+
+                <TextView
+                    android:id="@+id/textView5"
+                    android:layout_width="match_parent"
+                    android:layout_height="40dp"
+                    android:layout_weight="1"
+                    android:gravity="center_vertical|left"
+                    android:text=""
+                    android:tag="val"
+                    android:lines="2"
+                    android:ellipsize="end"
+                    android:textSize="16sp" />
+            </LinearLayout>
+
+            <!-- 6 -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="horizontal"
+                android:onClick="itemClick">
+
+                <TextView
+                    android:id="@+id/textViewLabel6"
+                    android:layout_width="wrap_content"
+                    android:layout_height="40dp"
+                    android:gravity="center_vertical|left"
+                    android:text="技术探测："
+                    android:tag="key"
+                    android:textSize="16sp" />
+
+                <TextView
+                    android:id="@+id/textView6"
+                    android:layout_width="match_parent"
+                    android:layout_height="40dp"
+                    android:layout_weight="1"
+                    android:gravity="center_vertical|left"
+                    android:text=""
+                    android:tag="val"
+                    android:lines="2"
+                    android:ellipsize="end"
+                    android:textSize="16sp" />
+            </LinearLayout>
+
+            <!--<TextView
+                android:id="@+id/textView2"
+                android:layout_width="match_parent"
+                android:layout_height="40dp"
+                android:gravity="center_vertical|left"
+                android:text="应用包名：" />
+
+            <TextView
+                android:id="@+id/textView3"
+                android:layout_width="match_parent"
+                android:layout_height="40dp"
+                android:gravity="center_vertical|left"
+                android:text="版本名称：" />
+
+            <TextView
+                android:id="@+id/textView4"
+                android:layout_width="match_parent"
+                android:layout_height="40dp"
+                android:gravity="center_vertical|left"
+                android:text="版本号码：" />
+
+            <TextView
+                android:id="@+id/textView5"
+                android:layout_width="match_parent"
+                android:layout_height="40dp"
+                android:gravity="center_vertical|left"
+                android:text="编译目标：" />
+
+            <TextView
+                android:id="@+id/textView6"
+                android:layout_width="match_parent"
+                android:layout_height="40dp"
+                android:gravity="center_vertical|left"
+                android:text="技术探测：" />-->
+
+        </LinearLayout>
+    </ScrollView>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

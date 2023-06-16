@@ -1,8 +1,13 @@
 # HapViewerAndroid
 
+<img src="app/src/main/res/mipmap-xxxhdpi/ic_launcher.png" width="128px" />
+
 ## 项目介绍
 
 安卓版的hap查看器，对于电脑版跨平台的hap查看器项目HapViewer的补充
+
+- 支持系统 Android 7+
+- 支持解析 OpenHarmony/HarmonyOS API9+ (Stage模型) 的应用安装包
 
 开源仓库
 
@@ -21,7 +26,7 @@
 
 ## 截图预览
 
-x
+![](screenshot/all.png)
 
 ## 视频演示
 
@@ -30,4 +35,3 @@ x
 ## 许可声明
 
 - 本项目是以Apache2.0许可开源，如果衍生或商用需保留原始版权和许可声明即可
-- 软件图标出处：https://www.flaticon.com/free-icon/apk_9704667
