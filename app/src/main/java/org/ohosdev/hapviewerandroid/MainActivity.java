@@ -1,11 +1,6 @@
 package org.ohosdev.hapviewerandroid;
 
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.appcompat.app.AlertDialog;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.app.ActivityCompat;
-
+import android.Manifest;
 import android.annotation.SuppressLint;
 import android.content.ClipData;
 import android.content.ClipboardManager;
@@ -21,14 +16,20 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.Manifest;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.AlertDialog;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
+
 import com.google.android.material.snackbar.Snackbar;
 
 import org.ohosdev.hapviewerandroid.model.HapInfo;
+import org.ohosdev.hapviewerandroid.util.DialogUtil;
 import org.ohosdev.hapviewerandroid.util.HapUtil;
 import org.ohosdev.hapviewerandroid.util.MyFileUtil;
 
@@ -38,17 +39,15 @@ import java.io.IOException;
 public class MainActivity extends AppCompatActivity {
 
     private static final String TAG = "MainActivity";
-    private long exitTime = 0;
-    public static HapInfo currentHapInfo = null;
-
     // 文件读写权限
     private static final String[] PERMISSIONS_EXTERNAL_STORAGE = {
             Manifest.permission.READ_EXTERNAL_STORAGE,
             Manifest.permission.WRITE_EXTERNAL_STORAGE
     };
-
     // 文件读写权限 请求码
     private static final int REQUEST_CODE_EXTERNAL_STORAGE = 1;
+    public static HapInfo currentHapInfo = null;
+    private long exitTime = 0;
 
     @SuppressLint("SourceLockedOrientationActivity")
     @Override
@@ -98,7 +97,7 @@ public class MainActivity extends AppCompatActivity {
 
     public void aboutClick(MenuItem item) {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setTitle("关于")
+        AlertDialog alertDialog = builder.setTitle("关于")
                 .setMessage("HAP查看器 for Android\n\n" +
                         "软件版本：" + BuildConfig.VERSION_NAME + "\n" +
                         "软件作者：westinyang\n" +
@@ -109,6 +108,7 @@ public class MainActivity extends AppCompatActivity {
                 })
                 .setCancelable(false)
                 .show();
+        DialogUtil.setDialogContentSelectable(alertDialog,true);
     }
 
     public void fabClick(View view) {
@@ -167,6 +167,7 @@ public class MainActivity extends AppCompatActivity {
 
     /**
      * 解析hap并显示信息
+     *
      * @param hapFilePath
      */
     private void parseHapAndShowInfo(String hapFilePath) {
@@ -194,7 +195,7 @@ public class MainActivity extends AppCompatActivity {
             textView6.setText(hapInfo.getTechDesc());
         } catch (IOException | RuntimeException e) {
             e.printStackTrace();
-            //Toast.makeText(this, "hap文件解析失败（目前仅支持API9+(Stage模型)编译的安装包）", Toast.LENGTH_LONG).show();
+            // Toast.makeText(this, "hap文件解析失败（目前仅支持API9+(Stage模型)编译的安装包）", Toast.LENGTH_LONG).show();
             Snackbar.make(getWindow().getDecorView(), "hap文件解析失败，目前仅支持解析 API9+ (Stage模型) 的应用安装包", Snackbar.LENGTH_LONG).setAction("Action", null).show();
         }
     }
@@ -205,9 +206,9 @@ public class MainActivity extends AppCompatActivity {
         String k = String.valueOf(key.getText());
         k = k.replace("：", "");
         String v = String.valueOf(val.getText());
-        //获取剪切板管理器
+        // 获取剪切板管理器
         ClipboardManager cm = (ClipboardManager) getSystemService(Context.CLIPBOARD_SERVICE);
-        //设置内容到剪切板
+        // 设置内容到剪切板
         cm.setPrimaryClip(ClipData.newPlainText(null, v));
         Toast.makeText(this, "已复制 " + k, Toast.LENGTH_SHORT).show();
     }
