@@ -104,10 +104,9 @@ public class MainActivity extends AppCompatActivity {
                         "软件作者：westinyang\n" +
                         "开源仓库：https://gitee.com/ohos-dev/hap-viewer-android\n" +
                         "企鹅群组：752399947")
-                .setPositiveButton("关闭", (dialog, id) -> {
-                    dialog.cancel();
-                })
-                .setCancelable(false)
+                .setPositiveButton("关闭", null)
+                // .setCancelable(false)
+                // 此处禁止取消对话框并无任何业务，可以取消禁用
                 .show();
         DialogUtil.setDialogContentSelectable(alertDialog,true);
     }
