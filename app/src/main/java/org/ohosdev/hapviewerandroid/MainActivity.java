@@ -37,7 +37,6 @@ import java.io.IOException;
 
 public class MainActivity extends AppCompatActivity {
 
-    private static final String versionName = "1.0.0";
     private static final String TAG = "MainActivity";
     private long exitTime = 0;
     public static HapInfo currentHapInfo = null;
@@ -101,7 +100,7 @@ public class MainActivity extends AppCompatActivity {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setTitle("关于")
                 .setMessage("HAP查看器 for Android\n\n" +
-                        "软件版本：" + versionName + "\n" +
+                        "软件版本：" + BuildConfig.VERSION_NAME + "\n" +
                         "软件作者：westinyang\n" +
                         "开源仓库：https://gitee.com/ohos-dev/hap-viewer-android\n" +
                         "企鹅群组：752399947")

@@ -4,7 +4,7 @@
 
 ## 项目介绍
 
-安卓版的hap查看器，对于电脑版跨平台的hap查看器项目HapViewer的补充
+安卓版的hap查看器，支持解析 OpenHarmony(开源鸿蒙)、HarmonyOS(鸿蒙) API9+(Stage模型) 的应用安装包，支持在 Android 7+ 的安卓设备上运行
 
 - 支持系统 Android 7+
 - 支持解析 OpenHarmony/HarmonyOS API9+ (Stage模型) 的应用安装包
