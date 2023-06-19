@@ -1,4 +1,6 @@
 <resources>
     <string name="app_name">HAP查看器</string>
     <string name="menu_about">关于</string>
+    <string name="config_icon">应用图标</string>
+    <string name="select_file_hap">选择 HAP 文件</string>
 </resources>

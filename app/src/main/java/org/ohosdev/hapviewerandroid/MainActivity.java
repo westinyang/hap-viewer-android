@@ -6,7 +6,6 @@ import android.content.ClipData;
 import android.content.ClipboardManager;
 import android.content.Context;
 import android.content.Intent;
-import android.content.pm.ActivityInfo;
 import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Build;
@@ -16,7 +15,6 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -25,9 +23,12 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.material.snackbar.Snackbar;
 
+import org.ohosdev.hapviewerandroid.adapter.InfoAdapter;
 import org.ohosdev.hapviewerandroid.model.HapInfo;
 import org.ohosdev.hapviewerandroid.util.DialogUtil;
 import org.ohosdev.hapviewerandroid.util.HapUtil;
@@ -48,12 +49,17 @@ public class MainActivity extends AppCompatActivity {
     private static final int REQUEST_CODE_EXTERNAL_STORAGE = 1;
     public static HapInfo currentHapInfo = null;
     private long exitTime = 0;
+    private InfoAdapter infoAdapter;
 
     @SuppressLint("SourceLockedOrientationActivity")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        infoAdapter = new InfoAdapter(this);
+        RecyclerView recyclerView = findViewById(R.id.recycler_view);
+        recyclerView.setAdapter(infoAdapter);
+        recyclerView.setLayoutManager(new LinearLayoutManager(this));
         // setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);  // 禁用横屏
         // 禁用横屏会导致平板与折叠屏用户体验不佳。应用目前的布局对横屏已经非常友好，取消禁用并无大碍
     }
@@ -108,7 +114,7 @@ public class MainActivity extends AppCompatActivity {
                 // .setCancelable(false)
                 // 此处禁止取消对话框并无任何业务，可以取消禁用
                 .show();
-        DialogUtil.setDialogContentSelectable(alertDialog,true);
+        DialogUtil.setDialogContentSelectable(alertDialog, true);
     }
 
     public void fabClick(View view) {
@@ -176,8 +182,9 @@ public class MainActivity extends AppCompatActivity {
         try {
             hapInfo = HapUtil.parse(hapFilePath);
             currentHapInfo = hapInfo;
+            infoAdapter.setInfo(hapInfo);
 
-            ImageView imageView = findViewById(R.id.imageView);
+            /* ImageView imageView = findViewById(R.id.imageView);
             TextView textView1 = findViewById(R.id.textView1);
             TextView textView2 = findViewById(R.id.textView2);
             TextView textView3 = findViewById(R.id.textView3);
@@ -192,7 +199,7 @@ public class MainActivity extends AppCompatActivity {
             textView3.setText(hapInfo.versionName);
             textView4.setText(hapInfo.versionCode);
             textView5.setText(String.format("API%s (%s)", hapInfo.targetAPIVersion, hapInfo.apiReleaseType));
-            textView6.setText(hapInfo.getTechDesc());
+            textView6.setText(hapInfo.getTechDesc()); */
         } catch (IOException | RuntimeException e) {
             e.printStackTrace();
             // Toast.makeText(this, "hap文件解析失败（目前仅支持API9+(Stage模型)编译的安装包）", Toast.LENGTH_LONG).show();
