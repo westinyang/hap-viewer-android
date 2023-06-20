@@ -19,6 +19,9 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import androidx.activity.result.ActivityResultCallback;
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
@@ -56,6 +59,9 @@ public class MainActivity extends AppCompatActivity implements View.OnDragListen
     private ActivityMainBinding binding;
     private Snackbar exitSnackbar = null;
 
+    private final ActivityResultLauncher<String> selectFileResultLauncher = registerForActivityResult(
+            new ActivityResultContracts.GetContent(), this::parse);
+
     @SuppressLint("SourceLockedOrientationActivity")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -84,7 +90,7 @@ public class MainActivity extends AppCompatActivity implements View.OnDragListen
     @Override
     public void onBackPressed() {
         // Snackbar exitSnackbar = Snackbar.make(binding.getRoot(), "再按一次返回键退出", Snackbar.LENGTH_SHORT);
-        if (exitSnackbar!=null && exitSnackbar.isShown())
+        if (exitSnackbar != null && exitSnackbar.isShown())
             super.onBackPressed();
         else {
             exitSnackbar = Snackbar.make(binding.getRoot(), "再按一次返回键退出", Snackbar.LENGTH_SHORT);
@@ -155,17 +161,8 @@ public class MainActivity extends AppCompatActivity implements View.OnDragListen
         }
     }
 
-    @SuppressWarnings("deprecation")
     public void selectFile() {
-        Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
-        intent.setType("*/*");
-        intent.addCategory(Intent.CATEGORY_OPENABLE);
-        try {
-            startActivityForResult(Intent.createChooser(intent, "选择文件"), 1);
-        } catch (android.content.ActivityNotFoundException ex) {
-            // Toast.makeText(this, "未找到文件管理应用", Toast.LENGTH_SHORT).show();
-            Snackbar.make(binding.getRoot(), "未找到文件管理应用", Snackbar.LENGTH_SHORT).show();
-        }
+        selectFileResultLauncher.launch("*/*");
     }
 
     @Override
