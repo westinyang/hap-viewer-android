@@ -5,9 +5,4 @@
             <stroke android:width="4dp" android:color="?colorAccent" />
         </shape>
     </item>
-    <item android:state_drag_hovered="true">
-        <shape android:shape="rectangle">
-            <solid android:color="#22000000" />
-        </shape>
-    </item>
 </selector>

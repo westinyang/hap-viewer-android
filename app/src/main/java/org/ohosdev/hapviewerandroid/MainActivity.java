@@ -266,15 +266,13 @@ public class MainActivity extends AppCompatActivity implements View.OnDragListen
     @Override
     public boolean onDrag(View v, DragEvent event) {
 
-        switch (event.getAction()) {
-            case DragEvent.ACTION_DROP: {
-                ClipData.Item item = event.getClipData().getItemAt(0);
-                if (item.getUri() == null) {
-                    return false;
-                }
-                requestDragAndDropPermissions(event);
-                parse(item.getUri());
+        if (event.getAction() == DragEvent.ACTION_DROP) {
+            ClipData.Item item = event.getClipData().getItemAt(0);
+            if (item.getUri() == null) {
+                return false;
             }
+            requestDragAndDropPermissions(event);
+            parse(item.getUri());
         }
         return true;
     }
