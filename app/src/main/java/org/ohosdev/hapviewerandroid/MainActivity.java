@@ -18,7 +18,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -54,6 +53,7 @@ public class MainActivity extends AppCompatActivity implements View.OnDragListen
     private long exitTime = 0;
     private InfoAdapter infoAdapter;
     private ActivityMainBinding binding;
+    private Snackbar exitSnackbar = null;
 
     @SuppressLint("SourceLockedOrientationActivity")
     @Override
@@ -62,13 +62,15 @@ public class MainActivity extends AppCompatActivity implements View.OnDragListen
         binding = ActivityMainBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
         infoAdapter = new InfoAdapter(this);
-        RecyclerView recyclerView = findViewById(R.id.recycler_view);
+        RecyclerView recyclerView = binding.recyclerView;
         recyclerView.setAdapter(infoAdapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         // 启用拖放
         binding.getRoot().setOnDragListener(this);
+        setSupportActionBar(binding.toolbar);
         // setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);  // 禁用横屏
         // 禁用横屏会导致平板与折叠屏用户体验不佳。应用目前的布局对横屏已经非常友好，取消禁用并无大碍
+        exitSnackbar = Snackbar.make(binding.getRoot(), "再按一次返回键退出", Snackbar.LENGTH_SHORT);
     }
 
     @Override
@@ -80,14 +82,22 @@ public class MainActivity extends AppCompatActivity implements View.OnDragListen
 
     @Override
     public void onBackPressed() {
-        if ((System.currentTimeMillis() - exitTime) > 2000) {
-            Toast.makeText(this, "再按一次返回键退出", Toast.LENGTH_SHORT).show();
-            exitTime = System.currentTimeMillis();
-        } else {
+        // Snackbar exitSnackbar = Snackbar.make(binding.getRoot(), "再按一次返回键退出", Snackbar.LENGTH_SHORT);
+        if (exitSnackbar.isShown())
             super.onBackPressed();
-            // finish();
-            // System.exit(0);
-        }
+        else
+            exitSnackbar.show();
+
+        // if ((System.currentTimeMillis() - exitTime) > 2000) {
+        //     Snackbar exitSnackbar = Snackbar.make(binding.getRoot(), "再按一次返回键退出", Snackbar.LENGTH_SHORT);
+        //     exitSnackbar.show();
+        //     Toast.makeText(this, "再按一次返回键退出", Toast.LENGTH_SHORT).show();
+        //     exitTime = System.currentTimeMillis();
+        // } else {
+        //     super.onBackPressed();
+        //     // finish();
+        //     // System.exit(0);
+        // }
     }
 
     @Override
@@ -158,6 +168,9 @@ public class MainActivity extends AppCompatActivity implements View.OnDragListen
         if (data == null) return;
         if (requestCode == 1) {
             Uri uri = data.getData();
+            if (uri == null) {
+                return;
+            }
             parse(uri);
             // File file = null;
             // // Android 10+ 把文件复制到沙箱内
