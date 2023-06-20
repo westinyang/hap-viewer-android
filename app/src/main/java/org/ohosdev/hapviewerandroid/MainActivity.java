@@ -83,8 +83,9 @@ public class MainActivity extends AppCompatActivity {
             Toast.makeText(this, "再按一次返回键退出", Toast.LENGTH_SHORT).show();
             exitTime = System.currentTimeMillis();
         } else {
-            finish();
-            System.exit(0);
+            super.onBackPressed();
+            // finish();
+            // System.exit(0);
         }
     }
 
