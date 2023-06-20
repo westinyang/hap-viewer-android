@@ -14,7 +14,6 @@
         android:label="@string/app_name"
         android:supportsRtl="true"
         android:theme="@style/Theme.HapViewerAndroid"
-        tools:targetApi="31"
         android:requestLegacyExternalStorage="true">
         <activity
             android:name=".MainActivity"
