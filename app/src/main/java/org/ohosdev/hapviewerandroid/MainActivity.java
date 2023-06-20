@@ -15,6 +15,7 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -183,27 +184,14 @@ public class MainActivity extends AppCompatActivity {
         try {
             hapInfo = HapUtil.parse(hapFilePath);
             currentHapInfo = hapInfo;
-            infoAdapter.setInfo(hapInfo);
-
-            /* ImageView imageView = findViewById(R.id.imageView);
-            TextView textView1 = findViewById(R.id.textView1);
-            TextView textView2 = findViewById(R.id.textView2);
-            TextView textView3 = findViewById(R.id.textView3);
-            TextView textView4 = findViewById(R.id.textView4);
-            TextView textView5 = findViewById(R.id.textView5);
-            TextView textView6 = findViewById(R.id.textView6);
-
-            // 显示信息
+            // 显示应用图标
+            ImageView imageView = findViewById(R.id.imageView);
             imageView.setImageBitmap(hapInfo.icon);
-            textView1.setText(hapInfo.appName);
-            textView2.setText(hapInfo.packageName);
-            textView3.setText(hapInfo.versionName);
-            textView4.setText(hapInfo.versionCode);
-            textView5.setText(String.format("API%s (%s)", hapInfo.targetAPIVersion, hapInfo.apiReleaseType));
-            textView6.setText(hapInfo.getTechDesc()); */
+            // 显示应用信息
+            infoAdapter.setInfo(hapInfo);
         } catch (IOException | RuntimeException e) {
             e.printStackTrace();
-            // Toast.makeText(this, "hap文件解析失败（目前仅支持API9+(Stage模型)编译的安装包）", Toast.LENGTH_LONG).show();
+            // Toast.makeText(this, "hap文件解析失败，目前仅支持解析 API9+ (Stage模型) 的应用安装包", Toast.LENGTH_LONG).show();
             Snackbar.make(getWindow().getDecorView(), "hap文件解析失败，目前仅支持解析 API9+ (Stage模型) 的应用安装包", Snackbar.LENGTH_LONG).setAction("Action", null).show();
         }
     }
