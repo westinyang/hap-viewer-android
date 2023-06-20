@@ -9,6 +9,8 @@ import java.util.Set;
  * @author westinyang
  */
 public class HapInfo {
+    public boolean init = false;
+
     /* app. */
     public Bitmap icon;
     public String iconPath;
@@ -29,6 +31,13 @@ public class HapInfo {
     public String hapFilePath;
     public Set<String> techList;
     private String techDesc;
+
+    public HapInfo() {
+    }
+
+    public HapInfo(boolean init) {
+        this.init = init;
+    }
 
     public String getTechDesc() {
         if (techList != null && techList.size() > 0) {

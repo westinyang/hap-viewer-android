@@ -44,29 +44,27 @@ public class InfoAdapter extends RecyclerView.Adapter<InfoAdapter.ViewHolder> {
         switch (position) {
             case 0:
                 holder.setName("应用名称");
-                holder.setContent(info.appName != null ? info.appName : unknownString);
+                holder.setContent(info.init ? unknownString : info.appName);
                 break;
             case 1:
                 holder.setName("应用包名");
-                holder.setContent(info.packageName != null ? info.packageName : unknownString);
+                holder.setContent(info.init ? unknownString : info.packageName);
                 break;
             case 2:
                 holder.setName("版本名称");
-                holder.setContent(info.versionName != null ? info.versionName : unknownString);
+                holder.setContent(info.init ?  unknownString : info.versionName);
                 break;
             case 3:
                 holder.setName("版本号码");
-                holder.setContent(info.versionCode != null ? info.versionCode : unknownString);
+                holder.setContent(info.init ? unknownString : info.versionCode);
                 break;
             case 4:
                 holder.setName("编译目标");
-                holder.setContent(String.format("API %s (%s)",
-                        info.targetAPIVersion != null ? info.targetAPIVersion : unknownString,
-                        info.apiReleaseType != null ? info.apiReleaseType : unknownString));
+                holder.setContent(info.init ? unknownString : String.format("API %s (%s)", info.targetAPIVersion, info.apiReleaseType));
                 break;
             case 5:
                 holder.setName("技术探测");
-                holder.setContent(info.getTechDesc());
+                holder.setContent(info.init ? unknownString : info.getTechDesc());
                 break;
         }
     }
