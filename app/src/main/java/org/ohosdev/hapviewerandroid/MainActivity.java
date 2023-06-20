@@ -165,16 +165,16 @@ public class MainActivity extends AppCompatActivity implements View.OnDragListen
         selectFileResultLauncher.launch("*/*");
     }
 
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        if (data == null) return;
-        if (requestCode == 1) {
-            Uri uri = data.getData();
-            if (uri == null) {
-                return;
-            }
-            parse(uri);
+    // @Override
+    // protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+    //     super.onActivityResult(requestCode, resultCode, data);
+    //     if (data == null) return;
+    //     if (requestCode == 1) {
+    //         Uri uri = data.getData();
+    //         if (uri == null) {
+    //             return;
+    //         }
+    //         parse(uri);
             // File file = null;
             // // Android 10+ 把文件复制到沙箱内
             // if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
@@ -201,8 +201,8 @@ public class MainActivity extends AppCompatActivity implements View.OnDragListen
             //     // Toast.makeText(this, "请选择一个hap安装包", Toast.LENGTH_SHORT).show();
             //     Snackbar.make(binding.getRoot(), "请选择一个hap安装包", Snackbar.LENGTH_SHORT).show();
             // }
-        }
-    }
+    //     }
+    // }
 
     private void parse(@NonNull Uri uri) {
         File file = null;
