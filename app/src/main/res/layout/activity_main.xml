@@ -6,32 +6,39 @@
     android:layout_height="match_parent"
     tools:context=".MainActivity">
 
-    <com.google.android.material.floatingactionbutton.FloatingActionButton
+    <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
         android:id="@+id/floatingActionButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginEnd="16dp"
-        android:layout_marginBottom="16dp"
+        android:layout_margin="16dp"
         android:clickable="true"
-        android:contentDescription="选择"
         android:focusable="true"
         android:onClick="fabClick"
+        android:text="@string/select_file_hap"
+        app:icon="@drawable/ic_folder"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:srcCompat="@drawable/ic_folder"
-        />
+        app:layout_constraintEnd_toEndOf="parent" />
 
     <ImageView
         android:id="@+id/imageView"
         android:layout_width="128dp"
         android:layout_height="128dp"
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="16dp"
+        android:layout_margin="16dp"
+        android:contentDescription="@string/config_icon"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:srcCompat="@drawable/ic_default_new" />
 
-    <ScrollView
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recycler_view"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/imageView" />
+
+    <!-- <ScrollView
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_marginStart="16dp"
@@ -49,7 +56,7 @@
             android:layout_height="wrap_content"
             android:orientation="vertical">
 
-            <!-- 1 -->
+            &lt;!&ndash; 1 &ndash;&gt;
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
@@ -78,7 +85,7 @@
                     android:textSize="16sp" />
             </LinearLayout>
 
-            <!-- 2 -->
+            &lt;!&ndash; 2 &ndash;&gt;
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
@@ -107,7 +114,7 @@
                     android:textSize="16sp" />
             </LinearLayout>
 
-            <!-- 3 -->
+            &lt;!&ndash; 3 &ndash;&gt;
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
@@ -136,7 +143,7 @@
                     android:textSize="16sp" />
             </LinearLayout>
 
-            <!-- 4 -->
+            &lt;!&ndash; 4 &ndash;&gt;
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
@@ -165,7 +172,7 @@
                     android:textSize="16sp" />
             </LinearLayout>
 
-            <!-- 5 -->
+            &lt;!&ndash; 5 &ndash;&gt;
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
@@ -194,7 +201,7 @@
                     android:textSize="16sp" />
             </LinearLayout>
 
-            <!-- 6 -->
+            &lt;!&ndash; 6 &ndash;&gt;
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
@@ -221,44 +228,43 @@
                     android:lines="2"
                     android:ellipsize="end"
                     android:textSize="16sp" />
-            </LinearLayout>
+            </LinearLayout> -->
 
-            <!--<TextView
-                android:id="@+id/textView2"
-                android:layout_width="match_parent"
-                android:layout_height="40dp"
-                android:gravity="center_vertical|left"
-                android:text="应用包名：" />
+    <!--<TextView
+        android:id="@+id/textView2"
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:gravity="center_vertical|left"
+        android:text="应用包名：" />
 
-            <TextView
-                android:id="@+id/textView3"
-                android:layout_width="match_parent"
-                android:layout_height="40dp"
-                android:gravity="center_vertical|left"
-                android:text="版本名称：" />
+    <TextView
+        android:id="@+id/textView3"
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:gravity="center_vertical|left"
+        android:text="版本名称：" />
 
-            <TextView
-                android:id="@+id/textView4"
-                android:layout_width="match_parent"
-                android:layout_height="40dp"
-                android:gravity="center_vertical|left"
-                android:text="版本号码：" />
+    <TextView
+        android:id="@+id/textView4"
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:gravity="center_vertical|left"
+        android:text="版本号码：" />
 
-            <TextView
-                android:id="@+id/textView5"
-                android:layout_width="match_parent"
-                android:layout_height="40dp"
-                android:gravity="center_vertical|left"
-                android:text="编译目标：" />
+    <TextView
+        android:id="@+id/textView5"
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:gravity="center_vertical|left"
+        android:text="编译目标：" />
 
-            <TextView
-                android:id="@+id/textView6"
-                android:layout_width="match_parent"
-                android:layout_height="40dp"
-                android:gravity="center_vertical|left"
-                android:text="技术探测：" />-->
+    <TextView
+        android:id="@+id/textView6"
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:gravity="center_vertical|left"
+        android:text="技术探测：" />-->
 
-        </LinearLayout>
-    </ScrollView>
+    <!-- </ScrollView> -->
 
 </androidx.constraintlayout.widget.ConstraintLayout>
