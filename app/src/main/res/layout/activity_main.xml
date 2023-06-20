@@ -9,8 +9,8 @@
         android:id="@+id/appbar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:theme="?actionBarTheme"
-        android:fitsSystemWindows="true">
+        android:fitsSystemWindows="true"
+        android:theme="?actionBarTheme">
 
         <androidx.appcompat.widget.Toolbar
             android:id="@+id/toolbar"
@@ -48,6 +48,7 @@
             android:layout_marginStart="16dp"
             android:text="@android:string/unknownName"
             android:textColor="?colorOnBackground"
+            android:textIsSelectable="true"
             android:textSize="16sp"
             app:layout_constraintBottom_toTopOf="@+id/version"
             app:layout_constraintStart_toEndOf="@+id/imageView"
@@ -62,6 +63,7 @@
             android:layout_marginStart="16dp"
             android:text="@android:string/unknownName"
             android:textColor="?colorOnBackground"
+            android:textIsSelectable="true"
             android:textSize="16sp"
             app:layout_constraintBottom_toTopOf="@+id/recycler_view"
             app:layout_constraintStart_toEndOf="@+id/imageView"
