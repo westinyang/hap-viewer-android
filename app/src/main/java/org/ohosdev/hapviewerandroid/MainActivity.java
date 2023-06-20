@@ -71,7 +71,7 @@ public class MainActivity extends AppCompatActivity implements View.OnDragListen
         setSupportActionBar(binding.toolbar);
         // setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);  // 禁用横屏
         // 禁用横屏会导致平板与折叠屏用户体验不佳。应用目前的布局对横屏已经非常友好，取消禁用并无大碍
-        exitSnackbar = Snackbar.make(binding.getRoot(), "再按一次返回键退出", Snackbar.LENGTH_SHORT);
+
     }
 
     @Override
@@ -84,10 +84,12 @@ public class MainActivity extends AppCompatActivity implements View.OnDragListen
     @Override
     public void onBackPressed() {
         // Snackbar exitSnackbar = Snackbar.make(binding.getRoot(), "再按一次返回键退出", Snackbar.LENGTH_SHORT);
-        if (exitSnackbar.isShown())
+        if (exitSnackbar!=null && exitSnackbar.isShown())
             super.onBackPressed();
-        else
+        else {
+            exitSnackbar = Snackbar.make(binding.getRoot(), "再按一次返回键退出", Snackbar.LENGTH_SHORT);
             exitSnackbar.show();
+        }
 
         // if ((System.currentTimeMillis() - exitTime) > 2000) {
         //     Snackbar exitSnackbar = Snackbar.make(binding.getRoot(), "再按一次返回键退出", Snackbar.LENGTH_SHORT);
