@@ -27,6 +27,7 @@ import androidx.core.app.ActivityCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.android.material.snackbar.Snackbar;
 
 import org.ohosdev.hapviewerandroid.adapter.InfoAdapter;
@@ -117,20 +118,23 @@ public class MainActivity extends AppCompatActivity implements View.OnDragListen
         } else {
             // Snackbar.make(getWindow().getDecorView(), "权限申请失败", Snackbar.LENGTH_SHORT).setAction("Action", null).show();
             // Toast.makeText(this, "权限申请失败", Toast.LENGTH_SHORT).show();
-            Snackbar.make(binding.getRoot(), "权限申请失败", Snackbar.LENGTH_SHORT).show();
+            Snackbar.make(binding.getRoot(), R.string.permission_grant_fail, Snackbar.LENGTH_SHORT).show();
 
         }
     }
 
     public void aboutClick(MenuItem item) {
-        AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        AlertDialog alertDialog = builder.setTitle("关于")
-                .setMessage("HAP查看器 for Android\n\n" +
-                        "支持解析 OpenHarmony(开源鸿蒙)、HarmonyOS(鸿蒙) API9+(Stage模型) 的应用安装包，支持在 Android 7+ 的安卓设备上运行\n\n" +
-                        "应用版本：" + BuildConfig.VERSION_NAME + "\n" +
-                        "开源仓库：https://gitee.com/ohos-dev/hap-viewer-android\n" +
-                        "开源贡献：westinyang、Jesse205\n" +
-                        "企鹅群组：752399947")
+        // 使用 Material Dialog
+        // 但是华为设备上拖拽阴影在 Material Dialog 有bug
+        AlertDialog.Builder builder = new MaterialAlertDialogBuilder(this);
+        AlertDialog alertDialog = builder.setTitle(R.string.about)
+                // .setMessage("HAP查看器 for Android\n\n" +
+                //         "支持解析 OpenHarmony(开源鸿蒙)、HarmonyOS(鸿蒙) API9+(Stage模型) 的应用安装包，支持在 Android 7+ 的安卓设备上运行\n\n" +
+                //         "应用版本：" + BuildConfig.VERSION_NAME + "\n" +
+                //         "开源仓库：https://gitee.com/ohos-dev/hap-viewer-android\n" +
+                //         "开源贡献：westinyang、Jesse205\n" +
+                //         "企鹅群组：752399947")
+                .setMessage(String.format(getString(R.string.about_message), BuildConfig.VERSION_NAME))
                 .setPositiveButton(android.R.string.ok, null)
                 // .setCancelable(false)
                 // 此处禁止取消对话框并无任何业务，可以取消禁用

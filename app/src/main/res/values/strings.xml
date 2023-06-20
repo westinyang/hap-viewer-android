@@ -1,6 +1,14 @@
 <resources>
     <string name="app_name">HAP查看器</string>
     <string name="menu_about">关于</string>
+    <string name="about">关于</string>
+    <string name="about_message">HAP查看器 for Android
+\n\n支持解析 OpenHarmony(开源鸿蒙)、HarmonyOS(鸿蒙) API9+(Stage模型) 的应用安装包，支持在 Android 7+ 的安卓设备上运行
+\n\n应用版本：%1$s
+\n开源仓库：https://gitee.com/ohos-dev/hap-viewer-android
+\n开源贡献：westinyang、Jesse205
+\n企鹅群组：752399947</string>
     <string name="config_icon">应用图标</string>
     <string name="select_file_hap">选择 HAP 文件</string>
+    <string name="permission_grant_fail">权限申请失败</string>
 </resources>
