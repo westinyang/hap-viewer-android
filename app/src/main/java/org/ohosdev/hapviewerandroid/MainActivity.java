@@ -32,7 +32,7 @@ import com.google.android.material.snackbar.Snackbar;
 import org.ohosdev.hapviewerandroid.adapter.InfoAdapter;
 import org.ohosdev.hapviewerandroid.databinding.ActivityMainBinding;
 import org.ohosdev.hapviewerandroid.model.HapInfo;
-import org.ohosdev.hapviewerandroid.util.DialogUtil;
+import org.ohosdev.hapviewerandroid.helper.DialogHelper;
 import org.ohosdev.hapviewerandroid.util.HapUtil;
 import org.ohosdev.hapviewerandroid.util.MyFileUtil;
 
@@ -124,7 +124,7 @@ public class MainActivity extends AppCompatActivity {
                 // .setCancelable(false)
                 // 此处禁止取消对话框并无任何业务，可以取消禁用
                 .show();
-        DialogUtil.setDialogContentSelectable(alertDialog, true);
+        DialogHelper.setDialogContentSelectable(alertDialog, true);
     }
 
     public void fabClick(View view) {
