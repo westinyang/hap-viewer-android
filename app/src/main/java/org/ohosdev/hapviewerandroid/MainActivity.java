@@ -212,6 +212,11 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+
+    /**
+     * @param view 视图
+     * @deprecated
+     */
     public void itemClick(View view) {
         TextView key = view.findViewWithTag("key");
         TextView val = view.findViewWithTag("val");
