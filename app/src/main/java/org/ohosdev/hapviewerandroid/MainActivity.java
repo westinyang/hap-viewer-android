@@ -30,6 +30,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.google.android.material.snackbar.Snackbar;
 
 import org.ohosdev.hapviewerandroid.adapter.InfoAdapter;
+import org.ohosdev.hapviewerandroid.databinding.ActivityMainBinding;
 import org.ohosdev.hapviewerandroid.model.HapInfo;
 import org.ohosdev.hapviewerandroid.util.DialogUtil;
 import org.ohosdev.hapviewerandroid.util.HapUtil;
@@ -51,16 +52,20 @@ public class MainActivity extends AppCompatActivity {
     public static HapInfo currentHapInfo = null;
     private long exitTime = 0;
     private InfoAdapter infoAdapter;
+    private ActivityMainBinding binding;
 
     @SuppressLint("SourceLockedOrientationActivity")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        binding = ActivityMainBinding.inflate(getLayoutInflater());
+        setContentView(binding.getRoot());
         infoAdapter = new InfoAdapter(this);
         RecyclerView recyclerView = findViewById(R.id.recycler_view);
         recyclerView.setAdapter(infoAdapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
+
+
         // setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);  // 禁用横屏
         // 禁用横屏会导致平板与折叠屏用户体验不佳。应用目前的布局对横屏已经非常友好，取消禁用并无大碍
     }
@@ -184,6 +189,9 @@ public class MainActivity extends AppCompatActivity {
         try {
             hapInfo = HapUtil.parse(hapFilePath);
             currentHapInfo = hapInfo;
+            // 显示基础信息
+            binding.appName.setText(hapInfo.appName);
+            binding.version.setText(String.format("%s (%s)", hapInfo.versionName, hapInfo.versionCode));
             // 显示应用图标
             ImageView imageView = findViewById(R.id.imageView);
             imageView.setImageBitmap(hapInfo.icon);
