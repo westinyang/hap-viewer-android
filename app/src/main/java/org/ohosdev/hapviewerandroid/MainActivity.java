@@ -127,7 +127,9 @@ public class MainActivity extends AppCompatActivity {
 
     public void fabClick(View view) {
         // 申请权限
-        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+        // 安卓10及以上不需要存储权限
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.Q
+                && ActivityCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
             ActivityCompat.requestPermissions(MainActivity.this, PERMISSIONS_EXTERNAL_STORAGE, REQUEST_CODE_EXTERNAL_STORAGE);
         } else {
             selectFile();
