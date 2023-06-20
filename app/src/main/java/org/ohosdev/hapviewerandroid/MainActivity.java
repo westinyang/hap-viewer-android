@@ -11,6 +11,7 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.DragEvent;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -31,15 +32,15 @@ import com.google.android.material.snackbar.Snackbar;
 
 import org.ohosdev.hapviewerandroid.adapter.InfoAdapter;
 import org.ohosdev.hapviewerandroid.databinding.ActivityMainBinding;
-import org.ohosdev.hapviewerandroid.model.HapInfo;
 import org.ohosdev.hapviewerandroid.helper.DialogHelper;
+import org.ohosdev.hapviewerandroid.model.HapInfo;
 import org.ohosdev.hapviewerandroid.util.HapUtil;
 import org.ohosdev.hapviewerandroid.util.MyFileUtil;
 
 import java.io.File;
 import java.io.IOException;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements View.OnDragListener {
 
     private static final String TAG = "MainActivity";
     // 文件读写权限
@@ -64,8 +65,8 @@ public class MainActivity extends AppCompatActivity {
         RecyclerView recyclerView = findViewById(R.id.recycler_view);
         recyclerView.setAdapter(infoAdapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
-
-
+        // 启用拖放
+        binding.getRoot().setOnDragListener(this);
         // setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);  // 禁用横屏
         // 禁用横屏会导致平板与折叠屏用户体验不佳。应用目前的布局对横屏已经非常友好，取消禁用并无大碍
     }
@@ -157,32 +158,62 @@ public class MainActivity extends AppCompatActivity {
         if (data == null) return;
         if (requestCode == 1) {
             Uri uri = data.getData();
-            File file = null;
-            // Android 10+ 把文件复制到沙箱内
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
-                file = MyFileUtil.uriToFileApiQ(this, uri);
+            parse(uri);
+            // File file = null;
+            // // Android 10+ 把文件复制到沙箱内
+            // if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+            //     file = MyFileUtil.uriToFileApiQ(this, uri);
+            // }
+            // // Android 10 以下获取文件真实路径，创建File
+            // else {
+            //     String path = MyFileUtil.getPath(this, uri);
+            //     if (path != null) {
+            //         file = new File(path);
+            //     }
+            // }
+            // if (file == null) {
+            //     // Toast.makeText(this, "文件获取失败", Toast.LENGTH_SHORT).show();
+            //     Snackbar.make(binding.getRoot(), "文件获取失败", Snackbar.LENGTH_SHORT).show();
+            //     return;
+            // }
+            // // 解析hap
+            // String path = file.getAbsolutePath();
+            // String extName = path.substring(path.lastIndexOf(".") + 1);
+            // if (path.length() > 0 && "hap".equals(extName)) {
+            //     parseHapAndShowInfo(path);
+            // } else {
+            //     // Toast.makeText(this, "请选择一个hap安装包", Toast.LENGTH_SHORT).show();
+            //     Snackbar.make(binding.getRoot(), "请选择一个hap安装包", Snackbar.LENGTH_SHORT).show();
+            // }
+        }
+    }
+
+    private void parse(@NonNull Uri uri) {
+        File file = null;
+        // Android 10+ 把文件复制到沙箱内
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+            file = MyFileUtil.uriToFileApiQ(this, uri);
+        }
+        // Android 10 以下获取文件真实路径，创建File
+        else {
+            String path = MyFileUtil.getPath(this, uri);
+            if (path != null) {
+                file = new File(path);
             }
-            // Android 10 以下获取文件真实路径，创建File
-            else {
-                String path = MyFileUtil.getPath(this, uri);
-                if (path != null) {
-                    file = new File(path);
-                }
-            }
-            if (file == null) {
-                // Toast.makeText(this, "文件获取失败", Toast.LENGTH_SHORT).show();
-                Snackbar.make(binding.getRoot(), "文件获取失败", Snackbar.LENGTH_SHORT).show();
-                return;
-            }
-            // 解析hap
-            String path = file.getAbsolutePath();
-            String extName = path.substring(path.lastIndexOf(".") + 1);
-            if (path.length() > 0 && "hap".equals(extName)) {
-                parseHapAndShowInfo(path);
-            } else {
-                // Toast.makeText(this, "请选择一个hap安装包", Toast.LENGTH_SHORT).show();
-                Snackbar.make(binding.getRoot(), "请选择一个hap安装包", Snackbar.LENGTH_SHORT).show();
-            }
+        }
+        if (file == null) {
+            // Toast.makeText(this, "文件获取失败", Toast.LENGTH_SHORT).show();
+            Snackbar.make(binding.getRoot(), "文件获取失败", Snackbar.LENGTH_SHORT).show();
+            return;
+        }
+        // 解析hap
+        String path = file.getAbsolutePath();
+        String extName = path.substring(path.lastIndexOf(".") + 1);
+        if (path.length() > 0 && "hap".equals(extName)) {
+            parseHapAndShowInfo(path);
+        } else {
+            // Toast.makeText(this, "请选择一个hap安装包", Toast.LENGTH_SHORT).show();
+            Snackbar.make(binding.getRoot(), "请选择一个hap安装包", Snackbar.LENGTH_SHORT).show();
         }
     }
 
@@ -230,5 +261,21 @@ public class MainActivity extends AppCompatActivity {
         // Toast.makeText(this, "已复制 " + k, Toast.LENGTH_SHORT).show();
         Snackbar.make(binding.getRoot(), "已复制", Snackbar.LENGTH_SHORT).show();
 
+    }
+
+    @Override
+    public boolean onDrag(View v, DragEvent event) {
+
+        switch (event.getAction()) {
+            case DragEvent.ACTION_DROP: {
+                ClipData.Item item = event.getClipData().getItemAt(0);
+                if (item.getUri() == null) {
+                    return false;
+                }
+                requestDragAndDropPermissions(event);
+                parse(item.getUri());
+            }
+        }
+        return true;
     }
 }
