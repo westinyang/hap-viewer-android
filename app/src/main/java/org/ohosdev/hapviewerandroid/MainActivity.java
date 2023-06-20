@@ -105,7 +105,9 @@ public class MainActivity extends AppCompatActivity {
             }
         } else {
             // Snackbar.make(getWindow().getDecorView(), "权限申请失败", Snackbar.LENGTH_SHORT).setAction("Action", null).show();
-            Toast.makeText(this, "权限申请失败", Toast.LENGTH_SHORT).show();
+            // Toast.makeText(this, "权限申请失败", Toast.LENGTH_SHORT).show();
+            Snackbar.make(binding.getRoot(), "权限申请失败", Snackbar.LENGTH_SHORT).show();
+
         }
     }
 
@@ -144,7 +146,8 @@ public class MainActivity extends AppCompatActivity {
         try {
             startActivityForResult(Intent.createChooser(intent, "选择文件"), 1);
         } catch (android.content.ActivityNotFoundException ex) {
-            Toast.makeText(this, "未找到文件管理应用", Toast.LENGTH_SHORT).show();
+            // Toast.makeText(this, "未找到文件管理应用", Toast.LENGTH_SHORT).show();
+            Snackbar.make(binding.getRoot(), "未找到文件管理应用", Snackbar.LENGTH_SHORT).show();
         }
     }
 
@@ -167,7 +170,8 @@ public class MainActivity extends AppCompatActivity {
                 }
             }
             if (file == null) {
-                Toast.makeText(this, "文件获取失败", Toast.LENGTH_SHORT).show();
+                // Toast.makeText(this, "文件获取失败", Toast.LENGTH_SHORT).show();
+                Snackbar.make(binding.getRoot(), "文件获取失败", Snackbar.LENGTH_SHORT).show();
                 return;
             }
             // 解析hap
@@ -176,7 +180,8 @@ public class MainActivity extends AppCompatActivity {
             if (path.length() > 0 && "hap".equals(extName)) {
                 parseHapAndShowInfo(path);
             } else {
-                Toast.makeText(this, "请选择一个hap安装包", Toast.LENGTH_SHORT).show();
+                // Toast.makeText(this, "请选择一个hap安装包", Toast.LENGTH_SHORT).show();
+                Snackbar.make(binding.getRoot(), "请选择一个hap安装包", Snackbar.LENGTH_SHORT).show();
             }
         }
     }
@@ -203,7 +208,7 @@ public class MainActivity extends AppCompatActivity {
         } catch (IOException | RuntimeException e) {
             e.printStackTrace();
             // Toast.makeText(this, "hap文件解析失败，目前仅支持解析 API9+ (Stage模型) 的应用安装包", Toast.LENGTH_LONG).show();
-            Snackbar.make(getWindow().getDecorView(), "hap文件解析失败，目前仅支持解析 API9+ (Stage模型) 的应用安装包", Snackbar.LENGTH_LONG).setAction("Action", null).show();
+            Snackbar.make(binding.getRoot(), "hap文件解析失败，目前仅支持解析 API9+ (Stage模型) 的应用安装包", Snackbar.LENGTH_SHORT).show();
         }
     }
 
@@ -217,6 +222,8 @@ public class MainActivity extends AppCompatActivity {
         ClipboardManager cm = (ClipboardManager) getSystemService(Context.CLIPBOARD_SERVICE);
         // 设置内容到剪切板
         cm.setPrimaryClip(ClipData.newPlainText(null, v));
-        Toast.makeText(this, "已复制 " + k, Toast.LENGTH_SHORT).show();
+        // Toast.makeText(this, "已复制 " + k, Toast.LENGTH_SHORT).show();
+        Snackbar.make(binding.getRoot(), "已复制", Snackbar.LENGTH_SHORT).show();
+
     }
 }
