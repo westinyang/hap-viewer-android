@@ -217,7 +217,11 @@ public class MainActivity extends AppCompatActivity implements View.OnDragListen
     //     }
     // }
 
+    @SuppressWarnings("ConstantConditions")
     private void parse(@NonNull Uri uri) {
+        if (uri == null) {
+            return;
+        }
         File file = null;
         // Android 10+ 把文件复制到沙箱内
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
