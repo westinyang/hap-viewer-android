@@ -10,6 +10,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:theme="?actionBarTheme">
+
         <androidx.appcompat.widget.Toolbar
             android:id="@+id/toolbar"
             android:layout_width="match_parent"
@@ -18,11 +19,11 @@
     </com.google.android.material.appbar.AppBarLayout>
 
     <!-- BUG:RecyclerView回收失效 -->
- <!--    <androidx.core.widget.NestedScrollView
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        app:layout_behavior="com.google.android.material.appbar.AppBarLayout$ScrollingViewBehavior">
-    </androidx.core.widget.NestedScrollView> -->
+    <!--    <androidx.core.widget.NestedScrollView
+           android:layout_width="match_parent"
+           android:layout_height="match_parent"
+           app:layout_behavior="com.google.android.material.appbar.AppBarLayout$ScrollingViewBehavior">
+       </androidx.core.widget.NestedScrollView> -->
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -44,6 +45,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="16dp"
+            android:text="@android:string/unknownName"
             android:textColor="?colorOnBackground"
             android:textSize="16sp"
             app:layout_constraintBottom_toTopOf="@+id/version"
@@ -57,6 +59,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="16dp"
+            android:text="@android:string/unknownName"
             android:textColor="?colorOnBackground"
             android:textSize="16sp"
             app:layout_constraintBottom_toTopOf="@+id/recycler_view"
