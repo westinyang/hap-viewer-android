@@ -1,6 +1,6 @@
 # HapViewerAndroid
 
-<img src="app/src/main/res/mipmap-xxxhdpi/ic_launcher.png" width="128px" />
+<img src="app/src/main/res/mipmap-xxxhdpi/ic_launcher.webp" width="128px" />
 
 ## 项目介绍
 

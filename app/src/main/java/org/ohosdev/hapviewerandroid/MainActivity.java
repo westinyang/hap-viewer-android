@@ -106,9 +106,10 @@ public class MainActivity extends AppCompatActivity {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         AlertDialog alertDialog = builder.setTitle("关于")
                 .setMessage("HAP查看器 for Android\n\n" +
-                        "软件版本：" + BuildConfig.VERSION_NAME + "\n" +
-                        "软件作者：westinyang\n" +
+                        "支持解析 OpenHarmony(开源鸿蒙)、HarmonyOS(鸿蒙) API9+(Stage模型) 的应用安装包，支持在 Android 7+ 的安卓设备上运行\n\n" +
+                        "应用版本：" + BuildConfig.VERSION_NAME + "\n" +
                         "开源仓库：https://gitee.com/ohos-dev/hap-viewer-android\n" +
+                        "开源贡献：westinyang、Jesse205\n" +
                         "企鹅群组：752399947")
                 .setPositiveButton("关闭", null)
                 // .setCancelable(false)
