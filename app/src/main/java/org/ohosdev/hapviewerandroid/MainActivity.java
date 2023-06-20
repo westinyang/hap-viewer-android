@@ -5,7 +5,6 @@ import android.annotation.SuppressLint;
 import android.content.ClipData;
 import android.content.ClipboardManager;
 import android.content.Context;
-import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Build;
@@ -16,17 +15,20 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import androidx.activity.result.ActivityResultCallback;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
+import androidx.core.graphics.Insets;
+import androidx.core.view.ViewCompat;
+import androidx.core.view.WindowCompat;
+import androidx.core.view.WindowInsetsCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -36,6 +38,7 @@ import com.google.android.material.snackbar.Snackbar;
 import org.ohosdev.hapviewerandroid.adapter.InfoAdapter;
 import org.ohosdev.hapviewerandroid.databinding.ActivityMainBinding;
 import org.ohosdev.hapviewerandroid.helper.DialogHelper;
+import org.ohosdev.hapviewerandroid.helper.FloatingButtonOnApplyWindowInsetsListener;
 import org.ohosdev.hapviewerandroid.model.HapInfo;
 import org.ohosdev.hapviewerandroid.util.HapUtil;
 import org.ohosdev.hapviewerandroid.util.MyFileUtil;
@@ -57,10 +60,9 @@ public class MainActivity extends AppCompatActivity implements View.OnDragListen
     private long exitTime = 0;
     private InfoAdapter infoAdapter;
     private ActivityMainBinding binding;
-    private Snackbar exitSnackbar = null;
-
     private final ActivityResultLauncher<String> selectFileResultLauncher = registerForActivityResult(
             new ActivityResultContracts.GetContent(), this::parse);
+    private Snackbar exitSnackbar = null;
 
     @SuppressLint("SourceLockedOrientationActivity")
     @Override
@@ -75,6 +77,16 @@ public class MainActivity extends AppCompatActivity implements View.OnDragListen
         // 启用拖放
         binding.getRoot().setOnDragListener(this);
         setSupportActionBar(binding.toolbar);
+        WindowCompat.setDecorFitsSystemWindows(getWindow(), false);
+        binding.floatingActionButton.setOnApplyWindowInsetsListener(new FloatingButtonOnApplyWindowInsetsListener(binding.floatingActionButton));
+
+        // 列表边距
+        ViewCompat.setOnApplyWindowInsetsListener(binding.recyclerView, (v, windowInsets) -> {
+            Insets insets = windowInsets.getInsets(WindowInsetsCompat.Type.systemBars());
+            ViewGroup.MarginLayoutParams mlp = (ViewGroup.MarginLayoutParams) v.getLayoutParams();
+            v.setPadding(insets.left,0,insets.right, insets.bottom);
+            return WindowInsetsCompat.CONSUMED;
+        });
         // setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);  // 禁用横屏
         // 禁用横屏会导致平板与折叠屏用户体验不佳。应用目前的布局对横屏已经非常友好，取消禁用并无大碍
 
@@ -175,32 +187,32 @@ public class MainActivity extends AppCompatActivity implements View.OnDragListen
     //             return;
     //         }
     //         parse(uri);
-            // File file = null;
-            // // Android 10+ 把文件复制到沙箱内
-            // if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
-            //     file = MyFileUtil.uriToFileApiQ(this, uri);
-            // }
-            // // Android 10 以下获取文件真实路径，创建File
-            // else {
-            //     String path = MyFileUtil.getPath(this, uri);
-            //     if (path != null) {
-            //         file = new File(path);
-            //     }
-            // }
-            // if (file == null) {
-            //     // Toast.makeText(this, "文件获取失败", Toast.LENGTH_SHORT).show();
-            //     Snackbar.make(binding.getRoot(), "文件获取失败", Snackbar.LENGTH_SHORT).show();
-            //     return;
-            // }
-            // // 解析hap
-            // String path = file.getAbsolutePath();
-            // String extName = path.substring(path.lastIndexOf(".") + 1);
-            // if (path.length() > 0 && "hap".equals(extName)) {
-            //     parseHapAndShowInfo(path);
-            // } else {
-            //     // Toast.makeText(this, "请选择一个hap安装包", Toast.LENGTH_SHORT).show();
-            //     Snackbar.make(binding.getRoot(), "请选择一个hap安装包", Snackbar.LENGTH_SHORT).show();
-            // }
+    // File file = null;
+    // // Android 10+ 把文件复制到沙箱内
+    // if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+    //     file = MyFileUtil.uriToFileApiQ(this, uri);
+    // }
+    // // Android 10 以下获取文件真实路径，创建File
+    // else {
+    //     String path = MyFileUtil.getPath(this, uri);
+    //     if (path != null) {
+    //         file = new File(path);
+    //     }
+    // }
+    // if (file == null) {
+    //     // Toast.makeText(this, "文件获取失败", Toast.LENGTH_SHORT).show();
+    //     Snackbar.make(binding.getRoot(), "文件获取失败", Snackbar.LENGTH_SHORT).show();
+    //     return;
+    // }
+    // // 解析hap
+    // String path = file.getAbsolutePath();
+    // String extName = path.substring(path.lastIndexOf(".") + 1);
+    // if (path.length() > 0 && "hap".equals(extName)) {
+    //     parseHapAndShowInfo(path);
+    // } else {
+    //     // Toast.makeText(this, "请选择一个hap安装包", Toast.LENGTH_SHORT).show();
+    //     Snackbar.make(binding.getRoot(), "请选择一个hap安装包", Snackbar.LENGTH_SHORT).show();
+    // }
     //     }
     // }
 
