@@ -115,7 +115,7 @@ public class InfoAdapter extends RecyclerView.Adapter<InfoAdapter.ViewHolder> {
                 return;
             ClipboardManager cm = (ClipboardManager) itemView.getContext().getSystemService(Context.CLIPBOARD_SERVICE);
             // 设置内容到剪切板
-            cm.setPrimaryClip(ClipData.newPlainText(null, textView.getText()));
+            cm.setPrimaryClip(ClipData.newPlainText(null, this.content));
             Toast.makeText(itemView.getContext(), "已复制 " + name, Toast.LENGTH_SHORT).show();
         }
 
