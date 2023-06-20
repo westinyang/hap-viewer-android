@@ -14,6 +14,8 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.google.android.material.snackbar.Snackbar;
+
 import org.ohosdev.hapviewerandroid.R;
 import org.ohosdev.hapviewerandroid.model.HapInfo;
 
@@ -77,6 +79,8 @@ public class InfoAdapter extends RecyclerView.Adapter<InfoAdapter.ViewHolder> {
         notifyDataSetChanged();
     }
 
+
+
     static class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
         private final TextView textView;
@@ -116,7 +120,8 @@ public class InfoAdapter extends RecyclerView.Adapter<InfoAdapter.ViewHolder> {
             ClipboardManager cm = (ClipboardManager) itemView.getContext().getSystemService(Context.CLIPBOARD_SERVICE);
             // 设置内容到剪切板
             cm.setPrimaryClip(ClipData.newPlainText(null, this.content));
-            Toast.makeText(itemView.getContext(), "已复制 " + name, Toast.LENGTH_SHORT).show();
+            // Toast.makeText(itemView.getContext(), "已复制 " + name, Toast.LENGTH_SHORT).show();
+            Snackbar.make(itemView, "已复制 " + name, Snackbar.LENGTH_SHORT).show();
         }
 
         @Override
