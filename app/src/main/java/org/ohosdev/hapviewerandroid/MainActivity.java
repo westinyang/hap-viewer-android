@@ -57,7 +57,7 @@ public class MainActivity extends AppCompatActivity implements View.OnDragListen
     // 文件读写权限 请求码
     private static final int REQUEST_CODE_EXTERNAL_STORAGE = 1;
     public static HapInfo currentHapInfo = null;
-    private long exitTime = 0;
+    // private long exitTime = 0;
     private InfoAdapter infoAdapter;
     private ActivityMainBinding binding;
     private final ActivityResultLauncher<String> selectFileResultLauncher = registerForActivityResult(
