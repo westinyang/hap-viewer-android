@@ -1,4 +1,4 @@
-package org.ohosdev.hapviewerandroid.util;
+package org.ohosdev.hapviewerandroid.helper;
 
 import android.app.Dialog;
 import android.widget.TextView;
@@ -8,7 +8,7 @@ import android.widget.TextView;
  *
  * @author Jesse205
  */
-public class DialogUtil {
+public class DialogHelper {
     /**
      * 设置对话框内容是否可选
      * @param dialog 对话框
