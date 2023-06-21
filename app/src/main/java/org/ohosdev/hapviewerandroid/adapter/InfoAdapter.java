@@ -59,7 +59,7 @@ public class InfoAdapter extends RecyclerView.Adapter<InfoAdapter.ViewHolder> {
                 holder.setContent(info.init ? unknownString : info.versionCode);
                 break;
             case 4:
-                holder.setName(R.string.info_targetAPI);
+                holder.setName(R.string.info_compileTarget);
                 holder.setContent(info.init ? unknownString : String.format("API %s (%s)", info.targetAPIVersion, info.apiReleaseType));
                 break;
             case 5:

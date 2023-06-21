@@ -36,7 +36,7 @@
             android:layout_width="100dp"
             android:layout_height="100dp"
             android:layout_margin="16dp"
-            android:contentDescription="@string/config_icon"
+            android:contentDescription="@string/info_icon"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             app:srcCompat="@drawable/ic_default_new" />
