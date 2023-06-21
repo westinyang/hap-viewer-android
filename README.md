@@ -1,6 +1,6 @@
 # HapViewerAndroid
 
-<img src="app/src/main/res/mipmap-xxxhdpi/ic_launcher.webp" width="128px" />
+<img src="app/src/main/res/mipmap-xxxhdpi/ic_launcher_round.webp" width="128px" />
 
 ## 项目介绍
 
@@ -24,7 +24,7 @@
 ## 开发环境
 
 - Android Studio 2022.1.1
-- TargetSDK 33 (MinSDK 24)
+- TargetSDK 32 (MinSDK 24)
 
 ## 截图预览
 
@@ -37,3 +37,10 @@
 ## 许可声明
 
 - 本项目是以Apache2.0许可开源，如果衍生或商用需保留原始版权和许可声明即可
+
+## 开源贡献
+
+> HapViewerAndroid 项目由 westinyang 创建于 2023 年，并获得包括但不限于以下人士的贡献：
+
+- [westinyang](https://gitee.com/westinyang)
+- [Jesse205](https://gitee.com/Jesse205)
