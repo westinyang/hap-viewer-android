@@ -16,6 +16,7 @@
     <string name="parse_error_fail_obtain">文件获取失败</string>
     <string name="parse_error_fail">hap 文件解析失败，目前仅支持解析 API 9+ (Stage 模型) 的应用安装包</string>
     <string name="parse_error_type">文件类型错误，请选择一个 hap 安装包</string>
+    <string name="parse_continue_ignoreError">忽略错误，继续解析</string>
     <string name="separator_words">、</string>
 
 </resources>

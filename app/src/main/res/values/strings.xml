@@ -17,5 +17,6 @@
     <string name="parse_error_fail">Hap file parsing failed, currently only supports parsing API 9+ (Stage model) application installers.</string>
     <string name="parse_error_type">Wrong file type, please select a hap file.</string>
     <string name="separator_words">, </string>
+    <string name="parse_continue_ignoreError">Ignore error, Continue parse</string>
 
 </resources>

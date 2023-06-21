@@ -251,7 +251,11 @@ public class MainActivity extends AppCompatActivity implements View.OnDragListen
             parseHapAndShowInfo(path);
         } else {
             // Toast.makeText(this, "请选择一个hap安装包", Toast.LENGTH_SHORT).show();
-            Snackbar.make(binding.getRoot(), R.string.parse_error_type, Snackbar.LENGTH_SHORT).show();
+            Snackbar.make(binding.getRoot(), R.string.parse_error_type, Snackbar.LENGTH_SHORT)
+                    .setAction(R.string.parse_continue_ignoreError, v -> {
+                        parseHapAndShowInfo(path);
+                    })
+                    .show();
         }
     }
 
