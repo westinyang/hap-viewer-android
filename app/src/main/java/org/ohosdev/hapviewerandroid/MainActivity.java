@@ -5,6 +5,7 @@ import android.annotation.SuppressLint;
 import android.content.ClipData;
 import android.content.ClipboardManager;
 import android.content.Context;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Build;
@@ -22,6 +23,7 @@ import android.widget.TextView;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
@@ -84,13 +86,17 @@ public class MainActivity extends AppCompatActivity implements View.OnDragListen
         ViewCompat.setOnApplyWindowInsetsListener(binding.recyclerView, (v, windowInsets) -> {
             Insets insets = windowInsets.getInsets(WindowInsetsCompat.Type.systemBars());
             ViewGroup.MarginLayoutParams mlp = (ViewGroup.MarginLayoutParams) v.getLayoutParams();
-            v.setPadding(insets.left,0,insets.right, insets.bottom);
+            v.setPadding(insets.left, 0, insets.right, insets.bottom);
             return WindowInsetsCompat.CONSUMED;
         });
         // setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);  // 禁用横屏
         // 禁用横屏会导致平板与折叠屏用户体验不佳。应用目前的布局对横屏已经非常友好，取消禁用并无大碍
         // 初始化应用信息
         infoAdapter.setInfo(new HapInfo(true));
+
+        // 解析传入的 Intent
+        Intent intent = getIntent();
+        parse(intent.getData());
     }
 
     @Override
@@ -217,8 +223,7 @@ public class MainActivity extends AppCompatActivity implements View.OnDragListen
     //     }
     // }
 
-    @SuppressWarnings("ConstantConditions")
-    private void parse(@NonNull Uri uri) {
+    private void parse(@Nullable Uri uri) {
         if (uri == null) {
             return;
         }
@@ -308,5 +313,11 @@ public class MainActivity extends AppCompatActivity implements View.OnDragListen
             parse(item.getUri());
         }
         return true;
+    }
+
+    @Override
+    protected void onNewIntent(Intent intent) {
+        super.onNewIntent(intent);
+        parse(intent.getData());
     }
 }
