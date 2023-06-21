@@ -112,7 +112,7 @@ public class MainActivity extends AppCompatActivity implements View.OnDragListen
         if (exitSnackbar != null && exitSnackbar.isShown())
             super.onBackPressed();
         else {
-            exitSnackbar = Snackbar.make(binding.getRoot(), "再按一次返回键退出", Snackbar.LENGTH_SHORT);
+            exitSnackbar = Snackbar.make(binding.getRoot(), R.string.exit_toast, Snackbar.LENGTH_SHORT);
             exitSnackbar.show();
         }
 
@@ -241,7 +241,7 @@ public class MainActivity extends AppCompatActivity implements View.OnDragListen
         }
         if (file == null) {
             // Toast.makeText(this, "文件获取失败", Toast.LENGTH_SHORT).show();
-            Snackbar.make(binding.getRoot(), "文件获取失败", Snackbar.LENGTH_SHORT).show();
+            Snackbar.make(binding.getRoot(), R.string.parse_error_fail_obtain, Snackbar.LENGTH_SHORT).show();
             return;
         }
         // 解析hap
@@ -251,7 +251,7 @@ public class MainActivity extends AppCompatActivity implements View.OnDragListen
             parseHapAndShowInfo(path);
         } else {
             // Toast.makeText(this, "请选择一个hap安装包", Toast.LENGTH_SHORT).show();
-            Snackbar.make(binding.getRoot(), "请选择一个hap安装包", Snackbar.LENGTH_SHORT).show();
+            Snackbar.make(binding.getRoot(), R.string.parse_error_type, Snackbar.LENGTH_SHORT).show();
         }
     }
 
@@ -277,7 +277,7 @@ public class MainActivity extends AppCompatActivity implements View.OnDragListen
         } catch (IOException | RuntimeException e) {
             e.printStackTrace();
             // Toast.makeText(this, "hap文件解析失败，目前仅支持解析 API9+ (Stage模型) 的应用安装包", Toast.LENGTH_LONG).show();
-            Snackbar.make(binding.getRoot(), "hap文件解析失败，目前仅支持解析 API9+ (Stage模型) 的应用安装包", Snackbar.LENGTH_SHORT).show();
+            Snackbar.make(binding.getRoot(), R.string.parse_error_fail, Snackbar.LENGTH_SHORT).show();
         }
     }
 
@@ -297,7 +297,7 @@ public class MainActivity extends AppCompatActivity implements View.OnDragListen
         // 设置内容到剪切板
         cm.setPrimaryClip(ClipData.newPlainText(null, v));
         // Toast.makeText(this, "已复制 " + k, Toast.LENGTH_SHORT).show();
-        Snackbar.make(binding.getRoot(), "已复制", Snackbar.LENGTH_SHORT).show();
+        Snackbar.make(binding.getRoot(), R.string.copied, Snackbar.LENGTH_SHORT).show();
 
     }
 

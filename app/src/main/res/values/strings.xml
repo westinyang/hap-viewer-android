@@ -11,4 +11,12 @@
     <string name="config_icon">应用图标</string>
     <string name="select_file_hap">选择 HAP 文件</string>
     <string name="permission_grant_fail">权限申请失败</string>
+    <string name="exit_toast">再按一次返回键退出</string>
+    <string name="copied">已复制</string>
+    <string name="copied_withName">已复制 %s</string>
+    <string name="parse_error_fail_obtain">文件获取失败</string>
+    <string name="parse_error_fail">hap 文件解析失败，目前仅支持解析 API 9+ (Stage 模型) 的应用安装包</string>
+    <string name="parse_error_type">文件类型错误，请选择一个 hap 安装包</string>
+    <string name="separator_words">、</string>
+
 </resources>
