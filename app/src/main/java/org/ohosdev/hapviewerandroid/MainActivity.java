@@ -50,15 +50,19 @@ public class MainActivity extends AppCompatActivity implements View.OnDragListen
             Manifest.permission.READ_EXTERNAL_STORAGE,
             Manifest.permission.WRITE_EXTERNAL_STORAGE
     };
+    private static final String KEY_NOW_URI = "now_uri";
     // 文件读写权限 请求码
     private static final int REQUEST_CODE_EXTERNAL_STORAGE = 1;
     public static HapInfo currentHapInfo = null;
     // private long exitTime = 0;
     private InfoAdapter infoAdapter;
     private ActivityMainBinding binding;
+    @Nullable
+    private Snackbar exitSnackbar = null;
+    @Nullable
+    private Uri nowUri = null;
     private final ActivityResultLauncher<String> selectFileResultLauncher = registerForActivityResult(
             new ActivityResultContracts.GetContent(), this::parse);
-    private Snackbar exitSnackbar = null;
 
     @SuppressLint("SourceLockedOrientationActivity")
     @Override
@@ -120,6 +124,22 @@ public class MainActivity extends AppCompatActivity implements View.OnDragListen
         //     // finish();
         //     // System.exit(0);
         // }
+    }
+
+    @Override
+    protected void onSaveInstanceState(@NonNull Bundle outState) {
+        super.onSaveInstanceState(outState);
+        if (nowUri != null)
+            outState.putString(KEY_NOW_URI, nowUri.toString());
+    }
+
+    @Override
+    protected void onRestoreInstanceState(@NonNull Bundle savedInstanceState) {
+        super.onRestoreInstanceState(savedInstanceState);
+        String nowUriString = savedInstanceState.getString(KEY_NOW_URI);
+        if (nowUriString != null) {
+            parse(Uri.parse(nowUriString));
+        }
     }
 
     @Override
@@ -185,17 +205,22 @@ public class MainActivity extends AppCompatActivity implements View.OnDragListen
             return;
         }
         File file = null;
-        // Android 10+ 把文件复制到沙箱内
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
-            file = MyFileUtil.uriToFileApiQ(this, uri);
-        }
-        // Android 10 以下获取文件真实路径，创建File
-        else {
-            String path = MyFileUtil.getPath(this, uri);
-            if (path != null) {
-                file = new File(path);
+        try {
+            // Android 10+ 把文件复制到沙箱内
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+                file = MyFileUtil.uriToFileApiQ(this, uri);
             }
+            // Android 10 以下获取文件真实路径，创建File
+            else {
+                String path = MyFileUtil.getPath(this, uri);
+                if (path != null) {
+                    file = new File(path);
+                }
+            }
+        } catch (RuntimeException | AssertionError e) {
+            e.printStackTrace();
         }
+
         if (file == null) {
             // Toast.makeText(this, "文件获取失败", Toast.LENGTH_SHORT).show();
             Snackbar.make(binding.getRoot(), R.string.parse_error_fail_obtain, Snackbar.LENGTH_SHORT)
@@ -207,11 +232,11 @@ public class MainActivity extends AppCompatActivity implements View.OnDragListen
         String path = file.getAbsolutePath();
         String extName = path.substring(path.lastIndexOf(".") + 1);
         if (path.length() > 0 && "hap".equals(extName)) {
-            parseHapAndShowInfo(path);
+            parseHapAndShowInfo(path, uri);
         } else {
             // Toast.makeText(this, "请选择一个hap安装包", Toast.LENGTH_SHORT).show();
             Snackbar.make(binding.getRoot(), R.string.parse_error_type, Snackbar.LENGTH_SHORT)
-                    .setAction(R.string.parse_continue_ignoreError, v -> parseHapAndShowInfo(path))
+                    .setAction(R.string.parse_continue_ignoreError, v -> parseHapAndShowInfo(path, uri))
                     .setAnchorView(R.id.floatingActionButton)
                     .show();
         }
@@ -221,13 +246,15 @@ public class MainActivity extends AppCompatActivity implements View.OnDragListen
      * 解析hap并显示信息
      *
      * @param hapFilePath
+     * @param uri
      */
-    private void parseHapAndShowInfo(String hapFilePath) {
+    private void parseHapAndShowInfo(String hapFilePath, Uri uri) {
         // 解析hap
         HapInfo hapInfo;
         try {
             hapInfo = HapUtil.parse(hapFilePath);
             currentHapInfo = hapInfo;
+            nowUri = uri;
             // 显示基础信息
             binding.basicInfo.appName.setText(hapInfo.appName);
             binding.basicInfo.version.setText(String.format("%s (%s)", hapInfo.versionName, hapInfo.versionCode));
