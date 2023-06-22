@@ -91,8 +91,11 @@ public class MainActivity extends AppCompatActivity implements View.OnDragListen
         infoAdapter.setInfo(new HapInfo(true));
 
         // 解析传入的 Intent
-        Intent intent = getIntent();
-        parse(intent.getData());
+        if (savedInstanceState == null) {
+            Intent intent = getIntent();
+            parse(intent.getData());
+        }
+
 
     }
 
