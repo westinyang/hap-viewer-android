@@ -3,8 +3,6 @@ package org.ohosdev.hapviewerandroid;
 import android.Manifest;
 import android.annotation.SuppressLint;
 import android.content.ClipData;
-import android.content.ClipboardManager;
-import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.net.Uri;
@@ -16,7 +14,6 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.TextView;
 
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
@@ -183,45 +180,6 @@ public class MainActivity extends AppCompatActivity implements View.OnDragListen
         selectFileResultLauncher.launch("*/*");
     }
 
-    // @Override
-    // protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
-    //     super.onActivityResult(requestCode, resultCode, data);
-    //     if (data == null) return;
-    //     if (requestCode == 1) {
-    //         Uri uri = data.getData();
-    //         if (uri == null) {
-    //             return;
-    //         }
-    //         parse(uri);
-    // File file = null;
-    // // Android 10+ 把文件复制到沙箱内
-    // if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
-    //     file = MyFileUtil.uriToFileApiQ(this, uri);
-    // }
-    // // Android 10 以下获取文件真实路径，创建File
-    // else {
-    //     String path = MyFileUtil.getPath(this, uri);
-    //     if (path != null) {
-    //         file = new File(path);
-    //     }
-    // }
-    // if (file == null) {
-    //     // Toast.makeText(this, "文件获取失败", Toast.LENGTH_SHORT).show();
-    //     Snackbar.make(binding.getRoot(), "文件获取失败", Snackbar.LENGTH_SHORT).show();
-    //     return;
-    // }
-    // // 解析hap
-    // String path = file.getAbsolutePath();
-    // String extName = path.substring(path.lastIndexOf(".") + 1);
-    // if (path.length() > 0 && "hap".equals(extName)) {
-    //     parseHapAndShowInfo(path);
-    // } else {
-    //     // Toast.makeText(this, "请选择一个hap安装包", Toast.LENGTH_SHORT).show();
-    //     Snackbar.make(binding.getRoot(), "请选择一个hap安装包", Snackbar.LENGTH_SHORT).show();
-    // }
-    //     }
-    // }
-
     private void parse(@Nullable Uri uri) {
         if (uri == null) {
             return;
@@ -284,28 +242,6 @@ public class MainActivity extends AppCompatActivity implements View.OnDragListen
                     .setAnchorView(R.id.floatingActionButton)
                     .show();
         }
-    }
-
-
-    /**
-     * @param view 视图
-     * @deprecated
-     */
-    public void itemClick(View view) {
-        TextView key = view.findViewWithTag("key");
-        TextView val = view.findViewWithTag("val");
-        String k = String.valueOf(key.getText());
-        k = k.replace("：", "");
-        String v = String.valueOf(val.getText());
-        // 获取剪切板管理器
-        ClipboardManager cm = (ClipboardManager) getSystemService(Context.CLIPBOARD_SERVICE);
-        // 设置内容到剪切板
-        cm.setPrimaryClip(ClipData.newPlainText(null, v));
-        // Toast.makeText(this, "已复制 " + k, Toast.LENGTH_SHORT).show();
-        Snackbar.make(binding.getRoot(), R.string.copied, Snackbar.LENGTH_SHORT)
-                .setAnchorView(R.id.floatingActionButton)
-                .show();
-
     }
 
     @Override
