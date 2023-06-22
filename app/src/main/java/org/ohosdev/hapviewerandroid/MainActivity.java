@@ -51,8 +51,7 @@ public class MainActivity extends AppCompatActivity implements View.OnDragListen
     private static final String TAG = "MainActivity";
     // 文件读写权限
     private static final String[] PERMISSIONS_EXTERNAL_STORAGE = {
-            Manifest.permission.READ_EXTERNAL_STORAGE,
-            Manifest.permission.WRITE_EXTERNAL_STORAGE
+            Manifest.permission.READ_EXTERNAL_STORAGE
     };
     private static final String KEY_NOW_URI = "now_uri";
     // 文件读写权限 请求码
