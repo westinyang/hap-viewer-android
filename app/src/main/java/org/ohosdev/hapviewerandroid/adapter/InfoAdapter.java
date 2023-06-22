@@ -128,7 +128,9 @@ public class InfoAdapter extends RecyclerView.Adapter<InfoAdapter.ViewHolder> {
             cm.setPrimaryClip(ClipData.newPlainText(null, this.content));
             // Toast.makeText(itemView.getContext(), "已复制 " + name, Toast.LENGTH_SHORT).show();
             String toastText = String.format(context.getString(R.string.copied_withName), name);
-            Snackbar.make(itemView, toastText, Snackbar.LENGTH_SHORT).show();
+            Snackbar.make(itemView, toastText, Snackbar.LENGTH_SHORT)
+                    .setAnchorView(R.id.floatingActionButton)
+                    .show();
         }
 
         @Override

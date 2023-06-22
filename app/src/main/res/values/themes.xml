@@ -24,6 +24,8 @@
         <item name="colorPrimary">@color/color_primary</item>
         <item name="colorOnPrimary">?colorOnSecondary</item>
         <item name="colorSecondary">@color/color_secondary</item>
+        <!-- <item name="materialCardViewOutlinedStyle">@style/Widget.HapViewerAndroid.CardView.Outlined</item> -->
+        <!-- <item name="materialCardViewStyle">?materialCardViewOutlinedStyle</item> -->
     </style>
 
     <style name="Theme.HapViewerAndroid" parent="Base.Theme.HapViewerAndroid" />
@@ -32,9 +34,6 @@
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>
         <item name="colorAccent">?colorPrimary</item>
-        <!-- <item name="colorPrimary">@color/color_primary</item> -->
-        <!-- <item name="colorOnPrimary">?colorOnSecondary</item> -->
-        <!-- <item name="colorSecondary">@color/color_secondary</item> -->
     </style>
 
     <style name="Theme.HapViewerAndroid.Material3" parent="Base.Theme.HapViewerAndroid.Material3" />

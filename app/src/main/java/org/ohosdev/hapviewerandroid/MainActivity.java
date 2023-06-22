@@ -109,6 +109,7 @@ public class MainActivity extends AppCompatActivity implements View.OnDragListen
             super.onBackPressed();
         else {
             exitSnackbar = Snackbar.make(binding.getRoot(), R.string.exit_toast, Snackbar.LENGTH_SHORT);
+            exitSnackbar.setAnchorView(R.id.floatingActionButton);
             exitSnackbar.show();
         }
 
@@ -141,7 +142,9 @@ public class MainActivity extends AppCompatActivity implements View.OnDragListen
         } else {
             // Snackbar.make(getWindow().getDecorView(), "权限申请失败", Snackbar.LENGTH_SHORT).setAction("Action", null).show();
             // Toast.makeText(this, "权限申请失败", Toast.LENGTH_SHORT).show();
-            Snackbar.make(binding.getRoot(), R.string.permission_grant_fail, Snackbar.LENGTH_SHORT).show();
+            Snackbar.make(binding.getRoot(), R.string.permission_grant_fail, Snackbar.LENGTH_SHORT)
+                    .setAnchorView(R.id.floatingActionButton)
+                    .show();
 
         }
     }
@@ -237,7 +240,9 @@ public class MainActivity extends AppCompatActivity implements View.OnDragListen
         }
         if (file == null) {
             // Toast.makeText(this, "文件获取失败", Toast.LENGTH_SHORT).show();
-            Snackbar.make(binding.getRoot(), R.string.parse_error_fail_obtain, Snackbar.LENGTH_SHORT).show();
+            Snackbar.make(binding.getRoot(), R.string.parse_error_fail_obtain, Snackbar.LENGTH_SHORT)
+                    .setAnchorView(R.id.floatingActionButton)
+                    .show();
             return;
         }
         // 解析hap
@@ -249,6 +254,7 @@ public class MainActivity extends AppCompatActivity implements View.OnDragListen
             // Toast.makeText(this, "请选择一个hap安装包", Toast.LENGTH_SHORT).show();
             Snackbar.make(binding.getRoot(), R.string.parse_error_type, Snackbar.LENGTH_SHORT)
                     .setAction(R.string.parse_continue_ignoreError, v -> parseHapAndShowInfo(path))
+                    .setAnchorView(R.id.floatingActionButton)
                     .show();
         }
     }
@@ -274,7 +280,9 @@ public class MainActivity extends AppCompatActivity implements View.OnDragListen
         } catch (IOException | RuntimeException e) {
             e.printStackTrace();
             // Toast.makeText(this, "hap文件解析失败，目前仅支持解析 API9+ (Stage模型) 的应用安装包", Toast.LENGTH_LONG).show();
-            Snackbar.make(binding.getRoot(), R.string.parse_error_fail, Snackbar.LENGTH_SHORT).show();
+            Snackbar.make(binding.getRoot(), R.string.parse_error_fail, Snackbar.LENGTH_SHORT)
+                    .setAnchorView(R.id.floatingActionButton)
+                    .show();
         }
     }
 
@@ -294,7 +302,9 @@ public class MainActivity extends AppCompatActivity implements View.OnDragListen
         // 设置内容到剪切板
         cm.setPrimaryClip(ClipData.newPlainText(null, v));
         // Toast.makeText(this, "已复制 " + k, Toast.LENGTH_SHORT).show();
-        Snackbar.make(binding.getRoot(), R.string.copied, Snackbar.LENGTH_SHORT).show();
+        Snackbar.make(binding.getRoot(), R.string.copied, Snackbar.LENGTH_SHORT)
+                .setAnchorView(R.id.floatingActionButton)
+                .show();
 
     }
 
