@@ -1,20 +1,41 @@
-<resources xmlns:tools="http://schemas.android.com/tools">
+<resources>
 
-    <!-- Base application theme. -->
-    <style name="Theme.HapViewerAndroid" parent="Theme.MaterialComponents.DayNight.NoActionBar">
-        <!-- Primary brand color. -->
-        <item name="colorPrimary">@color/purple_500</item>
-        <item name="colorPrimaryVariant">@color/purple_700</item>
-        <item name="colorOnPrimary">@color/white</item>
-        <!-- Secondary brand color. -->
-        <item name="colorSecondary">@color/teal_200</item>
-        <item name="colorSecondaryVariant">@color/teal_700</item>
-        <item name="colorOnSecondary">@color/white</item>
-        <!-- Status bar color. -->
-        <item name="android:statusBarColor">?attr/colorPrimaryVariant</item>
-        <!-- Customize your theme here. -->
-        <item name="android:navigationBarColor">@color/black</item>
-        <item name="android:colorBackground">@color/white</item>
-        <item name="actionBarTheme">@style/ThemeOverlay.MaterialComponents.Dark.ActionBar</item>
+    <style name="Platform.V23.Theme.HapViewerAndroid" parent="Theme.MaterialComponents.DayNight.DarkActionBar">
+        <item name="colorPrimaryDark">@android:color/transparent</item>
+        <item name="android:navigationBarColor">@color/system_window_scrim_compat</item>
+        <item name="windowLightStatusBar">false</item>
+        <item name="windowLightNavigationBar">?isLightTheme</item>
     </style>
+
+    <style name="Platform.Theme.HapViewerAndroid" parent="Platform.V23.Theme.HapViewerAndroid" />
+
+    <style name="Platform.V23.Theme.HapViewerAndroid.Material3" parent="Theme.Material3.DynamicColors.DayNight">
+        <item name="colorPrimaryDark">@android:color/transparent</item>
+        <item name="android:navigationBarColor">@color/system_window_scrim_compat</item>
+        <item name="windowLightStatusBar">?isLightTheme</item>
+        <item name="windowLightNavigationBar">?isLightTheme</item>
+    </style>
+
+    <style name="Platform.Theme.HapViewerAndroid.Material3" parent="Platform.V23.Theme.HapViewerAndroid.Material3" />
+
+    <style name="Base.Theme.HapViewerAndroid" parent="Platform.Theme.HapViewerAndroid">
+        <item name="windowActionBar">false</item>
+        <item name="windowNoTitle">true</item>
+        <item name="colorPrimary">@color/color_primary</item>
+        <item name="colorOnPrimary">?colorOnSecondary</item>
+        <item name="colorSecondary">@color/color_secondary</item>
+    </style>
+
+    <style name="Theme.HapViewerAndroid" parent="Base.Theme.HapViewerAndroid" />
+
+    <style name="Base.Theme.HapViewerAndroid.Material3" parent="Platform.Theme.HapViewerAndroid.Material3">
+        <item name="windowActionBar">false</item>
+        <item name="windowNoTitle">true</item>
+        <item name="colorAccent">?colorPrimary</item>
+        <!-- <item name="colorPrimary">@color/color_primary</item> -->
+        <!-- <item name="colorOnPrimary">?colorOnSecondary</item> -->
+        <!-- <item name="colorSecondary">@color/color_secondary</item> -->
+    </style>
+
+    <style name="Theme.HapViewerAndroid.Material3" parent="Base.Theme.HapViewerAndroid.Material3" />
 </resources>

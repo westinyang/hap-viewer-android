@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="info_icon">App icon</string>
+    <string name="info_appName">App name</string>
+    <string name="info_appPackageName">App package name</string>
+    <string name="info_versionName">Version name</string>
+    <string name="info_versionCode">Version number</string>
+    <string name="info_compileTarget">Compile target</string>
+    <string name="info_tech">Tech</string>
+    <string name="info_tech_unknown">Native development or unknown development techniques</string>
+</resources>

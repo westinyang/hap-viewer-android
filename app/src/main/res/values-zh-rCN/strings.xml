@@ -1,0 +1,22 @@
+<resources>
+    <string name="app_name">HAP查看器</string>
+    <string name="menu_about">关于</string>
+    <string name="about">关于</string>
+    <string name="about_message">HAP查看器 for Android
+\n\n支持解析 OpenHarmony(开源鸿蒙)、HarmonyOS(鸿蒙) API 9+(Stage模型) 的应用安装包，支持在 Android 7+ 的安卓设备上运行
+\n\n应用版本：%1$s
+\n开源仓库：https://gitee.com/ohos-dev/hap-viewer-android
+\n开源贡献：westinyang、Jesse205
+\n企鹅群组：752399947</string>
+    <string name="select_file_hap">选择 HAP 文件</string>
+    <string name="permission_grant_fail">权限申请失败</string>
+    <string name="exit_toast">再按一次返回键退出</string>
+    <string name="copied">已复制</string>
+    <string name="copied_withName">已复制 %s</string>
+    <string name="parse_error_fail_obtain">文件获取失败</string>
+    <string name="parse_error_fail">hap 文件解析失败，目前仅支持解析 API 9+ (Stage 模型) 的应用安装包</string>
+    <string name="parse_error_type">文件类型错误，请选择一个 hap 安装包</string>
+    <string name="parse_continue_ignoreError">忽略错误，继续解析</string>
+    <string name="separator_words">、</string>
+
+</resources>

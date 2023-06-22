@@ -1,6 +1,9 @@
 package org.ohosdev.hapviewerandroid.model;
 
+import android.content.Context;
 import android.graphics.Bitmap;
+
+import org.ohosdev.hapviewerandroid.R;
 
 import java.util.Set;
 
@@ -44,6 +47,15 @@ public class HapInfo {
             techDesc = String.join("、", techList);
         } else {
             techDesc = "原生开发或未知开发技术";
+        }
+        return techDesc;
+    }
+
+    public String getTechDesc(Context context) {
+        if (techList != null && techList.size() > 0) {
+            techDesc = String.join(context.getString(R.string.separator_words), techList);
+        } else {
+            techDesc = context.getString(R.string.info_tech_unknown);
         }
         return techDesc;
     }

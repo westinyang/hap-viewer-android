@@ -5,6 +5,7 @@ import android.annotation.SuppressLint;
 import android.content.ClipData;
 import android.content.ClipboardManager;
 import android.content.Context;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Build;
@@ -15,20 +16,15 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.ViewGroup;
-import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
-import androidx.core.graphics.Insets;
-import androidx.core.view.ViewCompat;
-import androidx.core.view.WindowCompat;
-import androidx.core.view.WindowInsetsCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -38,13 +34,16 @@ import com.google.android.material.snackbar.Snackbar;
 import org.ohosdev.hapviewerandroid.adapter.InfoAdapter;
 import org.ohosdev.hapviewerandroid.databinding.ActivityMainBinding;
 import org.ohosdev.hapviewerandroid.helper.DialogHelper;
-import org.ohosdev.hapviewerandroid.helper.FloatingButtonOnApplyWindowInsetsListener;
+import org.ohosdev.hapviewerandroid.helper.ThemeHelper;
 import org.ohosdev.hapviewerandroid.model.HapInfo;
 import org.ohosdev.hapviewerandroid.util.HapUtil;
 import org.ohosdev.hapviewerandroid.util.MyFileUtil;
 
 import java.io.File;
 import java.io.IOException;
+
+import rikka.insets.WindowInsetsHelper;
+import rikka.layoutinflater.view.LayoutInflaterFactory;
 
 public class MainActivity extends AppCompatActivity implements View.OnDragListener {
 
@@ -67,30 +66,33 @@ public class MainActivity extends AppCompatActivity implements View.OnDragListen
     @SuppressLint("SourceLockedOrientationActivity")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        getLayoutInflater().setFactory2(new LayoutInflaterFactory(getDelegate())
+                .addOnViewCreatedListener(WindowInsetsHelper.getLISTENER()));
         super.onCreate(savedInstanceState);
+
+
         binding = ActivityMainBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
+
+        setSupportActionBar(binding.toolbar);
+        ThemeHelper.fixSystemBarsAppearance(this);
+
         infoAdapter = new InfoAdapter(this);
         RecyclerView recyclerView = binding.recyclerView;
         recyclerView.setAdapter(infoAdapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         // 启用拖放
         binding.getRoot().setOnDragListener(this);
-        setSupportActionBar(binding.toolbar);
-        WindowCompat.setDecorFitsSystemWindows(getWindow(), false);
-        binding.floatingActionButton.setOnApplyWindowInsetsListener(new FloatingButtonOnApplyWindowInsetsListener(binding.floatingActionButton));
 
-        // 列表边距
-        ViewCompat.setOnApplyWindowInsetsListener(binding.recyclerView, (v, windowInsets) -> {
-            Insets insets = windowInsets.getInsets(WindowInsetsCompat.Type.systemBars());
-            ViewGroup.MarginLayoutParams mlp = (ViewGroup.MarginLayoutParams) v.getLayoutParams();
-            v.setPadding(insets.left,0,insets.right, insets.bottom);
-            return WindowInsetsCompat.CONSUMED;
-        });
         // setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);  // 禁用横屏
         // 禁用横屏会导致平板与折叠屏用户体验不佳。应用目前的布局对横屏已经非常友好，取消禁用并无大碍
         // 初始化应用信息
         infoAdapter.setInfo(new HapInfo(true));
+
+        // 解析传入的 Intent
+        Intent intent = getIntent();
+        parse(intent.getData());
+
     }
 
     @Override
@@ -106,7 +108,7 @@ public class MainActivity extends AppCompatActivity implements View.OnDragListen
         if (exitSnackbar != null && exitSnackbar.isShown())
             super.onBackPressed();
         else {
-            exitSnackbar = Snackbar.make(binding.getRoot(), "再按一次返回键退出", Snackbar.LENGTH_SHORT);
+            exitSnackbar = Snackbar.make(binding.getRoot(), R.string.exit_toast, Snackbar.LENGTH_SHORT);
             exitSnackbar.show();
         }
 
@@ -217,8 +219,7 @@ public class MainActivity extends AppCompatActivity implements View.OnDragListen
     //     }
     // }
 
-    @SuppressWarnings("ConstantConditions")
-    private void parse(@NonNull Uri uri) {
+    private void parse(@Nullable Uri uri) {
         if (uri == null) {
             return;
         }
@@ -236,7 +237,7 @@ public class MainActivity extends AppCompatActivity implements View.OnDragListen
         }
         if (file == null) {
             // Toast.makeText(this, "文件获取失败", Toast.LENGTH_SHORT).show();
-            Snackbar.make(binding.getRoot(), "文件获取失败", Snackbar.LENGTH_SHORT).show();
+            Snackbar.make(binding.getRoot(), R.string.parse_error_fail_obtain, Snackbar.LENGTH_SHORT).show();
             return;
         }
         // 解析hap
@@ -246,7 +247,9 @@ public class MainActivity extends AppCompatActivity implements View.OnDragListen
             parseHapAndShowInfo(path);
         } else {
             // Toast.makeText(this, "请选择一个hap安装包", Toast.LENGTH_SHORT).show();
-            Snackbar.make(binding.getRoot(), "请选择一个hap安装包", Snackbar.LENGTH_SHORT).show();
+            Snackbar.make(binding.getRoot(), R.string.parse_error_type, Snackbar.LENGTH_SHORT)
+                    .setAction(R.string.parse_continue_ignoreError, v -> parseHapAndShowInfo(path))
+                    .show();
         }
     }
 
@@ -262,17 +265,16 @@ public class MainActivity extends AppCompatActivity implements View.OnDragListen
             hapInfo = HapUtil.parse(hapFilePath);
             currentHapInfo = hapInfo;
             // 显示基础信息
-            binding.appName.setText(hapInfo.appName);
-            binding.version.setText(String.format("%s (%s)", hapInfo.versionName, hapInfo.versionCode));
+            binding.basicInfo.appName.setText(hapInfo.appName);
+            binding.basicInfo.version.setText(String.format("%s (%s)", hapInfo.versionName, hapInfo.versionCode));
             // 显示应用图标
-            ImageView imageView = findViewById(R.id.imageView);
-            imageView.setImageBitmap(hapInfo.icon);
+            binding.basicInfo.imageView.setImageBitmap(hapInfo.icon);
             // 显示应用信息
             infoAdapter.setInfo(hapInfo);
         } catch (IOException | RuntimeException e) {
             e.printStackTrace();
             // Toast.makeText(this, "hap文件解析失败，目前仅支持解析 API9+ (Stage模型) 的应用安装包", Toast.LENGTH_LONG).show();
-            Snackbar.make(binding.getRoot(), "hap文件解析失败，目前仅支持解析 API9+ (Stage模型) 的应用安装包", Snackbar.LENGTH_SHORT).show();
+            Snackbar.make(binding.getRoot(), R.string.parse_error_fail, Snackbar.LENGTH_SHORT).show();
         }
     }
 
@@ -292,7 +294,7 @@ public class MainActivity extends AppCompatActivity implements View.OnDragListen
         // 设置内容到剪切板
         cm.setPrimaryClip(ClipData.newPlainText(null, v));
         // Toast.makeText(this, "已复制 " + k, Toast.LENGTH_SHORT).show();
-        Snackbar.make(binding.getRoot(), "已复制", Snackbar.LENGTH_SHORT).show();
+        Snackbar.make(binding.getRoot(), R.string.copied, Snackbar.LENGTH_SHORT).show();
 
     }
 
@@ -308,5 +310,11 @@ public class MainActivity extends AppCompatActivity implements View.OnDragListen
             parse(item.getUri());
         }
         return true;
+    }
+
+    @Override
+    protected void onNewIntent(Intent intent) {
+        super.onNewIntent(intent);
+        parse(intent.getData());
     }
 }
