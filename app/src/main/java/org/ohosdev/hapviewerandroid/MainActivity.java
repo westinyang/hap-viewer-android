@@ -269,8 +269,7 @@ public class MainActivity extends AppCompatActivity implements View.OnDragListen
             binding.appName.setText(hapInfo.appName);
             binding.version.setText(String.format("%s (%s)", hapInfo.versionName, hapInfo.versionCode));
             // 显示应用图标
-            ImageView imageView = findViewById(R.id.imageView);
-            imageView.setImageBitmap(hapInfo.icon);
+            binding.imageView.setImageBitmap(hapInfo.icon);
             // 显示应用信息
             infoAdapter.setInfo(hapInfo);
         } catch (IOException | RuntimeException e) {
