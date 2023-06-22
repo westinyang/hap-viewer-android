@@ -6,4 +6,11 @@
         <item name="android:windowLightNavigationBar" tools:targetApi="o_mr1">?windowLightNavigationBar</item>
     </style>
     <style name="Platform.Theme.HapViewerAndroid" parent="Platform.V26.Theme.HapViewerAndroid" />
+
+    <style name="Platform.V26.Theme.HapViewerAndroid.Material3" parent="Platform.V23.Theme.HapViewerAndroid.Material3">
+        <item name="android:navigationBarColor">@color/system_window_scrim</item>
+        <!-- v26支持动态设置亮色导航栏 -->
+        <item name="android:windowLightNavigationBar" tools:targetApi="o_mr1">?windowLightNavigationBar</item>
+    </style>
+    <style name="Platform.Theme.HapViewerAndroid.Material3" parent="Platform.V26.Theme.HapViewerAndroid.Material3" />
 </resources>

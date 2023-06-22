@@ -69,8 +69,10 @@ public class MainActivity extends AppCompatActivity implements View.OnDragListen
     @SuppressLint("SourceLockedOrientationActivity")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        getLayoutInflater().setFactory2(new LayoutInflaterFactory().addOnViewCreatedListener(WindowInsetsHelper.getLISTENER()));
+        getLayoutInflater().setFactory2(new LayoutInflaterFactory(getDelegate())
+                .addOnViewCreatedListener(WindowInsetsHelper.getLISTENER()));
         super.onCreate(savedInstanceState);
+
 
         binding = ActivityMainBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
@@ -266,10 +268,10 @@ public class MainActivity extends AppCompatActivity implements View.OnDragListen
             hapInfo = HapUtil.parse(hapFilePath);
             currentHapInfo = hapInfo;
             // 显示基础信息
-            binding.appName.setText(hapInfo.appName);
-            binding.version.setText(String.format("%s (%s)", hapInfo.versionName, hapInfo.versionCode));
+            binding.basicInfo.appName.setText(hapInfo.appName);
+            binding.basicInfo.version.setText(String.format("%s (%s)", hapInfo.versionName, hapInfo.versionCode));
             // 显示应用图标
-            binding.imageView.setImageBitmap(hapInfo.icon);
+            binding.basicInfo.imageView.setImageBitmap(hapInfo.icon);
             // 显示应用信息
             infoAdapter.setInfo(hapInfo);
         } catch (IOException | RuntimeException e) {
