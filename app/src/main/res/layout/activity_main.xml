@@ -43,7 +43,7 @@
             android:contentDescription="@string/info_icon"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:srcCompat="@drawable/ic_default_new" />
+            android:src="@drawable/ic_default_new" />
 
         <TextView
             android:id="@+id/app_name"
