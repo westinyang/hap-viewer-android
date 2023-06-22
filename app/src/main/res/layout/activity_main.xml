@@ -69,8 +69,9 @@
         android:text="@string/select_file_hap"
         app:icon="@drawable/ic_folder"
         app:layout_anchor="@id/bottom_stub"
-        app:layout_anchorGravity="top|right"
-        app:layout_dodgeInsetEdges="bottom" />
+        app:layout_anchorGravity="top|end"
+        app:layout_dodgeInsetEdges="bottom"
+        app:layout_fitsSystemWindowsInsets="end" />
 
     <!-- 悬浮球不能直接设置底部衬边，也不能给CoordinatorLayout设置衬边，只好通过这种方法解决底部边距问题了 -->
     <FrameLayout
