@@ -3,14 +3,17 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:clipToPadding="true"
+    app:edgeToEdge="true">
 
     <com.google.android.material.appbar.AppBarLayout
         android:id="@+id/appbar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:fitsSystemWindows="true"
-        android:theme="?actionBarTheme">
+        android:theme="?actionBarTheme"
+        app:fitsSystemWindowsInsets="top|start|end">
 
         <com.google.android.material.appbar.MaterialToolbar
             android:id="@+id/toolbar"
@@ -26,10 +29,11 @@
            app:layout_behavior="com.google.android.material.appbar.AppBarLayout$ScrollingViewBehavior">
        </androidx.core.widget.NestedScrollView> -->
     <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/content_container"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        app:fitsSystemWindowsInsets="start|end"
         app:layout_behavior="com.google.android.material.appbar.AppBarLayout$ScrollingViewBehavior">
-
 
         <ImageView
             android:id="@+id/imageView"
@@ -50,11 +54,11 @@
             android:textColor="?colorOnBackground"
             android:textIsSelectable="true"
             android:textSize="16sp"
+            android:visibility="gone"
             app:layout_constraintBottom_toTopOf="@+id/version"
             app:layout_constraintStart_toEndOf="@+id/imageView"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintVertical_chainStyle="packed"
-            android:visibility="gone"
             tools:text="应用名" />
 
         <TextView
@@ -66,10 +70,10 @@
             android:textColor="?colorOnBackground"
             android:textIsSelectable="true"
             android:textSize="16sp"
+            android:visibility="gone"
             app:layout_constraintBottom_toTopOf="@+id/recycler_view"
             app:layout_constraintStart_toEndOf="@+id/imageView"
             app:layout_constraintTop_toBottomOf="@+id/app_name"
-            android:visibility="gone"
             tools:text="版本号" />
 
 
@@ -78,6 +82,7 @@
             android:layout_width="0dp"
             android:layout_height="0dp"
             android:layout_marginTop="16dp"
+            app:fitsSystemWindowsInsets="bottom"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -88,14 +93,24 @@
         android:id="@+id/floatingActionButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_gravity="bottom|end"
         android:layout_margin="16dp"
         android:clickable="true"
         android:focusable="true"
         android:onClick="fabClick"
         android:text="@string/select_file_hap"
         app:icon="@drawable/ic_folder"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent" />
+        app:layout_anchor="@id/bottom_stub"
+        app:layout_anchorGravity="top|right"
+        app:layout_dodgeInsetEdges="bottom" />
+
+    <!-- 悬浮球不能直接设置底部衬边，也不能给CoordinatorLayout设置衬边，只好通过这种方法解决底部边距问题了 -->
+    <FrameLayout
+        android:id="@+id/bottom_stub"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom"
+        app:fitsSystemWindowsInsets="bottom"
+        app:layout_insetEdge="bottom" />
+
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

@@ -17,6 +17,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowInsets;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -27,10 +28,6 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
-import androidx.core.graphics.Insets;
-import androidx.core.view.ViewCompat;
-import androidx.core.view.WindowCompat;
-import androidx.core.view.WindowInsetsCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -40,13 +37,16 @@ import com.google.android.material.snackbar.Snackbar;
 import org.ohosdev.hapviewerandroid.adapter.InfoAdapter;
 import org.ohosdev.hapviewerandroid.databinding.ActivityMainBinding;
 import org.ohosdev.hapviewerandroid.helper.DialogHelper;
-import org.ohosdev.hapviewerandroid.helper.FloatingButtonOnApplyWindowInsetsListener;
+import org.ohosdev.hapviewerandroid.helper.ThemeHelper;
 import org.ohosdev.hapviewerandroid.model.HapInfo;
 import org.ohosdev.hapviewerandroid.util.HapUtil;
 import org.ohosdev.hapviewerandroid.util.MyFileUtil;
 
 import java.io.File;
 import java.io.IOException;
+
+import rikka.insets.WindowInsetsHelper;
+import rikka.layoutinflater.view.LayoutInflaterFactory;
 
 public class MainActivity extends AppCompatActivity implements View.OnDragListener {
 
@@ -69,26 +69,22 @@ public class MainActivity extends AppCompatActivity implements View.OnDragListen
     @SuppressLint("SourceLockedOrientationActivity")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        getLayoutInflater().setFactory2(new LayoutInflaterFactory().addOnViewCreatedListener(WindowInsetsHelper.getLISTENER()));
         super.onCreate(savedInstanceState);
+
         binding = ActivityMainBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
+
+        setSupportActionBar(binding.toolbar);
+        ThemeHelper.fixSystemBarsAppearance(this);
+
         infoAdapter = new InfoAdapter(this);
         RecyclerView recyclerView = binding.recyclerView;
         recyclerView.setAdapter(infoAdapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         // 启用拖放
         binding.getRoot().setOnDragListener(this);
-        setSupportActionBar(binding.toolbar);
-        WindowCompat.setDecorFitsSystemWindows(getWindow(), false);
-        binding.floatingActionButton.setOnApplyWindowInsetsListener(new FloatingButtonOnApplyWindowInsetsListener(binding.floatingActionButton));
 
-        // 列表边距
-        ViewCompat.setOnApplyWindowInsetsListener(binding.recyclerView, (v, windowInsets) -> {
-            Insets insets = windowInsets.getInsets(WindowInsetsCompat.Type.systemBars());
-            ViewGroup.MarginLayoutParams mlp = (ViewGroup.MarginLayoutParams) v.getLayoutParams();
-            v.setPadding(insets.left, 0, insets.right, insets.bottom);
-            return WindowInsetsCompat.CONSUMED;
-        });
         // setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);  // 禁用横屏
         // 禁用横屏会导致平板与折叠屏用户体验不佳。应用目前的布局对横屏已经非常友好，取消禁用并无大碍
         // 初始化应用信息
@@ -97,6 +93,7 @@ public class MainActivity extends AppCompatActivity implements View.OnDragListen
         // 解析传入的 Intent
         Intent intent = getIntent();
         parse(intent.getData());
+
     }
 
     @Override
@@ -252,9 +249,7 @@ public class MainActivity extends AppCompatActivity implements View.OnDragListen
         } else {
             // Toast.makeText(this, "请选择一个hap安装包", Toast.LENGTH_SHORT).show();
             Snackbar.make(binding.getRoot(), R.string.parse_error_type, Snackbar.LENGTH_SHORT)
-                    .setAction(R.string.parse_continue_ignoreError, v -> {
-                        parseHapAndShowInfo(path);
-                    })
+                    .setAction(R.string.parse_continue_ignoreError, v -> parseHapAndShowInfo(path))
                     .show();
         }
     }
