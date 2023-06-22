@@ -1,7 +1,7 @@
 <resources>
 
     <style name="Platform.V23.Theme.HapViewerAndroid" parent="Theme.MaterialComponents.DayNight.DarkActionBar">
-        <item name="colorPrimaryDark">@color/system_window_scrim_light_black</item>
+        <item name="colorPrimaryDark">@android:color/transparent</item>
         <item name="android:navigationBarColor">@color/system_window_scrim_compat</item>
         <item name="windowLightStatusBar">false</item>
         <item name="windowLightNavigationBar">?isLightTheme</item>
