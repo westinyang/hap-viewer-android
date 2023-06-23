@@ -20,6 +20,7 @@ android {
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+            signingConfig signingConfigs.debug
         }
     }
 
@@ -30,6 +31,15 @@ android {
 
     buildFeatures {
         viewBinding true
+    }
+    flavorDimensions 'theme'
+    productFlavors {
+        material {
+            dimension 'theme'
+        }
+        material3 {
+            dimension 'theme'
+        }
     }
 }
 

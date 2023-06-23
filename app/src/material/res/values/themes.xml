@@ -9,15 +9,6 @@
 
     <style name="Platform.Theme.HapViewerAndroid" parent="Platform.V23.Theme.HapViewerAndroid" />
 
-    <style name="Platform.V23.Theme.HapViewerAndroid.Material3" parent="Theme.Material3.DynamicColors.DayNight">
-        <item name="colorPrimaryDark">@android:color/transparent</item>
-        <item name="android:navigationBarColor">@color/system_window_scrim_compat</item>
-        <item name="windowLightStatusBar">?isLightTheme</item>
-        <item name="windowLightNavigationBar">?isLightTheme</item>
-    </style>
-
-    <style name="Platform.Theme.HapViewerAndroid.Material3" parent="Platform.V23.Theme.HapViewerAndroid.Material3" />
-
     <style name="Base.Theme.HapViewerAndroid" parent="Platform.Theme.HapViewerAndroid">
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>
@@ -31,11 +22,4 @@
 
     <style name="Theme.HapViewerAndroid" parent="Base.Theme.HapViewerAndroid" />
 
-    <style name="Base.Theme.HapViewerAndroid.Material3" parent="Platform.Theme.HapViewerAndroid.Material3">
-        <item name="windowActionBar">false</item>
-        <item name="windowNoTitle">true</item>
-        <item name="colorAccent">?colorPrimary</item>
-    </style>
-
-    <style name="Theme.HapViewerAndroid.Material3" parent="Base.Theme.HapViewerAndroid.Material3" />
 </resources>

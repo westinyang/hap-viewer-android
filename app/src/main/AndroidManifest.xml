@@ -20,7 +20,7 @@
         android:label="@string/app_name"
         android:localeConfig="@xml/locales_config"
         android:supportsRtl="true"
-        android:theme="@style/Theme.HapViewerAndroid"
+        android:theme="@style/Theme.MaterialComponents.DayNight"
         tools:targetApi="tiramisu">
         <activity
             android:name=".MainActivity"
