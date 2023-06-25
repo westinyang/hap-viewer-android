@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources xmlns:tools="http://schemas.android.com/tools" tools:ignore="PrivateResource">
+
+    <style name="Widget.HapViewerAndroid.CardView.Outlined" parent="Widget.MaterialComponents.CardView">
+        <item name="cardElevation">0dp</item>
+        <item name="strokeWidth">@dimen/mtrl_btn_stroke_size</item>
+        <item name="strokeColor">@color/mtrl_btn_stroke_color_selector</item>
+    </style>
+</resources>

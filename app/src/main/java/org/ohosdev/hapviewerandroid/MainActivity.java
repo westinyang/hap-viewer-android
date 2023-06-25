@@ -3,8 +3,6 @@ package org.ohosdev.hapviewerandroid;
 import android.Manifest;
 import android.annotation.SuppressLint;
 import android.content.ClipData;
-import android.content.ClipboardManager;
-import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.net.Uri;
@@ -16,7 +14,6 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.TextView;
 
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
@@ -53,15 +50,19 @@ public class MainActivity extends AppCompatActivity implements View.OnDragListen
             Manifest.permission.READ_EXTERNAL_STORAGE,
             Manifest.permission.WRITE_EXTERNAL_STORAGE
     };
+    private static final String KEY_NOW_URI = "now_uri";
     // 文件读写权限 请求码
     private static final int REQUEST_CODE_EXTERNAL_STORAGE = 1;
     public static HapInfo currentHapInfo = null;
     // private long exitTime = 0;
     private InfoAdapter infoAdapter;
     private ActivityMainBinding binding;
+    @Nullable
+    private Snackbar exitSnackbar = null;
+    @Nullable
+    private Uri nowUri = null;
     private final ActivityResultLauncher<String> selectFileResultLauncher = registerForActivityResult(
             new ActivityResultContracts.GetContent(), this::parse);
-    private Snackbar exitSnackbar = null;
 
     @SuppressLint("SourceLockedOrientationActivity")
     @Override
@@ -90,8 +91,11 @@ public class MainActivity extends AppCompatActivity implements View.OnDragListen
         infoAdapter.setInfo(new HapInfo(true));
 
         // 解析传入的 Intent
-        Intent intent = getIntent();
-        parse(intent.getData());
+        if (savedInstanceState == null) {
+            Intent intent = getIntent();
+            parse(intent.getData());
+        }
+
 
     }
 
@@ -109,6 +113,7 @@ public class MainActivity extends AppCompatActivity implements View.OnDragListen
             super.onBackPressed();
         else {
             exitSnackbar = Snackbar.make(binding.getRoot(), R.string.exit_toast, Snackbar.LENGTH_SHORT);
+            exitSnackbar.setAnchorView(R.id.floatingActionButton);
             exitSnackbar.show();
         }
 
@@ -122,6 +127,22 @@ public class MainActivity extends AppCompatActivity implements View.OnDragListen
         //     // finish();
         //     // System.exit(0);
         // }
+    }
+
+    @Override
+    protected void onSaveInstanceState(@NonNull Bundle outState) {
+        super.onSaveInstanceState(outState);
+        if (nowUri != null)
+            outState.putString(KEY_NOW_URI, nowUri.toString());
+    }
+
+    @Override
+    protected void onRestoreInstanceState(@NonNull Bundle savedInstanceState) {
+        super.onRestoreInstanceState(savedInstanceState);
+        String nowUriString = savedInstanceState.getString(KEY_NOW_URI);
+        if (nowUriString != null) {
+            parse(Uri.parse(nowUriString));
+        }
     }
 
     @Override
@@ -141,7 +162,9 @@ public class MainActivity extends AppCompatActivity implements View.OnDragListen
         } else {
             // Snackbar.make(getWindow().getDecorView(), "权限申请失败", Snackbar.LENGTH_SHORT).setAction("Action", null).show();
             // Toast.makeText(this, "权限申请失败", Toast.LENGTH_SHORT).show();
-            Snackbar.make(binding.getRoot(), R.string.permission_grant_fail, Snackbar.LENGTH_SHORT).show();
+            Snackbar.make(binding.getRoot(), R.string.permission_grant_fail, Snackbar.LENGTH_SHORT)
+                    .setAnchorView(R.id.floatingActionButton)
+                    .show();
 
         }
     }
@@ -180,75 +203,44 @@ public class MainActivity extends AppCompatActivity implements View.OnDragListen
         selectFileResultLauncher.launch("*/*");
     }
 
-    // @Override
-    // protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
-    //     super.onActivityResult(requestCode, resultCode, data);
-    //     if (data == null) return;
-    //     if (requestCode == 1) {
-    //         Uri uri = data.getData();
-    //         if (uri == null) {
-    //             return;
-    //         }
-    //         parse(uri);
-    // File file = null;
-    // // Android 10+ 把文件复制到沙箱内
-    // if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
-    //     file = MyFileUtil.uriToFileApiQ(this, uri);
-    // }
-    // // Android 10 以下获取文件真实路径，创建File
-    // else {
-    //     String path = MyFileUtil.getPath(this, uri);
-    //     if (path != null) {
-    //         file = new File(path);
-    //     }
-    // }
-    // if (file == null) {
-    //     // Toast.makeText(this, "文件获取失败", Toast.LENGTH_SHORT).show();
-    //     Snackbar.make(binding.getRoot(), "文件获取失败", Snackbar.LENGTH_SHORT).show();
-    //     return;
-    // }
-    // // 解析hap
-    // String path = file.getAbsolutePath();
-    // String extName = path.substring(path.lastIndexOf(".") + 1);
-    // if (path.length() > 0 && "hap".equals(extName)) {
-    //     parseHapAndShowInfo(path);
-    // } else {
-    //     // Toast.makeText(this, "请选择一个hap安装包", Toast.LENGTH_SHORT).show();
-    //     Snackbar.make(binding.getRoot(), "请选择一个hap安装包", Snackbar.LENGTH_SHORT).show();
-    // }
-    //     }
-    // }
-
     private void parse(@Nullable Uri uri) {
         if (uri == null) {
             return;
         }
         File file = null;
-        // Android 10+ 把文件复制到沙箱内
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
-            file = MyFileUtil.uriToFileApiQ(this, uri);
-        }
-        // Android 10 以下获取文件真实路径，创建File
-        else {
-            String path = MyFileUtil.getPath(this, uri);
-            if (path != null) {
-                file = new File(path);
+        try {
+            // Android 10+ 把文件复制到沙箱内
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+                file = MyFileUtil.uriToFileApiQ(this, uri);
             }
+            // Android 10 以下获取文件真实路径，创建File
+            else {
+                String path = MyFileUtil.getPath(this, uri);
+                if (path != null) {
+                    file = new File(path);
+                }
+            }
+        } catch (RuntimeException | AssertionError e) {
+            e.printStackTrace();
         }
+
         if (file == null) {
             // Toast.makeText(this, "文件获取失败", Toast.LENGTH_SHORT).show();
-            Snackbar.make(binding.getRoot(), R.string.parse_error_fail_obtain, Snackbar.LENGTH_SHORT).show();
+            Snackbar.make(binding.getRoot(), R.string.parse_error_fail_obtain, Snackbar.LENGTH_SHORT)
+                    .setAnchorView(R.id.floatingActionButton)
+                    .show();
             return;
         }
         // 解析hap
         String path = file.getAbsolutePath();
         String extName = path.substring(path.lastIndexOf(".") + 1);
         if (path.length() > 0 && "hap".equals(extName)) {
-            parseHapAndShowInfo(path);
+            parseHapAndShowInfo(path, uri);
         } else {
             // Toast.makeText(this, "请选择一个hap安装包", Toast.LENGTH_SHORT).show();
             Snackbar.make(binding.getRoot(), R.string.parse_error_type, Snackbar.LENGTH_SHORT)
-                    .setAction(R.string.parse_continue_ignoreError, v -> parseHapAndShowInfo(path))
+                    .setAction(R.string.parse_continue_ignoreError, v -> parseHapAndShowInfo(path, uri))
+                    .setAnchorView(R.id.floatingActionButton)
                     .show();
         }
     }
@@ -257,13 +249,15 @@ public class MainActivity extends AppCompatActivity implements View.OnDragListen
      * 解析hap并显示信息
      *
      * @param hapFilePath
+     * @param uri
      */
-    private void parseHapAndShowInfo(String hapFilePath) {
+    private void parseHapAndShowInfo(String hapFilePath, Uri uri) {
         // 解析hap
         HapInfo hapInfo;
         try {
             hapInfo = HapUtil.parse(hapFilePath);
             currentHapInfo = hapInfo;
+            nowUri = uri;
             // 显示基础信息
             binding.basicInfo.appName.setText(hapInfo.appName);
             binding.basicInfo.version.setText(String.format("%s (%s)", hapInfo.versionName, hapInfo.versionCode));
@@ -274,28 +268,10 @@ public class MainActivity extends AppCompatActivity implements View.OnDragListen
         } catch (IOException | RuntimeException e) {
             e.printStackTrace();
             // Toast.makeText(this, "hap文件解析失败，目前仅支持解析 API9+ (Stage模型) 的应用安装包", Toast.LENGTH_LONG).show();
-            Snackbar.make(binding.getRoot(), R.string.parse_error_fail, Snackbar.LENGTH_SHORT).show();
+            Snackbar.make(binding.getRoot(), R.string.parse_error_fail, Snackbar.LENGTH_SHORT)
+                    .setAnchorView(R.id.floatingActionButton)
+                    .show();
         }
-    }
-
-
-    /**
-     * @param view 视图
-     * @deprecated
-     */
-    public void itemClick(View view) {
-        TextView key = view.findViewWithTag("key");
-        TextView val = view.findViewWithTag("val");
-        String k = String.valueOf(key.getText());
-        k = k.replace("：", "");
-        String v = String.valueOf(val.getText());
-        // 获取剪切板管理器
-        ClipboardManager cm = (ClipboardManager) getSystemService(Context.CLIPBOARD_SERVICE);
-        // 设置内容到剪切板
-        cm.setPrimaryClip(ClipData.newPlainText(null, v));
-        // Toast.makeText(this, "已复制 " + k, Toast.LENGTH_SHORT).show();
-        Snackbar.make(binding.getRoot(), R.string.copied, Snackbar.LENGTH_SHORT).show();
-
     }
 
     @Override
