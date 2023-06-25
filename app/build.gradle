@@ -32,7 +32,7 @@ android {
     buildFeatures {
         viewBinding true
     }
-    flavorDimensions 'theme'
+    flavorDimensions ['theme']
     productFlavors {
         material {
             dimension 'theme'
