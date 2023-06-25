@@ -26,7 +26,6 @@
         android:id="@+id/nestedScrollView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@drawable/drag_mask"
         app:layout_behavior="com.google.android.material.appbar.AppBarLayout$ScrollingViewBehavior">
 
         <androidx.constraintlayout.widget.ConstraintLayout
@@ -64,7 +63,7 @@
         android:focusable="true"
         android:onClick="handelFabClick"
         android:text="@string/select_file_hap"
-        app:icon="@drawable/ic_folder"
+        app:icon="@drawable/ic_file"
         app:layout_anchor="@id/bottom_stub"
         app:layout_anchorGravity="top|end"
         app:layout_dodgeInsetEdges="bottom"
