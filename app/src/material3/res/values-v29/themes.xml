@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <style name="Platform.Theme.HapViewerAndroid" parent="Platform.V29.Theme.HapViewerAndroid" />
 
     <style name="Platform.V29.Theme.HapViewerAndroid.Material3" parent="Platform.V28.Theme.HapViewerAndroid.Material3">
         <item name="android:forceDarkAllowed">false</item>
