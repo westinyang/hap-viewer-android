@@ -24,7 +24,6 @@
 ## 开发环境
 
 - Android Studio 2022.1.1
-- TargetSDK 32 (MinSDK 24)
 
 ## 截图预览
 
@@ -37,12 +36,10 @@
 ## 许可声明
 
 - 本项目是以Apache2.0许可开源，如果衍生或商用需保留原始版权和许可声明即可
-
-使用的开源软件：
-
-- **[Material Components for Android](https://github.com/material-components/material-components-android)**: Apache-2.0 license
-- **[Android Jetpack](https://github.com/androidx/androidx)**: Apache-2.0 license
-- **[AndroidFastScroll](https://github.com/zhanghai/AndroidFastScroll)**: Apache-2.0 license
+- 使用的开源软件
+  - [Material Components for Android](https://github.com/material-components/material-components-android) `Apache-2.0 license`
+  - [Android Jetpack](https://github.com/androidx/androidx) `Apache-2.0 license`
+  - [AndroidFastScroll](https://github.com/zhanghai/AndroidFastScroll) `Apache-2.0 license`
 
 ## 开源贡献
 
