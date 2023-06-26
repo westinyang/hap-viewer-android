@@ -20,4 +20,5 @@
         android:nestedScrollingEnabled="false"
         android:paddingTop="8dp"
         android:paddingBottom="8dp" />
+
 </com.google.android.material.card.MaterialCardView>

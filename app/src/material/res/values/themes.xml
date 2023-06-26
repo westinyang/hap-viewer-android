@@ -13,11 +13,11 @@
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>
         <item name="colorPrimary">@color/color_primary</item>
-        <item name="colorOnPrimary">?colorOnSecondary</item>
+        <item name="colorOnPrimary">@android:color/white</item>
         <item name="colorSecondary">@color/color_secondary</item>
         <item name="colorOnSecondary">@android:color/white</item>
-        <!-- <item name="materialCardViewOutlinedStyle">@style/Widget.HapViewerAndroid.CardView.Outlined</item> -->
-        <!-- <item name="materialCardViewStyle">?materialCardViewOutlinedStyle</item> -->
+        <item name="materialCardViewOutlinedStyle">@style/Widget.HapViewerAndroid.CardView.Outlined</item>
+        <item name="materialCardViewStyle">@style/Widget.HapViewerAndroid.CardView</item>
     </style>
 
     <style name="Theme.HapViewerAndroid" parent="Base.Theme.HapViewerAndroid" />

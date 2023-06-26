@@ -32,12 +32,15 @@ android {
     buildFeatures {
         viewBinding true
     }
-    flavorDimensions ['theme']
+    flavorDimensions 'theme'
     productFlavors {
         material {
             dimension 'theme'
         }
         material3 {
+            dimension 'theme'
+        }
+        harmony {
             dimension 'theme'
         }
     }
@@ -56,6 +59,9 @@ dependencies {
     implementation 'com.alibaba:fastjson:1.2.83'
     implementation 'dev.rikka.rikkax.insets:insets:1.3.0'
     implementation 'dev.rikka.rikkax.layoutinflater:layoutinflater:1.3.0'
+
+    implementation 'com.huawei.ui.uikit:hwbutton-phone:1.0.0.500'
+    implementation 'com.huawei.ui.uikit:hwfloatingactionbutton-phone:1.0.0.500'
 
     //    implementation 'com.android.tools:desugar_jdk_libs:1.1.8'
 }

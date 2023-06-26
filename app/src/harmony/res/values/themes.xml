@@ -1,0 +1,34 @@
+<resources>
+
+    <style name="Platform.V23.Theme.HapViewerAndroid.Harmony" parent="Theme.MaterialComponents.DayNight">
+        <item name="colorPrimaryDark">@color/system_window_scrim</item>
+        <item name="android:navigationBarColor">@color/system_window_scrim_compat</item>
+        <item name="windowLightStatusBar">?isLightTheme</item>
+        <item name="windowLightNavigationBar">?isLightTheme</item>
+    </style>
+
+    <style name="Platform.Theme.HapViewerAndroid.Harmony" parent="Platform.V23.Theme.HapViewerAndroid.Harmony" />
+
+    <style name="Base.Theme.HapViewerAndroid.Harmony" parent="Platform.Theme.HapViewerAndroid.Harmony">
+        <item name="windowActionBar">false</item>
+        <item name="windowNoTitle">true</item>
+        <item name="colorPrimary">@color/emui_accent</item>
+        <item name="colorOnPrimary">@android:color/white</item>
+        <item name="colorSecondary">?colorPrimary</item>
+        <item name="colorOnSecondary">?colorPrimary</item>
+        <item name="android:colorBackground">#F2F3F5</item>
+        <item name="actionBarTheme">@style/ThemeOverlay.HapViewerAndroid.Harmony.ActionBar</item>
+        <item name="actionBarStyle">@style/Widget.HapViewerAndroid.Harmony.ActionBar</item>
+        <item name="appBarLayoutStyle">@style/Widget.HapViewerAndroid.Harmony.AppBarLayout</item>
+        <item name="toolbarStyle">@style/Widget.HapViewerAndroid.Harmony.Toolbar</item>
+        <item name="materialCardViewStyle">@style/Widget.HapViewerAndroid.Harmony.CardView</item>
+        <item name="materialAlertDialogTheme">@style/ThemeOverlay.HapViewerAndroid.Harmony.MaterialAlertDialog</item>
+        <!-- <item name="buttonBarNeutralButtonStyle">@style/Widget.Emui.HwButton.Emphasize</item>
+        <item name="buttonBarNegativeButtonStyle">@style/Widget.Emui.HwButton.Emphasize</item>
+        <item name="buttonBarPositiveButtonStyle">@style/Widget.Emui.HwButton.Emphasize</item> -->
+
+    </style>
+
+    <style name="Theme.HapViewerAndroid.Harmony" parent="Base.Theme.HapViewerAndroid.Harmony" />
+
+</resources>

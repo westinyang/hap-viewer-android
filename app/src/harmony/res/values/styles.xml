@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources xmlns:tools="http://schemas.android.com/tools" tools:ignore="PrivateResource">
+
+    <style name="Widget.HapViewerAndroid.Harmony.CardView" parent="Widget.MaterialComponents.CardView">
+        <item name="cardElevation">0dp</item>
+        <item name="cardCornerRadius">@dimen/emui_corner_radius_card</item>
+    </style>
+    <style name="Widget.HapViewerAndroid.Harmony.ActionBar" parent="Widget.MaterialComponents.ActionBar.Surface">
+        <item name="android:background">?android:colorBackground</item>
+    </style>
+    <style name="Widget.HapViewerAndroid.Harmony.AppBarLayout" parent="Widget.MaterialComponents.AppBarLayout.Surface">
+        <item name="android:background">?android:colorBackground</item>
+        <item name="elevation">0dp</item>
+    </style>
+    <style name="Widget.HapViewerAndroid.Harmony.Toolbar" parent="Widget.MaterialComponents.Toolbar.Surface">
+        <item name="android:background">?android:colorBackground</item>
+    </style>
+    <style name="ThemeOverlay.HapViewerAndroid.Harmony.ActionBar" parent="ThemeOverlay.AppCompat.ActionBar">
+        <item name="android:textColorPrimary">@color/material_on_surface_emphasis_high_type</item>
+        <item name="android:textColorSecondary">@color/material_on_surface_emphasis_medium</item>
+        <item name="actionMenuTextColor">@color/material_on_surface_emphasis_high_type</item>
+        <item name="colorControlNormal">@color/material_on_surface_emphasis_high_type</item>
+    </style>
+    
+    <style name="ThemeOverlay.HapViewerAndroid.Harmony.MaterialAlertDialog" parent="ThemeOverlay.MaterialComponents.MaterialAlertDialog">
+        <item name="alertDialogStyle">@style/HarmonyAlertDialog</item>
+    </style>
+
+    <style name="HarmonyAlertDialog" parent="MaterialAlertDialog.MaterialComponents">
+        <item name="android:layout">@layout/harmony_alert_dialog</item>
+        <item name="materialAlertDialogButtonSpacerVisibility">0</item>
+    </style>
+</resources>
