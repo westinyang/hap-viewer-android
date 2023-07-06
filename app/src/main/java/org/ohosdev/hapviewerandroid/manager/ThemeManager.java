@@ -6,6 +6,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.res.TypedArray;
+import android.os.Build;
 import android.preference.PreferenceManager;
 import android.util.Log;
 import android.view.ContextThemeWrapper;
@@ -24,7 +25,8 @@ public class ThemeManager {
     public static final String THEME_STYLE = "theme_style";
     private static final String TAG = "ThemeManager";
     @NonNull
-    private static ThemeStyle defaultThemeStyle = ThemeStyle.Material2;
+    private static ThemeStyle defaultThemeStyle = getPlatformThemeStyle();
+
     private static ThemeStyle appThemeStyle;
     private final ContextThemeWrapper context;
     private final ThemeStyle themeStyle;
@@ -39,7 +41,7 @@ public class ThemeManager {
     /**
      * 设置软件全局主题风格
      *
-     * @param context   上下文
+     * @param context    上下文
      * @param themeStyle 主题配色
      */
     public static void setAppThemeStyle(Context context, ThemeStyle themeStyle) {
@@ -85,6 +87,15 @@ public class ThemeManager {
         return 0;
     }
 
+    public static ThemeStyle getPlatformThemeStyle() {
+        if (SDK_INT >= Build.VERSION_CODES.S) {
+            return ThemeStyle.Material3;
+        } else if (SDK_INT >= Build.VERSION_CODES.P) {
+            return ThemeStyle.Material2;
+        } else
+            return ThemeStyle.Material1;
+    }
+
     public void applyTheme() {
         int themeId = getThemeId(themeStyle);
         context.setTheme(themeId);
@@ -104,7 +115,7 @@ public class ThemeManager {
                     WindowCompat.getInsetsController(window, window.getDecorView());
 
             windowInsetsController.setAppearanceLightStatusBars(windowLightStatusBar);
-            if (SDK_INT >= 26 && windowLightNavigationBar) {
+            if (SDK_INT >= Build.VERSION_CODES.O && windowLightNavigationBar) {
                 windowInsetsController.setAppearanceLightNavigationBars(true);
                 window.setNavigationBarColor(context.getResources().getColor(R.color.system_window_scrim, context.getTheme()));
             }
