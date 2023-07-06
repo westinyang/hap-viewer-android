@@ -16,8 +16,9 @@
         <item name="colorOnPrimary">@android:color/white</item>
         <item name="colorSecondary">@color/color_secondary</item>
         <item name="colorOnSecondary">@android:color/white</item>
-        <item name="materialCardViewOutlinedStyle">@style/Widget.HapViewerAndroid.CardView.Outlined</item>
-        <item name="materialCardViewStyle">@style/Widget.HapViewerAndroid.CardView</item>
+        <item name="materialCardViewElevatedStyle">@style/Widget.HapViewerAndroid.CardView.Elevated</item>
+        <item name="materialCardViewStyle">?materialCardViewElevatedStyle</item>
+        <item name="liftOnScroll">false</item>
     </style>
 
     <style name="Theme.HapViewerAndroid" parent="Base.Theme.HapViewerAndroid" />

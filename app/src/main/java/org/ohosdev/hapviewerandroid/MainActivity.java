@@ -3,13 +3,12 @@ package org.ohosdev.hapviewerandroid;
 import android.Manifest;
 import android.annotation.SuppressLint;
 import android.content.ClipData;
-import android.content.ClipDescription;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.Color;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
-import android.os.Handler;
 import android.util.Log;
 import android.view.DragEvent;
 import android.view.Menu;
@@ -17,7 +16,6 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 
-import androidx.activity.OnBackPressedCallback;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
@@ -34,14 +32,13 @@ import com.google.android.material.snackbar.Snackbar;
 import org.ohosdev.hapviewerandroid.adapter.InfoAdapter;
 import org.ohosdev.hapviewerandroid.databinding.ActivityMainBinding;
 import org.ohosdev.hapviewerandroid.helper.DialogHelper;
-import org.ohosdev.hapviewerandroid.helper.ThemeHelper;
+import org.ohosdev.hapviewerandroid.manager.ThemeManager;
 import org.ohosdev.hapviewerandroid.model.HapInfo;
 import org.ohosdev.hapviewerandroid.util.HapUtil;
 import org.ohosdev.hapviewerandroid.util.MyFileUtil;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.concurrent.atomic.AtomicBoolean;
 
 import rikka.insets.WindowInsetsHelper;
 import rikka.layoutinflater.view.LayoutInflaterFactory;
@@ -57,13 +54,16 @@ public class MainActivity extends AppCompatActivity implements View.OnDragListen
     // 文件读写权限 请求码
     private static final int REQUEST_CODE_EXTERNAL_STORAGE = 1;
     public static HapInfo currentHapInfo = null;
+    private ThemeManager themeManager;
+    // private long exitTime = 0;
     private InfoAdapter infoAdapter;
     private ActivityMainBinding binding;
+    @Nullable
+    private Snackbar exitSnackbar = null;
     @Nullable
     private Uri nowUri = null;
     private final ActivityResultLauncher<String> selectFileResultLauncher = registerForActivityResult(
             new ActivityResultContracts.GetContent(), this::parse);
-    private OnExitCallback onExitCallback;
 
     @SuppressLint("SourceLockedOrientationActivity")
     @Override
@@ -72,19 +72,19 @@ public class MainActivity extends AppCompatActivity implements View.OnDragListen
                 .addOnViewCreatedListener(WindowInsetsHelper.getLISTENER()));
         super.onCreate(savedInstanceState);
 
+        themeManager = new ThemeManager(this);
+        themeManager.applyTheme();
+        getWindow().setStatusBarColor(Color.TRANSPARENT);
 
         binding = ActivityMainBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
-
         setSupportActionBar(binding.toolbar);
-        ThemeHelper.fixSystemBarsAppearance(this);
-        onExitCallback = new OnExitCallback();
-        getOnBackPressedDispatcher().addCallback(this, onExitCallback);
 
         infoAdapter = new InfoAdapter(this);
         RecyclerView recyclerView = binding.detailInfo.recyclerView;
         recyclerView.setAdapter(infoAdapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
+
         // 启用拖放
         binding.nestedScrollView.setOnDragListener(this);
 
@@ -98,15 +98,66 @@ public class MainActivity extends AppCompatActivity implements View.OnDragListen
             Intent intent = getIntent();
             parse(intent.getData());
         }
-
-
     }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.menu_main, menu);
+        switch (themeManager.getThemeStyle()) {
+            case Material1:
+                menu.findItem(R.id.action_theme_material1).setChecked(true);
+                break;
+            case Material2:
+                menu.findItem(R.id.action_theme_material2).setChecked(true);
+                break;
+            case Material3:
+                menu.findItem(R.id.action_theme_material3).setChecked(true);
+                break;
+        }
         return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        super.onOptionsItemSelected(item);
+        int itemId = item.getItemId();
+        if (itemId == R.id.action_about) {
+            aboutClick(item);
+        } else if (itemId == R.id.action_theme_material1) {
+            ThemeManager.setAppThemeStyle(this, ThemeManager.ThemeStyle.Material1);
+            checkTheme();
+        } else if (itemId == R.id.action_theme_material2) {
+            ThemeManager.setAppThemeStyle(this, ThemeManager.ThemeStyle.Material2);
+            checkTheme();
+        } else if (itemId == R.id.action_theme_material3) {
+            ThemeManager.setAppThemeStyle(this, ThemeManager.ThemeStyle.Material3);
+            checkTheme();
+        }
+        return true;
+    }
+
+    @Override
+    public void onBackPressed() {
+        // Snackbar exitSnackbar = Snackbar.make(binding.getRoot(), "再按一次返回键退出", Snackbar.LENGTH_SHORT);
+        if (exitSnackbar != null && exitSnackbar.isShown())
+            super.onBackPressed();
+        else {
+            exitSnackbar = Snackbar.make(binding.getRoot(), R.string.exit_toast, Snackbar.LENGTH_SHORT);
+            exitSnackbar.setAnchorView(R.id.floatingActionButton);
+            exitSnackbar.show();
+        }
+
+        // if ((System.currentTimeMillis() - exitTime) > 2000) {
+        //     Snackbar exitSnackbar = Snackbar.make(binding.getRoot(), "再按一次返回键退出", Snackbar.LENGTH_SHORT);
+        //     exitSnackbar.show();
+        //     Toast.makeText(this, "再按一次返回键退出", Toast.LENGTH_SHORT).show();
+        //     exitTime = System.currentTimeMillis();
+        // } else {
+        //     super.onBackPressed();
+        //     // finish();
+        //     // System.exit(0);
+        // }
     }
 
     @Override
@@ -140,6 +191,8 @@ public class MainActivity extends AppCompatActivity implements View.OnDragListen
                 selectFile();
             }
         } else {
+            // Snackbar.make(getWindow().getDecorView(), "权限申请失败", Snackbar.LENGTH_SHORT).setAction("Action", null).show();
+            // Toast.makeText(this, "权限申请失败", Toast.LENGTH_SHORT).show();
             Snackbar.make(binding.getRoot(), R.string.permission_grant_fail, Snackbar.LENGTH_SHORT)
                     .setAnchorView(R.id.floatingActionButton)
                     .show();
@@ -147,35 +200,17 @@ public class MainActivity extends AppCompatActivity implements View.OnDragListen
         }
     }
 
-    @Override
-    protected void onResume() {
-        super.onResume();
-        // Snackbar可能不会显示，也就不会重新启用，这时候就需要在重新进入应用时启用一下二次返回。
-        onExitCallback.setEnabled(true);
-    }
-
-    @Override
-    protected void onPause() {
-        super.onPause();
-        // 当退出时，必须隐藏snackbar
-        if (onExitCallback.snackbar != null) {
-            onExitCallback.snackbar.dismiss();
-        }
-    }
-
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        if (currentHapInfo != null) {
-            HapUtil.destroyHapInfo(this, currentHapInfo);
-        }
-    }
-
-    public void handelAboutClick(MenuItem item) {
+    public void aboutClick(MenuItem item) {
         // 使用 Material Dialog
         // 但是华为设备上拖拽阴影在 Material Dialog 有bug
         AlertDialog.Builder builder = new MaterialAlertDialogBuilder(this);
         AlertDialog alertDialog = builder.setTitle(R.string.about)
+                // .setMessage("HAP查看器 for Android\n\n" +
+                //         "支持解析 OpenHarmony(开源鸿蒙)、HarmonyOS(鸿蒙) API9+(Stage模型) 的应用安装包，支持在 Android 7+ 的安卓设备上运行\n\n" +
+                //         "应用版本：" + BuildConfig.VERSION_NAME + "\n" +
+                //         "开源仓库：https://gitee.com/ohos-dev/hap-viewer-android\n" +
+                //         "开源贡献：westinyang、Jesse205\n" +
+                //         "企鹅群组：752399947")
                 .setMessage(String.format(getString(R.string.about_message), BuildConfig.VERSION_NAME))
                 .setPositiveButton(android.R.string.ok, null)
                 // .setCancelable(false)
@@ -184,7 +219,7 @@ public class MainActivity extends AppCompatActivity implements View.OnDragListen
         DialogHelper.setDialogContentSelectable(alertDialog, true);
     }
 
-    public void handelFabClick(View view) {
+    public void fabClick(View view) {
         // 申请权限
         // 安卓10及以上不需要存储权限
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.Q
@@ -203,45 +238,48 @@ public class MainActivity extends AppCompatActivity implements View.OnDragListen
         if (uri == null) {
             return;
         }
-        binding.progressBar.setVisibility(View.VISIBLE);
-        new Thread(() -> {
-            synchronized (this) {
-                runOnUiThread(() -> binding.progressBar.setVisibility(View.VISIBLE));
-                File file = MyFileUtil.getOrCopyFile(MainActivity.this, uri);
-                if (file == null) {
-                    Snackbar.make(binding.getRoot(), R.string.parse_error_fail_obtain, Snackbar.LENGTH_SHORT)
-                            .setAnchorView(R.id.floatingActionButton)
-                            .show();
-                    runOnUiThread(() -> binding.progressBar.setVisibility(View.GONE));
-                    return;
-                }
-                // 解析hap
-                String path = file.getAbsolutePath();
-                String extName = path.substring(path.lastIndexOf(".") + 1);
-                if (path.length() > 0 && "hap".equals(extName)) {
-                    parseHapAndShowInfo(path, uri);
-                } else {
-                    AtomicBoolean continueFlag = new AtomicBoolean(false);
-                    Snackbar.make(binding.getRoot(), R.string.parse_error_type, Snackbar.LENGTH_SHORT)
-                            .setAction(R.string.parse_continue_ignoreError, v -> {
-                                continueFlag.set(true);
-                                parseHapAndShowInfo(path, uri);
-                            })
-                            .setAnchorView(R.id.floatingActionButton)
-                            .addCallback(new Snackbar.Callback() {
-                                @Override
-                                public void onDismissed(Snackbar transientBottomBar, int event) {
-                                    //不继续解析，说明此文件没用了
-                                    if (!continueFlag.get()) {
-                                        MyFileUtil.deleteExternalCacheFile(MainActivity.this, path);
-                                    }
-                                }
-                            })
-                            .show();
-                }
-                runOnUiThread(() -> binding.progressBar.setVisibility(View.GONE));
+        File file = null;
+        try {
+            // Android 10+ 把文件复制到沙箱内
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+                file = MyFileUtil.uriToFileApiQ(this, uri);
             }
-        }).start();
+            // Android 10 以下获取文件真实路径，创建File
+            else {
+                String path = MyFileUtil.getPath(this, uri);
+                if (path != null) {
+                    file = new File(path);
+                }
+            }
+        } catch (RuntimeException | AssertionError e) {
+            e.printStackTrace();
+        }
+
+        if (file == null) {
+            // Toast.makeText(this, "文件获取失败", Toast.LENGTH_SHORT).show();
+            Snackbar.make(binding.getRoot(), R.string.parse_error_fail_obtain, Snackbar.LENGTH_SHORT)
+                    .setAnchorView(R.id.floatingActionButton)
+                    .show();
+            return;
+        }
+        // 解析hap
+        String path = file.getAbsolutePath();
+        String extName = path.substring(path.lastIndexOf(".") + 1);
+        if (path.length() > 0 && "hap".equals(extName)) {
+            parseHapAndShowInfo(path, uri);
+        } else {
+            // Toast.makeText(this, "请选择一个hap安装包", Toast.LENGTH_SHORT).show();
+            Snackbar.make(binding.getRoot(), R.string.parse_error_type, Snackbar.LENGTH_SHORT)
+                    .setAction(R.string.parse_continue_ignoreError, v -> parseHapAndShowInfo(path, uri))
+                    .setAnchorView(R.id.floatingActionButton)
+                    .show();
+        }
+    }
+
+    private void checkTheme() {
+        if (themeManager.checkThemeChanged()) {
+            recreate();
+        }
     }
 
     /**
@@ -250,60 +288,39 @@ public class MainActivity extends AppCompatActivity implements View.OnDragListen
      * @param hapFilePath
      * @param uri
      */
-    private void parseHapAndShowInfo(@NonNull String hapFilePath, @NonNull Uri uri) {
+    private void parseHapAndShowInfo(String hapFilePath, Uri uri) {
         // 解析hap
         HapInfo hapInfo;
-        runOnUiThread(() -> binding.progressBar.setVisibility(View.VISIBLE));
         try {
             hapInfo = HapUtil.parse(hapFilePath);
-            if (currentHapInfo != null && !currentHapInfo.hapFilePath.equalsIgnoreCase(hapInfo.hapFilePath)) {
-                HapUtil.destroyHapInfo(this, currentHapInfo);
-            }
-            runOnUiThread(() -> {
-                currentHapInfo = hapInfo;
-                nowUri = uri;
-                // 显示基础信息
-                binding.basicInfo.appName.setText(hapInfo.appName);
-                binding.basicInfo.version.setText(String.format("%s (%s)", hapInfo.versionName, hapInfo.versionCode));
-                // 显示应用图标
-                binding.basicInfo.imageView.setImageBitmap(hapInfo.icon);
-                // binding.basicInfo.imageView.setBackground(new BitmapDrawable(getResources(), newShadowBitmap(hapInfo.icon)));
-                // 显示应用信息
-                infoAdapter.setInfo(hapInfo);
-            });
+            currentHapInfo = hapInfo;
+            nowUri = uri;
+            // 显示基础信息
+            binding.basicInfo.appName.setText(hapInfo.appName);
+            binding.basicInfo.version.setText(String.format("%s (%s)", hapInfo.versionName, hapInfo.versionCode));
+            // 显示应用图标
+            binding.basicInfo.imageView.setImageBitmap(hapInfo.icon);
+            // 显示应用信息
+            infoAdapter.setInfo(hapInfo);
         } catch (IOException | RuntimeException e) {
             e.printStackTrace();
+            // Toast.makeText(this, "hap文件解析失败，目前仅支持解析 API9+ (Stage模型) 的应用安装包", Toast.LENGTH_LONG).show();
             Snackbar.make(binding.getRoot(), R.string.parse_error_fail, Snackbar.LENGTH_SHORT)
                     .setAnchorView(R.id.floatingActionButton)
                     .show();
         }
-        // 到此为止，这个临时文件没用了，可以删掉了
-        MyFileUtil.deleteExternalCacheFile(this, hapFilePath);
-        runOnUiThread(() -> binding.progressBar.setVisibility(View.GONE));
     }
-
 
     @Override
     public boolean onDrag(View v, DragEvent event) {
-        switch (event.getAction()) {
-            case DragEvent.ACTION_DRAG_STARTED: {
-                for (int i = 0; i < event.getClipDescription().getMimeTypeCount(); i++) {
-                    if (!event.getClipDescription().getMimeType(i).equals(ClipDescription.MIMETYPE_TEXT_PLAIN))
-                        return true;
-                }
+
+        if (event.getAction() == DragEvent.ACTION_DROP) {
+            ClipData.Item item = event.getClipData().getItemAt(0);
+            if (item.getUri() == null) {
                 return false;
             }
-            case DragEvent.ACTION_DROP: {
-                for (int i = 0; i < event.getClipData().getItemCount(); i++) {
-                    ClipData.Item item = event.getClipData().getItemAt(0);
-                    if (item.getUri() != null) {
-                        requestDragAndDropPermissions(event);
-                        parse(item.getUri());
-                        break;
-                    }
-                }
-                break;
-            }
+            requestDragAndDropPermissions(event);
+            parse(item.getUri());
         }
         return true;
     }
@@ -312,29 +329,5 @@ public class MainActivity extends AppCompatActivity implements View.OnDragListen
     protected void onNewIntent(Intent intent) {
         super.onNewIntent(intent);
         parse(intent.getData());
-    }
-
-    private class OnExitCallback extends OnBackPressedCallback {
-        private final Handler handler = new Handler();
-        @Nullable
-        private Snackbar snackbar;
-
-        public OnExitCallback() {
-            super(true);
-        }
-
-        @Override
-        public void handleOnBackPressed() {
-            OnExitCallback.this.setEnabled(false);
-            snackbar = Snackbar.make(binding.getRoot(), R.string.exit_toast, Snackbar.LENGTH_SHORT);
-            snackbar.setAnchorView(R.id.floatingActionButton);
-            snackbar.addCallback(new Snackbar.Callback() {
-                @Override
-                public void onDismissed(Snackbar transientBottomBar, int event) {
-                    OnExitCallback.this.setEnabled(true);
-                }
-            });
-            snackbar.show();
-        }
     }
 }

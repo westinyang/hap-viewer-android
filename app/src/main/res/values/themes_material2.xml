@@ -1,0 +1,38 @@
+<resources>
+
+    <style name="Platform.V23.Theme.HapViewerAndroid.Material2" parent="Theme.MaterialComponents.DayNight">
+        <item name="colorPrimaryDark">@color/system_window_scrim</item>
+        <item name="android:navigationBarColor">@color/system_window_scrim_compat</item>
+        <item name="windowLightStatusBar">?isLightTheme</item>
+        <item name="windowLightNavigationBar">?isLightTheme</item>
+    </style>
+
+    <style name="Platform.Theme.HapViewerAndroid.Material2" parent="Platform.V23.Theme.HapViewerAndroid.Material2" />
+
+    <style name="Base.Theme.HapViewerAndroid.Material2" parent="Platform.Theme.HapViewerAndroid.Material2">
+        <item name="windowActionBar">false</item>
+        <item name="windowNoTitle">true</item>
+
+        <item name="colorPrimary">@color/color_primary</item>
+        <item name="colorOnPrimary">@android:color/white</item>
+        <item name="colorSecondary">@color/color_secondary</item>
+        <item name="colorOnSecondary">@android:color/white</item>
+
+        <item name="materialCardViewOutlinedStyle">
+            @style/Widget.HapViewerAndroid.CardView.Outlined
+        </item>
+        <item name="materialCardViewElevatedStyle">
+            @style/Widget.HapViewerAndroid.CardView.Elevated
+        </item>
+        <item name="materialCardViewStyle">?materialCardViewOutlinedStyle</item>
+        <item name="actionBarStyle">@style/Widget.MaterialComponents.ActionBar.Surface</item>
+        <item name="actionBarTheme">@style/ThemeOverlay.MaterialComponents.ActionBar.Surface</item>
+        <item name="appBarLayoutStyle">@style/Widget.MaterialComponents.AppBarLayout.Surface</item>
+        <item name="toolbarSurfaceStyle">@style/Widget.HapViewerAndroid.Toolbar.Surface</item>
+        <item name="toolbarStyle">?toolbarSurfaceStyle</item>
+        <item name="liftOnScroll">true</item>
+    </style>
+
+    <style name="Theme.HapViewerAndroid.Material2" parent="Base.Theme.HapViewerAndroid.Material2" />
+
+</resources>

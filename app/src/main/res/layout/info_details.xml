@@ -2,11 +2,9 @@
 <com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/recycler_card"
-    style="?materialCardViewElevatedStyle"
     android:layout_width="0dp"
     android:layout_height="wrap_content"
     android:layout_margin="16dp"
-    app:cardElevation="@dimen/cardview_default_elevation"
     app:layout_constraintBottom_toBottomOf="parent"
     app:layout_constraintEnd_toEndOf="parent"
     app:layout_constraintStart_toStartOf="parent"
@@ -20,5 +18,4 @@
         android:nestedScrollingEnabled="false"
         android:paddingTop="8dp"
         android:paddingBottom="8dp" />
-
 </com.google.android.material.card.MaterialCardView>

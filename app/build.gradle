@@ -18,7 +18,12 @@ android {
 
     buildTypes {
         release {
-            minifyEnabled false
+            minifyEnabled true
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+            signingConfig signingConfigs.debug
+        }
+        debug {
+            minifyEnabled true
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
             signingConfig signingConfigs.debug
         }
@@ -35,9 +40,6 @@ android {
     flavorDimensions 'theme'
     productFlavors {
         material {
-            dimension 'theme'
-        }
-        material3 {
             dimension 'theme'
         }
         harmony {

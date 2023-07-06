@@ -12,12 +12,15 @@
         android:layout_height="wrap_content"
         android:fitsSystemWindows="true"
         android:theme="?actionBarTheme"
-        app:fitsSystemWindowsInsets="top|start|end">
+        app:fitsSystemWindowsInsets="top|start|end"
+        app:liftOnScroll="?liftOnScroll"
+        app:liftOnScrollTargetViewId="@id/nestedScrollView">
 
         <com.google.android.material.appbar.MaterialToolbar
             android:id="@+id/toolbar"
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
+            android:background="@null"
             app:popupTheme="?actionBarPopupTheme" />
     </com.google.android.material.appbar.AppBarLayout>
 

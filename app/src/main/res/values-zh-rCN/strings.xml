@@ -18,5 +18,6 @@
     <string name="parse_error_type">文件类型错误，请选择一个 hap 安装包</string>
     <string name="parse_continue_ignoreError">忽略错误，继续解析</string>
     <string name="separator_words">、</string>
+    <string name="menu_theme">主题</string>
 
 </resources>
