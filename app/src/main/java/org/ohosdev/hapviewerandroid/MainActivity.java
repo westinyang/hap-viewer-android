@@ -3,6 +3,7 @@ package org.ohosdev.hapviewerandroid;
 import android.Manifest;
 import android.annotation.SuppressLint;
 import android.content.ClipData;
+import android.content.ClipDescription;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
@@ -39,6 +40,7 @@ import org.ohosdev.hapviewerandroid.util.MyFileUtil;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.Objects;
 
 import rikka.insets.WindowInsetsHelper;
 import rikka.layoutinflater.view.LayoutInflaterFactory;
@@ -313,14 +315,26 @@ public class MainActivity extends AppCompatActivity implements View.OnDragListen
 
     @Override
     public boolean onDrag(View v, DragEvent event) {
-
-        if (event.getAction() == DragEvent.ACTION_DROP) {
-            ClipData.Item item = event.getClipData().getItemAt(0);
-            if (item.getUri() == null) {
+        switch (event.getAction()) {
+            case DragEvent.ACTION_DRAG_STARTED: {
+                for (int i = 0; i < event.getClipDescription().getMimeTypeCount(); i++) {
+                    if (!event.getClipDescription().getMimeType(i).equals(ClipDescription.MIMETYPE_TEXT_PLAIN))
+                        return true;
+                }
                 return false;
             }
-            requestDragAndDropPermissions(event);
-            parse(item.getUri());
+            case DragEvent.ACTION_DROP: {
+                for (int i = 0; i < event.getClipData().getItemCount(); i++) {
+                    ClipData.Item item = event.getClipData().getItemAt(0);
+                    if (item.getUri() != null) {
+                        requestDragAndDropPermissions(event);
+                        parse(item.getUri());
+                        break;
+                    }
+                }
+
+                break;
+            }
         }
         return true;
     }
