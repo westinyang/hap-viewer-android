@@ -3,6 +3,7 @@ package org.ohosdev.hapviewerandroid;
 import android.Manifest;
 import android.annotation.SuppressLint;
 import android.content.ClipData;
+import android.content.ClipDescription;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.net.Uri;
@@ -79,11 +80,11 @@ public class MainActivity extends AppCompatActivity implements View.OnDragListen
         ThemeHelper.fixSystemBarsAppearance(this);
 
         infoAdapter = new InfoAdapter(this);
-        RecyclerView recyclerView = binding.recyclerView;
+        RecyclerView recyclerView = binding.detailInfo.recyclerView;
         recyclerView.setAdapter(infoAdapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         // 启用拖放
-        binding.getRoot().setOnDragListener(this);
+        binding.nestedScrollView.setOnDragListener(this);
 
         // setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);  // 禁用横屏
         // 禁用横屏会导致平板与折叠屏用户体验不佳。应用目前的布局对横屏已经非常友好，取消禁用并无大碍
@@ -276,14 +277,26 @@ public class MainActivity extends AppCompatActivity implements View.OnDragListen
 
     @Override
     public boolean onDrag(View v, DragEvent event) {
-
-        if (event.getAction() == DragEvent.ACTION_DROP) {
-            ClipData.Item item = event.getClipData().getItemAt(0);
-            if (item.getUri() == null) {
+        switch (event.getAction()) {
+            case DragEvent.ACTION_DRAG_STARTED: {
+                for (int i = 0; i < event.getClipDescription().getMimeTypeCount(); i++) {
+                    if (!event.getClipDescription().getMimeType(i).equals(ClipDescription.MIMETYPE_TEXT_PLAIN))
+                        return true;
+                }
                 return false;
             }
-            requestDragAndDropPermissions(event);
-            parse(item.getUri());
+            case DragEvent.ACTION_DROP: {
+                for (int i = 0; i < event.getClipData().getItemCount(); i++) {
+                    ClipData.Item item = event.getClipData().getItemAt(0);
+                    if (item.getUri() != null) {
+                        requestDragAndDropPermissions(event);
+                        parse(item.getUri());
+                        break;
+                    }
+                }
+
+                break;
+            }
         }
         return true;
     }

@@ -26,6 +26,7 @@
         android:id="@+id/nestedScrollView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:background="@drawable/drag_mask"
         app:layout_behavior="com.google.android.material.appbar.AppBarLayout$ScrollingViewBehavior">
 
         <androidx.constraintlayout.widget.ConstraintLayout
@@ -37,24 +38,10 @@
             <include
                 android:id="@+id/basic_info"
                 layout="@layout/info_basic" />
+            <include
+                android:id="@+id/detail_info"
+                layout="@layout/info_details" />
 
-            <com.google.android.material.card.MaterialCardView
-                android:id="@+id/recycler_card"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_margin="16dp"
-                style="?materialCardViewElevatedStyle"
-                app:cardElevation="@dimen/cardview_default_elevation"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/basic_info">
-
-                <androidx.recyclerview.widget.RecyclerView
-                    android:id="@+id/recycler_view"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content" />
-            </com.google.android.material.card.MaterialCardView>
         </androidx.constraintlayout.widget.ConstraintLayout>
     </androidx.core.widget.NestedScrollView>
 
