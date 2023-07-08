@@ -315,7 +315,6 @@ public class MainActivity extends AppCompatActivity implements View.OnDragListen
 
         @Override
         public void handleOnBackPressed() {
-            this.setEnabled(false);
 
             Snackbar snackbar = Snackbar.make(binding.getRoot(), R.string.exit_toast, Snackbar.LENGTH_SHORT);
             snackbar.setAnchorView(R.id.floatingActionButton);
@@ -323,6 +322,11 @@ public class MainActivity extends AppCompatActivity implements View.OnDragListen
                 @Override
                 public void onDismissed(Snackbar transientBottomBar, int event) {
                     OnExitCallback.this.setEnabled(true);
+                }
+
+                @Override
+                public void onShown(Snackbar sb) {
+                    OnExitCallback.this.setEnabled(false);
                 }
             });
             snackbar.show();
