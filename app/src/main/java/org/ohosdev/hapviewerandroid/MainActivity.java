@@ -17,6 +17,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 
+import androidx.activity.OnBackPressedCallback;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
@@ -40,7 +41,6 @@ import org.ohosdev.hapviewerandroid.util.MyFileUtil;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.Objects;
 
 import rikka.insets.WindowInsetsHelper;
 import rikka.layoutinflater.view.LayoutInflaterFactory;
@@ -100,6 +100,8 @@ public class MainActivity extends AppCompatActivity implements View.OnDragListen
             Intent intent = getIntent();
             parse(intent.getData());
         }
+
+        getOnBackPressedDispatcher().addCallback(this, new OnExitCallback(true));
     }
 
     @Override
@@ -139,7 +141,7 @@ public class MainActivity extends AppCompatActivity implements View.OnDragListen
         return true;
     }
 
-    @Override
+    /* @Override
     public void onBackPressed() {
         // Snackbar exitSnackbar = Snackbar.make(binding.getRoot(), "再按一次返回键退出", Snackbar.LENGTH_SHORT);
         if (exitSnackbar != null && exitSnackbar.isShown())
@@ -160,7 +162,7 @@ public class MainActivity extends AppCompatActivity implements View.OnDragListen
         //     // finish();
         //     // System.exit(0);
         // }
-    }
+    } */
 
     @Override
     protected void onSaveInstanceState(@NonNull Bundle outState) {
@@ -344,4 +346,27 @@ public class MainActivity extends AppCompatActivity implements View.OnDragListen
         super.onNewIntent(intent);
         parse(intent.getData());
     }
+
+    private class OnExitCallback extends OnBackPressedCallback {
+        public OnExitCallback(boolean enabled) {
+            super(enabled);
+        }
+
+        @Override
+        public void handleOnBackPressed() {
+            this.setEnabled(false);
+
+            exitSnackbar = Snackbar.make(binding.getRoot(), R.string.exit_toast, Snackbar.LENGTH_SHORT);
+            exitSnackbar.setAnchorView(R.id.floatingActionButton);
+            exitSnackbar.addCallback(new Snackbar.Callback() {
+                @Override
+                public void onDismissed(Snackbar transientBottomBar, int event) {
+                    OnExitCallback.this.setEnabled(true);
+                }
+            });
+            exitSnackbar.show();
+        }
+    }
+
+    ;
 }
