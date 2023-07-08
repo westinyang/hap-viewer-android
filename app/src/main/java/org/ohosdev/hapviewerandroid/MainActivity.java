@@ -61,8 +61,6 @@ public class MainActivity extends AppCompatActivity implements View.OnDragListen
     private InfoAdapter infoAdapter;
     private ActivityMainBinding binding;
     @Nullable
-    private Snackbar exitSnackbar = null;
-    @Nullable
     private Uri nowUri = null;
     private final ActivityResultLauncher<String> selectFileResultLauncher = registerForActivityResult(
             new ActivityResultContracts.GetContent(), this::parse);
@@ -81,6 +79,8 @@ public class MainActivity extends AppCompatActivity implements View.OnDragListen
         binding = ActivityMainBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
         setSupportActionBar(binding.toolbar);
+
+        getOnBackPressedDispatcher().addCallback(this, new OnExitCallback());
 
         infoAdapter = new InfoAdapter(this);
         RecyclerView recyclerView = binding.detailInfo.recyclerView;
@@ -101,7 +101,7 @@ public class MainActivity extends AppCompatActivity implements View.OnDragListen
             parse(intent.getData());
         }
 
-        getOnBackPressedDispatcher().addCallback(this, new OnExitCallback(true));
+
     }
 
     @Override
@@ -348,25 +348,23 @@ public class MainActivity extends AppCompatActivity implements View.OnDragListen
     }
 
     private class OnExitCallback extends OnBackPressedCallback {
-        public OnExitCallback(boolean enabled) {
-            super(enabled);
+        public OnExitCallback() {
+            super(true);
         }
 
         @Override
         public void handleOnBackPressed() {
             this.setEnabled(false);
 
-            exitSnackbar = Snackbar.make(binding.getRoot(), R.string.exit_toast, Snackbar.LENGTH_SHORT);
-            exitSnackbar.setAnchorView(R.id.floatingActionButton);
-            exitSnackbar.addCallback(new Snackbar.Callback() {
+            Snackbar snackbar = Snackbar.make(binding.getRoot(), R.string.exit_toast, Snackbar.LENGTH_SHORT);
+            snackbar.setAnchorView(R.id.floatingActionButton);
+            snackbar.addCallback(new Snackbar.Callback() {
                 @Override
                 public void onDismissed(Snackbar transientBottomBar, int event) {
                     OnExitCallback.this.setEnabled(true);
                 }
             });
-            exitSnackbar.show();
+            snackbar.show();
         }
     }
-
-    ;
 }
