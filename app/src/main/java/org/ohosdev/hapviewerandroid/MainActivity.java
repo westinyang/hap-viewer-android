@@ -16,6 +16,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 
+import androidx.activity.OnBackPressedCallback;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
@@ -59,8 +60,6 @@ public class MainActivity extends AppCompatActivity implements View.OnDragListen
     private InfoAdapter infoAdapter;
     private ActivityMainBinding binding;
     @Nullable
-    private Snackbar exitSnackbar = null;
-    @Nullable
     private Uri nowUri = null;
     private final ActivityResultLauncher<String> selectFileResultLauncher = registerForActivityResult(
             new ActivityResultContracts.GetContent(), this::parse);
@@ -78,6 +77,8 @@ public class MainActivity extends AppCompatActivity implements View.OnDragListen
 
         setSupportActionBar(binding.toolbar);
         ThemeHelper.fixSystemBarsAppearance(this);
+
+        getOnBackPressedDispatcher().addCallback(this, new OnExitCallback());
 
         infoAdapter = new InfoAdapter(this);
         RecyclerView recyclerView = binding.detailInfo.recyclerView;
@@ -107,7 +108,7 @@ public class MainActivity extends AppCompatActivity implements View.OnDragListen
         return true;
     }
 
-    @Override
+    /* @Override
     public void onBackPressed() {
         // Snackbar exitSnackbar = Snackbar.make(binding.getRoot(), "再按一次返回键退出", Snackbar.LENGTH_SHORT);
         if (exitSnackbar != null && exitSnackbar.isShown())
@@ -128,7 +129,7 @@ public class MainActivity extends AppCompatActivity implements View.OnDragListen
         //     // finish();
         //     // System.exit(0);
         // }
-    }
+    } */
 
     @Override
     protected void onSaveInstanceState(@NonNull Bundle outState) {
@@ -305,5 +306,26 @@ public class MainActivity extends AppCompatActivity implements View.OnDragListen
     protected void onNewIntent(Intent intent) {
         super.onNewIntent(intent);
         parse(intent.getData());
+    }
+
+    private class OnExitCallback extends OnBackPressedCallback {
+        public OnExitCallback() {
+            super(true);
+        }
+
+        @Override
+        public void handleOnBackPressed() {
+            this.setEnabled(false);
+
+            Snackbar snackbar = Snackbar.make(binding.getRoot(), R.string.exit_toast, Snackbar.LENGTH_SHORT);
+            snackbar.setAnchorView(R.id.floatingActionButton);
+            snackbar.addCallback(new Snackbar.Callback() {
+                @Override
+                public void onDismissed(Snackbar transientBottomBar, int event) {
+                    OnExitCallback.this.setEnabled(true);
+                }
+            });
+            snackbar.show();
+        }
     }
 }
