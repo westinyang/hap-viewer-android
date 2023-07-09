@@ -6,10 +6,21 @@ import android.content.ClipData;
 import android.content.ClipDescription;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
+import android.graphics.Canvas;
 import android.graphics.Color;
+import android.graphics.ColorMatrix;
+import android.graphics.ColorMatrixColorFilter;
+import android.graphics.Matrix;
+import android.graphics.Paint;
+import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.renderscript.Allocation;
+import android.renderscript.Element;
+import android.renderscript.RenderScript;
+import android.renderscript.ScriptIntrinsicBlur;
 import android.util.Log;
 import android.view.DragEvent;
 import android.view.Menu;
@@ -36,6 +47,7 @@ import org.ohosdev.hapviewerandroid.databinding.ActivityMainBinding;
 import org.ohosdev.hapviewerandroid.helper.DialogHelper;
 import org.ohosdev.hapviewerandroid.manager.ThemeManager;
 import org.ohosdev.hapviewerandroid.model.HapInfo;
+import org.ohosdev.hapviewerandroid.util.BitmapUtil;
 import org.ohosdev.hapviewerandroid.util.HapUtil;
 import org.ohosdev.hapviewerandroid.util.MyFileUtil;
 
@@ -303,16 +315,35 @@ public class MainActivity extends AppCompatActivity implements View.OnDragListen
             binding.basicInfo.appName.setText(hapInfo.appName);
             binding.basicInfo.version.setText(String.format("%s (%s)", hapInfo.versionName, hapInfo.versionCode));
             // 显示应用图标
-            binding.basicInfo.imageView.setImageBitmap(hapInfo.icon);
+            binding.basicInfo.imageView.setImageBitmap((hapInfo.icon));
+
+            binding.basicInfo.imageView.setBackground(new BitmapDrawable(getResources(), newShadowBitmap(hapInfo.icon)));
+
             // 显示应用信息
             infoAdapter.setInfo(hapInfo);
         } catch (IOException | RuntimeException e) {
             e.printStackTrace();
+            Log.d(TAG, "parseHapAndShowInfo: ", e);
             // Toast.makeText(this, "hap文件解析失败，目前仅支持解析 API9+ (Stage模型) 的应用安装包", Toast.LENGTH_LONG).show();
             Snackbar.make(binding.getRoot(), R.string.parse_error_fail, Snackbar.LENGTH_SHORT)
                     .setAnchorView(R.id.floatingActionButton)
                     .show();
         }
+    }
+
+
+
+    /**
+     * 创建阴影 Bitmap
+     *
+     * @param src 原始 Bitmap
+     * @return 阴影Bitmap
+     */
+    private Bitmap newShadowBitmap(Bitmap src) {
+        return BitmapUtil.newShadowBitmap(this,src,
+                this.getResources().getDimensionPixelSize(R.dimen.icon_padding),
+                this.getResources().getDimensionPixelSize(R.dimen.icon_width),
+        this.getResources().getDimensionPixelSize(R.dimen.icon_width));
     }
 
     @Override
