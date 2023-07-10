@@ -149,29 +149,6 @@ public class MainActivity extends AppCompatActivity implements View.OnDragListen
         return true;
     }
 
-    /* @Override
-    public void onBackPressed() {
-        // Snackbar exitSnackbar = Snackbar.make(binding.getRoot(), "再按一次返回键退出", Snackbar.LENGTH_SHORT);
-        if (exitSnackbar != null && exitSnackbar.isShown())
-            super.onBackPressed();
-        else {
-            exitSnackbar = Snackbar.make(binding.getRoot(), R.string.exit_toast, Snackbar.LENGTH_SHORT);
-            exitSnackbar.setAnchorView(R.id.floatingActionButton);
-            exitSnackbar.show();
-        }
-
-        // if ((System.currentTimeMillis() - exitTime) > 2000) {
-        //     Snackbar exitSnackbar = Snackbar.make(binding.getRoot(), "再按一次返回键退出", Snackbar.LENGTH_SHORT);
-        //     exitSnackbar.show();
-        //     Toast.makeText(this, "再按一次返回键退出", Toast.LENGTH_SHORT).show();
-        //     exitTime = System.currentTimeMillis();
-        // } else {
-        //     super.onBackPressed();
-        //     // finish();
-        //     // System.exit(0);
-        // }
-    } */
-
     @Override
     protected void onSaveInstanceState(@NonNull Bundle outState) {
         super.onSaveInstanceState(outState);
@@ -344,7 +321,6 @@ public class MainActivity extends AppCompatActivity implements View.OnDragListen
                         break;
                     }
                 }
-
                 break;
             }
         }
