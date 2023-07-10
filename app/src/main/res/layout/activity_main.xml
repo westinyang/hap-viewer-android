@@ -38,6 +38,7 @@
             <include
                 android:id="@+id/basic_info"
                 layout="@layout/info_basic" />
+
             <include
                 android:id="@+id/detail_info"
                 layout="@layout/info_details" />
@@ -45,6 +46,14 @@
         </androidx.constraintlayout.widget.ConstraintLayout>
     </androidx.core.widget.NestedScrollView>
 
+    <ProgressBar
+        android:id="@+id/progress_bar"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:visibility="gone"
+        app:layout_anchor="@+id/nestedScrollView"
+        app:layout_anchorGravity="center"
+        app:layout_fitsSystemWindowsInsets="bottom|start|end" />
 
     <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
         android:id="@+id/floatingActionButton"
@@ -53,7 +62,7 @@
         android:layout_margin="16dp"
         android:clickable="true"
         android:focusable="true"
-        android:onClick="fabClick"
+        android:onClick="handelFabClick"
         android:text="@string/select_file_hap"
         app:icon="@drawable/ic_folder"
         app:layout_anchor="@id/bottom_stub"

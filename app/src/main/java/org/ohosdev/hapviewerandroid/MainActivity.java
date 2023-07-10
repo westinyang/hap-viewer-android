@@ -6,6 +6,7 @@ import android.content.ClipData;
 import android.content.ClipDescription;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -146,7 +147,7 @@ public class MainActivity extends AppCompatActivity implements View.OnDragListen
         }
     }
 
-    public void aboutClick(MenuItem item) {
+    public void handelAboutClick(MenuItem item) {
         // 使用 Material Dialog
         // 但是华为设备上拖拽阴影在 Material Dialog 有bug
         AlertDialog.Builder builder = new MaterialAlertDialogBuilder(this);
@@ -159,7 +160,7 @@ public class MainActivity extends AppCompatActivity implements View.OnDragListen
         DialogHelper.setDialogContentSelectable(alertDialog, true);
     }
 
-    public void fabClick(View view) {
+    public void handelFabClick(View view) {
         // 申请权限
         // 安卓10及以上不需要存储权限
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.Q
@@ -178,40 +179,32 @@ public class MainActivity extends AppCompatActivity implements View.OnDragListen
         if (uri == null) {
             return;
         }
-        File file = null;
-        try {
-            // Android 10+ 把文件复制到沙箱内
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
-                file = MyFileUtil.uriToFileApiQ(this, uri);
-            }
-            // Android 10 以下获取文件真实路径，创建File
-            else {
-                String path = MyFileUtil.getPath(this, uri);
-                if (path != null) {
-                    file = new File(path);
+        binding.progressBar.setVisibility(View.VISIBLE);
+        new Thread(() -> {
+            synchronized (this) {
+                runOnUiThread(() -> binding.progressBar.setVisibility(View.VISIBLE));
+                File file = MyFileUtil.getOrCopyFile(MainActivity.this, uri);
+                if (file == null) {
+                    Snackbar.make(binding.getRoot(), R.string.parse_error_fail_obtain, Snackbar.LENGTH_SHORT)
+                            .setAnchorView(R.id.floatingActionButton)
+                            .show();
+                    runOnUiThread(() -> binding.progressBar.setVisibility(View.GONE));
+                    return;
                 }
+                // 解析hap
+                String path = file.getAbsolutePath();
+                String extName = path.substring(path.lastIndexOf(".") + 1);
+                if (path.length() > 0 && "hap".equals(extName)) {
+                    parseHapAndShowInfo(path, uri);
+                } else {
+                    Snackbar.make(binding.getRoot(), R.string.parse_error_type, Snackbar.LENGTH_SHORT)
+                            .setAction(R.string.parse_continue_ignoreError, v -> parseHapAndShowInfo(path, uri))
+                            .setAnchorView(R.id.floatingActionButton)
+                            .show();
+                }
+                runOnUiThread(() -> binding.progressBar.setVisibility(View.GONE));
             }
-        } catch (RuntimeException | AssertionError e) {
-            e.printStackTrace();
-        }
-
-        if (file == null) {
-            Snackbar.make(binding.getRoot(), R.string.parse_error_fail_obtain, Snackbar.LENGTH_SHORT)
-                    .setAnchorView(R.id.floatingActionButton)
-                    .show();
-            return;
-        }
-        // 解析hap
-        String path = file.getAbsolutePath();
-        String extName = path.substring(path.lastIndexOf(".") + 1);
-        if (path.length() > 0 && "hap".equals(extName)) {
-            parseHapAndShowInfo(path, uri);
-        } else {
-            Snackbar.make(binding.getRoot(), R.string.parse_error_type, Snackbar.LENGTH_SHORT)
-                    .setAction(R.string.parse_continue_ignoreError, v -> parseHapAndShowInfo(path, uri))
-                    .setAnchorView(R.id.floatingActionButton)
-                    .show();
-        }
+        }).start();
     }
 
     /**
@@ -220,27 +213,35 @@ public class MainActivity extends AppCompatActivity implements View.OnDragListen
      * @param hapFilePath
      * @param uri
      */
-    private void parseHapAndShowInfo(String hapFilePath, Uri uri) {
+    private void parseHapAndShowInfo(@NonNull String hapFilePath, @NonNull Uri uri) {
         // 解析hap
         HapInfo hapInfo;
+        runOnUiThread(() -> binding.progressBar.setVisibility(View.VISIBLE));
         try {
             hapInfo = HapUtil.parse(hapFilePath);
-            currentHapInfo = hapInfo;
-            nowUri = uri;
-            // 显示基础信息
-            binding.basicInfo.appName.setText(hapInfo.appName);
-            binding.basicInfo.version.setText(String.format("%s (%s)", hapInfo.versionName, hapInfo.versionCode));
-            // 显示应用图标
-            binding.basicInfo.imageView.setImageBitmap(hapInfo.icon);
-            // 显示应用信息
-            infoAdapter.setInfo(hapInfo);
+            runOnUiThread(() -> {
+                currentHapInfo = hapInfo;
+                nowUri = uri;
+                // 显示基础信息
+                binding.basicInfo.appName.setText(hapInfo.appName);
+                binding.basicInfo.version.setText(String.format("%s (%s)", hapInfo.versionName, hapInfo.versionCode));
+                // 显示应用图标
+                binding.basicInfo.imageView.setImageBitmap(hapInfo.icon);
+                // binding.basicInfo.imageView.setBackground(new BitmapDrawable(getResources(), newShadowBitmap(hapInfo.icon)));
+                // 显示应用信息
+                infoAdapter.setInfo(hapInfo);
+            });
         } catch (IOException | RuntimeException e) {
             e.printStackTrace();
+            Log.d(TAG, "parseHapAndShowInfo: ", e);
+            // Toast.makeText(this, "hap文件解析失败，目前仅支持解析 API9+ (Stage模型) 的应用安装包", Toast.LENGTH_LONG).show();
             Snackbar.make(binding.getRoot(), R.string.parse_error_fail, Snackbar.LENGTH_SHORT)
                     .setAnchorView(R.id.floatingActionButton)
                     .show();
         }
+        runOnUiThread(() -> binding.progressBar.setVisibility(View.GONE));
     }
+
 
     @Override
     public boolean onDrag(View v, DragEvent event) {
