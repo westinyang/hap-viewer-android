@@ -190,7 +190,6 @@ public class HapUtil {
         if (hapInfo.icon != null) {
             hapInfo.icon.recycle();
         }
-
     }
 
 }
