@@ -155,6 +155,15 @@ public class MainActivity extends AppCompatActivity implements View.OnDragListen
     }
 
     @Override
+    protected void onPause() {
+        super.onPause();
+        // 当退出时，必须隐藏snackbar
+        if (onExitCallback.snackbar != null) {
+            onExitCallback.snackbar.dismiss();
+        }
+    }
+
+    @Override
     protected void onDestroy() {
         super.onDestroy();
         if (currentHapInfo != null) {
@@ -292,6 +301,7 @@ public class MainActivity extends AppCompatActivity implements View.OnDragListen
 
     private class OnExitCallback extends OnBackPressedCallback {
         private final Handler handler = new Handler();
+        @Nullable
         private Snackbar snackbar;
 
         public OnExitCallback() {
