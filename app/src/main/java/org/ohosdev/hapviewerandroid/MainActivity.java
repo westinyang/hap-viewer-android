@@ -7,20 +7,11 @@ import android.content.ClipDescription;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
-import android.graphics.Canvas;
 import android.graphics.Color;
-import android.graphics.ColorMatrix;
-import android.graphics.ColorMatrixColorFilter;
-import android.graphics.Matrix;
-import android.graphics.Paint;
 import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
-import android.renderscript.Allocation;
-import android.renderscript.Element;
-import android.renderscript.RenderScript;
-import android.renderscript.ScriptIntrinsicBlur;
 import android.util.Log;
 import android.view.DragEvent;
 import android.view.Menu;
@@ -35,6 +26,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.content.res.AppCompatResources;
 import androidx.core.app.ActivityCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -53,6 +45,7 @@ import org.ohosdev.hapviewerandroid.util.MyFileUtil;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.Objects;
 
 import rikka.insets.WindowInsetsHelper;
 import rikka.layoutinflater.view.LayoutInflaterFactory;
@@ -106,6 +99,9 @@ public class MainActivity extends AppCompatActivity implements View.OnDragListen
         // 禁用横屏会导致平板与折叠屏用户体验不佳。应用目前的布局对横屏已经非常友好，取消禁用并无大碍
         // 初始化应用信息
         infoAdapter.setInfo(new HapInfo(true));
+        BitmapDrawable defaultIconDrawable = (BitmapDrawable) Objects.requireNonNull(AppCompatResources.getDrawable(this, R.drawable.ic_default_new));
+        binding.basicInfo.imageView.setBackground(new BitmapDrawable(getResources(),
+                newShadowBitmap(defaultIconDrawable.getBitmap())));
 
         // 解析传入的 Intent
         if (savedInstanceState == null) {
@@ -254,42 +250,50 @@ public class MainActivity extends AppCompatActivity implements View.OnDragListen
         if (uri == null) {
             return;
         }
-        File file = null;
-        try {
-            // Android 10+ 把文件复制到沙箱内
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
-                file = MyFileUtil.uriToFileApiQ(this, uri);
-            }
-            // Android 10 以下获取文件真实路径，创建File
-            else {
-                String path = MyFileUtil.getPath(this, uri);
-                if (path != null) {
-                    file = new File(path);
-                }
-            }
-        } catch (RuntimeException | AssertionError e) {
-            e.printStackTrace();
-        }
+        binding.progressBar.setVisibility(View.VISIBLE);
+        new Thread(() -> {
+            synchronized(this) {
+                runOnUiThread(() -> binding.progressBar.setVisibility(View.VISIBLE));
+                File file = MyFileUtil.getOrCopyFile(MainActivity.this, uri);
+                /* try {
+                    // Android 10+ 把文件复制到沙箱内
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+                        file = MyFileUtil.uriToFileApiQ(MainActivity.this, uri);
+                    }
+                    // Android 10 以下获取文件真实路径，创建File
+                    else {
+                        String path = MyFileUtil.getPath(MainActivity.this, uri);
+                        if (path != null) {
+                            file = new File(path);
+                        }
+                    }
+                } catch (RuntimeException | AssertionError e) {
+                    e.printStackTrace();
+                } */
 
-        if (file == null) {
-            // Toast.makeText(this, "文件获取失败", Toast.LENGTH_SHORT).show();
-            Snackbar.make(binding.getRoot(), R.string.parse_error_fail_obtain, Snackbar.LENGTH_SHORT)
-                    .setAnchorView(R.id.floatingActionButton)
-                    .show();
-            return;
-        }
-        // 解析hap
-        String path = file.getAbsolutePath();
-        String extName = path.substring(path.lastIndexOf(".") + 1);
-        if (path.length() > 0 && "hap".equals(extName)) {
-            parseHapAndShowInfo(path, uri);
-        } else {
-            // Toast.makeText(this, "请选择一个hap安装包", Toast.LENGTH_SHORT).show();
-            Snackbar.make(binding.getRoot(), R.string.parse_error_type, Snackbar.LENGTH_SHORT)
-                    .setAction(R.string.parse_continue_ignoreError, v -> parseHapAndShowInfo(path, uri))
-                    .setAnchorView(R.id.floatingActionButton)
-                    .show();
-        }
+                if (file == null) {
+                    // Toast.makeText(this, "文件获取失败", Toast.LENGTH_SHORT).show();
+                    Snackbar.make(binding.getRoot(), R.string.parse_error_fail_obtain, Snackbar.LENGTH_SHORT)
+                            .setAnchorView(R.id.floatingActionButton)
+                            .show();
+                    runOnUiThread(() -> binding.progressBar.setVisibility(View.GONE));
+                    return;
+                }
+                // 解析hap
+                String path = file.getAbsolutePath();
+                String extName = path.substring(path.lastIndexOf(".") + 1);
+                if (path.length() > 0 && "hap".equals(extName)) {
+                    parseHapAndShowInfo(path, uri);
+                } else {
+                    // Toast.makeText(this, "请选择一个hap安装包", Toast.LENGTH_SHORT).show();
+                    Snackbar.make(binding.getRoot(), R.string.parse_error_type, Snackbar.LENGTH_SHORT)
+                            .setAction(R.string.parse_continue_ignoreError, v -> parseHapAndShowInfo(path, uri))
+                            .setAnchorView(R.id.floatingActionButton)
+                            .show();
+                }
+                runOnUiThread(() -> binding.progressBar.setVisibility(View.GONE));
+            }
+        }).start();
     }
 
     private void checkTheme() {
@@ -304,23 +308,24 @@ public class MainActivity extends AppCompatActivity implements View.OnDragListen
      * @param hapFilePath
      * @param uri
      */
-    private void parseHapAndShowInfo(String hapFilePath, Uri uri) {
+    private void parseHapAndShowInfo(@NonNull String hapFilePath, @NonNull Uri uri) {
         // 解析hap
         HapInfo hapInfo;
+        runOnUiThread(() -> binding.progressBar.setVisibility(View.VISIBLE));
         try {
             hapInfo = HapUtil.parse(hapFilePath);
-            currentHapInfo = hapInfo;
-            nowUri = uri;
-            // 显示基础信息
-            binding.basicInfo.appName.setText(hapInfo.appName);
-            binding.basicInfo.version.setText(String.format("%s (%s)", hapInfo.versionName, hapInfo.versionCode));
-            // 显示应用图标
-            binding.basicInfo.imageView.setImageBitmap((hapInfo.icon));
-
-            binding.basicInfo.imageView.setBackground(new BitmapDrawable(getResources(), newShadowBitmap(hapInfo.icon)));
-
-            // 显示应用信息
-            infoAdapter.setInfo(hapInfo);
+            runOnUiThread(() -> {
+                currentHapInfo = hapInfo;
+                nowUri = uri;
+                // 显示基础信息
+                binding.basicInfo.appName.setText(hapInfo.appName);
+                binding.basicInfo.version.setText(String.format("%s (%s)", hapInfo.versionName, hapInfo.versionCode));
+                // 显示应用图标
+                binding.basicInfo.imageView.setImageBitmap(hapInfo.icon);
+                binding.basicInfo.imageView.setBackground(new BitmapDrawable(getResources(), newShadowBitmap(hapInfo.icon)));
+                // 显示应用信息
+                infoAdapter.setInfo(hapInfo);
+            });
         } catch (IOException | RuntimeException e) {
             e.printStackTrace();
             Log.d(TAG, "parseHapAndShowInfo: ", e);
@@ -329,8 +334,8 @@ public class MainActivity extends AppCompatActivity implements View.OnDragListen
                     .setAnchorView(R.id.floatingActionButton)
                     .show();
         }
+        runOnUiThread(() -> binding.progressBar.setVisibility(View.GONE));
     }
-
 
 
     /**
@@ -340,10 +345,10 @@ public class MainActivity extends AppCompatActivity implements View.OnDragListen
      * @return 阴影Bitmap
      */
     private Bitmap newShadowBitmap(Bitmap src) {
-        return BitmapUtil.newShadowBitmap(this,src,
+        return BitmapUtil.newShadowBitmap(this, src,
                 this.getResources().getDimensionPixelSize(R.dimen.icon_padding),
                 this.getResources().getDimensionPixelSize(R.dimen.icon_width),
-        this.getResources().getDimensionPixelSize(R.dimen.icon_width));
+                this.getResources().getDimensionPixelSize(R.dimen.icon_width));
     }
 
     @Override
