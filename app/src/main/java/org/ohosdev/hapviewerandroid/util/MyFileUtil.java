@@ -225,4 +225,18 @@ public class MyFileUtil {
 
         return MyFileUtil.uriToFileApiQ(context, uri);
     }
+
+    public static boolean isExternalCacheFile(@NonNull Context context, @NonNull String filePath) {
+        return context.getExternalCacheDir() != null
+                && filePath.startsWith(context.getExternalCacheDir().getAbsolutePath());
+    }
+
+    public static void deleteExternalCacheFile(@NonNull Context context, @NonNull String filePath){
+        if (isExternalCacheFile(context, filePath)) {
+            File hapFile = new File(filePath);
+            if (hapFile.delete()) {
+                hapFile.deleteOnExit();
+            }
+        }
+    }
 }

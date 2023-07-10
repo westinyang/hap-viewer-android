@@ -11,10 +11,6 @@ import com.alibaba.fastjson.JSONObject;
 
 import org.ohosdev.hapviewerandroid.model.HapInfo;
 
-import cn.hutool.core.io.IoUtil;
-import cn.hutool.core.util.HexUtil;
-import cn.hutool.core.util.ReUtil;
-
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
@@ -24,14 +20,20 @@ import java.util.Set;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
 
+import cn.hutool.core.io.IoUtil;
+import cn.hutool.core.util.HexUtil;
+import cn.hutool.core.util.ReUtil;
+
 /**
  * HapUtil
+ *
  * @author westinyang
  */
 public class HapUtil {
 
     /**
      * 解析hap
+     *
      * @param hapFilePath hap文件路径
      * @return HapInfo
      */
@@ -65,7 +67,8 @@ public class HapUtil {
             JSONObject targetAbility = null;
             try {
                 targetAbility = (JSONObject) moduleAbilities.get(0);
-            } catch (Exception ignore) {}
+            } catch (Exception ignore) {
+            }
             for (Object item : moduleAbilities) {
                 JSONObject ability = (JSONObject) item;
                 if (hapInfo.mainElement.equals(ability.getString("name"))) {
@@ -100,8 +103,7 @@ public class HapUtil {
                         techList.add("Cocos");
                     }
                 }
-            }
-            finally {
+            } finally {
                 zipFile.close();
             }
             hapInfo.techList = techList;
@@ -117,7 +119,8 @@ public class HapUtil {
 
     /**
      * 读取文件为JsonObject
-     * @param zipFile zip文件
+     *
+     * @param zipFile   zip文件
      * @param entryName 条目名称
      * @return
      */
@@ -137,7 +140,8 @@ public class HapUtil {
 
     /**
      * 读取文件为图像
-     * @param zipFile zip文件
+     *
+     * @param zipFile   zip文件
      * @param entryName 条目名称
      * @return
      */
@@ -156,7 +160,8 @@ public class HapUtil {
 
     /**
      * 读取文件为字节数组
-     * @param zipFile zip文件
+     *
+     * @param zipFile   zip文件
      * @param entryName 条目名称
      * @return
      */
@@ -174,11 +179,11 @@ public class HapUtil {
     }
 
     public static void destroyHapInfo(@NonNull Context context, @NonNull HapInfo hapInfo) {
+        // 删除临时文件
         if (hapInfo.hapFilePath != null
-                && context.getExternalCacheDir() != null
-                && hapInfo.hapFilePath.startsWith(context.getExternalCacheDir().getAbsolutePath())) {
+                && MyFileUtil.isExternalCacheFile(context, hapInfo.hapFilePath)) {
             File hapFile = new File(hapInfo.hapFilePath);
-            if (!hapFile.delete()) {
+            if (hapFile.isFile() && !hapFile.delete()) {
                 hapFile.deleteOnExit();
             }
         }

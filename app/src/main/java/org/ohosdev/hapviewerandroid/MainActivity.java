@@ -41,6 +41,7 @@ import org.ohosdev.hapviewerandroid.util.MyFileUtil;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 import rikka.insets.WindowInsetsHelper;
 import rikka.layoutinflater.view.LayoutInflaterFactory;
@@ -221,9 +222,22 @@ public class MainActivity extends AppCompatActivity implements View.OnDragListen
                 if (path.length() > 0 && "hap".equals(extName)) {
                     parseHapAndShowInfo(path, uri);
                 } else {
+                    AtomicBoolean continueFlag = new AtomicBoolean(false);
                     Snackbar.make(binding.getRoot(), R.string.parse_error_type, Snackbar.LENGTH_SHORT)
-                            .setAction(R.string.parse_continue_ignoreError, v -> parseHapAndShowInfo(path, uri))
+                            .setAction(R.string.parse_continue_ignoreError, v -> {
+                                continueFlag.set(true);
+                                parseHapAndShowInfo(path, uri);
+                            })
                             .setAnchorView(R.id.floatingActionButton)
+                            .addCallback(new Snackbar.Callback() {
+                                @Override
+                                public void onDismissed(Snackbar transientBottomBar, int event) {
+                                    //不继续解析，说明此文件没用了
+                                    if (!continueFlag.get()) {
+                                        MyFileUtil.deleteExternalCacheFile(MainActivity.this, path);
+                                    }
+                                }
+                            })
                             .show();
                 }
                 runOnUiThread(() -> binding.progressBar.setVisibility(View.GONE));
@@ -264,6 +278,8 @@ public class MainActivity extends AppCompatActivity implements View.OnDragListen
                     .setAnchorView(R.id.floatingActionButton)
                     .show();
         }
+        // 到此为止，这个临时文件没用了，可以删掉了
+        MyFileUtil.deleteExternalCacheFile(this, hapFilePath);
         runOnUiThread(() -> binding.progressBar.setVisibility(View.GONE));
     }
 
