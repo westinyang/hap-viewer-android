@@ -52,7 +52,7 @@ public class MyFileUtil {
                     int index = cursor.getColumnIndex(OpenableColumns.DISPLAY_NAME);
                     assert index >= 0 : new RuntimeException("index < 0.");
                     String displayName = cursor.getString(index);
-                    File cache = new File(Objects.requireNonNull(ctx.getExternalCacheDir()).getAbsolutePath(), Math.round((Math.random() + 1) * 1000) + displayName);
+                    File cache = new File(Objects.requireNonNull(ctx.getExternalCacheDir()).getAbsolutePath(), displayName);
                     try (InputStream is = contentResolver.openInputStream(uri);
                          FileOutputStream fos = new FileOutputStream(cache)
                     ) {
