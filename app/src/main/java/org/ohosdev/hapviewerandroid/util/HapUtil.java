@@ -1,7 +1,10 @@
 package org.ohosdev.hapviewerandroid.util;
 
+import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+
+import androidx.annotation.NonNull;
 
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
@@ -12,6 +15,7 @@ import cn.hutool.core.io.IoUtil;
 import cn.hutool.core.util.HexUtil;
 import cn.hutool.core.util.ReUtil;
 
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Enumeration;
@@ -166,6 +170,20 @@ public class HapUtil {
             throw new RuntimeException(e);
         } finally {
             IoUtil.close(is);
+        }
+    }
+
+    public static void destroyHapInfo(@NonNull Context context, @NonNull HapInfo hapInfo) {
+        if (hapInfo.hapFilePath != null
+                && context.getExternalCacheDir() != null
+                && hapInfo.hapFilePath.startsWith(context.getExternalCacheDir().getAbsolutePath())) {
+            File hapFile = new File(hapInfo.hapFilePath);
+            if (!hapFile.delete()) {
+                hapFile.deleteOnExit();
+            }
+        }
+        if (hapInfo.icon != null) {
+            hapInfo.icon.recycle();
         }
     }
 
