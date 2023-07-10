@@ -203,8 +203,6 @@ public class MainActivity extends AppCompatActivity implements View.OnDragListen
                 selectFile();
             }
         } else {
-            // Snackbar.make(getWindow().getDecorView(), "权限申请失败", Snackbar.LENGTH_SHORT).setAction("Action", null).show();
-            // Toast.makeText(this, "权限申请失败", Toast.LENGTH_SHORT).show();
             Snackbar.make(binding.getRoot(), R.string.permission_grant_fail, Snackbar.LENGTH_SHORT)
                     .setAnchorView(R.id.floatingActionButton)
                     .show();
@@ -217,12 +215,6 @@ public class MainActivity extends AppCompatActivity implements View.OnDragListen
         // 但是华为设备上拖拽阴影在 Material Dialog 有bug
         AlertDialog.Builder builder = new MaterialAlertDialogBuilder(this);
         AlertDialog alertDialog = builder.setTitle(R.string.about)
-                // .setMessage("HAP查看器 for Android\n\n" +
-                //         "支持解析 OpenHarmony(开源鸿蒙)、HarmonyOS(鸿蒙) API9+(Stage模型) 的应用安装包，支持在 Android 7+ 的安卓设备上运行\n\n" +
-                //         "应用版本：" + BuildConfig.VERSION_NAME + "\n" +
-                //         "开源仓库：https://gitee.com/ohos-dev/hap-viewer-android\n" +
-                //         "开源贡献：westinyang、Jesse205\n" +
-                //         "企鹅群组：752399947")
                 .setMessage(String.format(getString(R.string.about_message), BuildConfig.VERSION_NAME))
                 .setPositiveButton(android.R.string.ok, null)
                 // .setCancelable(false)
@@ -231,9 +223,9 @@ public class MainActivity extends AppCompatActivity implements View.OnDragListen
         DialogHelper.setDialogContentSelectable(alertDialog, true);
     }
 
-    public void fabClick(View view) {
+    public void handelFabClick(View view) {
         // 申请权限
-        // 安卓10及以上不需要存储权限
+        // 安卓10及以上不需要存储权限，可以直接使用
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.Q
                 && ActivityCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
             ActivityCompat.requestPermissions(MainActivity.this, PERMISSIONS_EXTERNAL_STORAGE, REQUEST_CODE_EXTERNAL_STORAGE);
@@ -255,24 +247,7 @@ public class MainActivity extends AppCompatActivity implements View.OnDragListen
             synchronized(this) {
                 runOnUiThread(() -> binding.progressBar.setVisibility(View.VISIBLE));
                 File file = MyFileUtil.getOrCopyFile(MainActivity.this, uri);
-                /* try {
-                    // Android 10+ 把文件复制到沙箱内
-                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
-                        file = MyFileUtil.uriToFileApiQ(MainActivity.this, uri);
-                    }
-                    // Android 10 以下获取文件真实路径，创建File
-                    else {
-                        String path = MyFileUtil.getPath(MainActivity.this, uri);
-                        if (path != null) {
-                            file = new File(path);
-                        }
-                    }
-                } catch (RuntimeException | AssertionError e) {
-                    e.printStackTrace();
-                } */
-
                 if (file == null) {
-                    // Toast.makeText(this, "文件获取失败", Toast.LENGTH_SHORT).show();
                     Snackbar.make(binding.getRoot(), R.string.parse_error_fail_obtain, Snackbar.LENGTH_SHORT)
                             .setAnchorView(R.id.floatingActionButton)
                             .show();
@@ -285,7 +260,6 @@ public class MainActivity extends AppCompatActivity implements View.OnDragListen
                 if (path.length() > 0 && "hap".equals(extName)) {
                     parseHapAndShowInfo(path, uri);
                 } else {
-                    // Toast.makeText(this, "请选择一个hap安装包", Toast.LENGTH_SHORT).show();
                     Snackbar.make(binding.getRoot(), R.string.parse_error_type, Snackbar.LENGTH_SHORT)
                             .setAction(R.string.parse_continue_ignoreError, v -> parseHapAndShowInfo(path, uri))
                             .setAnchorView(R.id.floatingActionButton)

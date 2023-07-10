@@ -9,11 +9,12 @@ import android.database.Cursor;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Environment;
-import android.os.FileUtils;
 import android.provider.DocumentsContract;
 import android.provider.MediaStore;
 import android.provider.OpenableColumns;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.core.content.ContextCompat;
 
 import com.jesse205.util.FileUtil;
@@ -36,7 +37,8 @@ public class MyFileUtil {
      * @return File
      */
     // @RequiresApi(api = Build.VERSION_CODES.Q)
-    public static File uriToFileApiQ(Context ctx, Uri uri) throws RuntimeException {
+    @Nullable
+    public static File uriToFileApiQ(@NonNull Context ctx, @NonNull Uri uri) throws RuntimeException {
         File file = null;
         // android10以上转换
         if (Objects.equals(uri.getScheme(), ContentResolver.SCHEME_FILE)) {
@@ -78,7 +80,8 @@ public class MyFileUtil {
      * @param uri     The Uri to query.
      * @author paulburke
      */
-    public static String getPath(final Context context, final Uri uri) {
+    @Nullable
+    public static String getPath(@NonNull final Context context, @NonNull final Uri uri) {
 
         final boolean isKitKat = Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT;
 
@@ -150,8 +153,9 @@ public class MyFileUtil {
      * @param selectionArgs (Optional) Selection arguments used in the query.
      * @return The value of the _data column, which is typically a file path.
      */
-    public static String getDataColumn(Context context, Uri uri, String selection,
-                                       String[] selectionArgs) {
+    @Nullable
+    public static String getDataColumn(@NonNull Context context, @NonNull Uri uri, @Nullable String selection,
+                                       @Nullable String[] selectionArgs) {
 
         Cursor cursor = null;
         final String column = "_data";
@@ -201,10 +205,11 @@ public class MyFileUtil {
      * 仅当有存储权限，且可以获取文件路径时返回原文件，否则返回临时文件
      *
      * @param context 上下文
-     * @param uri
-     * @return
+     * @param uri     Uri
+     * @return 获取到的文件路径，或者是复制到的新文件路径
      */
-    public static File getOrCopyFile(Context context, Uri uri) {
+    @Nullable
+    public static File getOrCopyFile(@NonNull Context context, @NonNull Uri uri) {
         if (ContextCompat.checkSelfPermission(context, Manifest.permission.READ_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED) {
             try {
                 String path = MyFileUtil.getPath(context, uri);
