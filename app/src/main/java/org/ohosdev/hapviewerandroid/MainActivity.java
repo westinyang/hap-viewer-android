@@ -70,6 +70,7 @@ public class MainActivity extends AppCompatActivity implements View.OnDragListen
     private Uri nowUri = null;
     private final ActivityResultLauncher<String> selectFileResultLauncher = registerForActivityResult(
             new ActivityResultContracts.GetContent(), this::parse);
+    private OnExitCallback onExitCallback;
 
     @SuppressLint("SourceLockedOrientationActivity")
     @Override
@@ -85,8 +86,8 @@ public class MainActivity extends AppCompatActivity implements View.OnDragListen
         binding = ActivityMainBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
         setSupportActionBar(binding.toolbar);
-
-        getOnBackPressedDispatcher().addCallback(this, new OnExitCallback());
+        onExitCallback = new OnExitCallback();
+        getOnBackPressedDispatcher().addCallback(this, onExitCallback);
 
         infoAdapter = new InfoAdapter(this);
         RecyclerView recyclerView = binding.detailInfo.recyclerView;
@@ -186,6 +187,13 @@ public class MainActivity extends AppCompatActivity implements View.OnDragListen
                     .show();
 
         }
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        // Snackbar可能不会显示，也就不会重新启用，这时候就需要在重新进入应用时启用一下二次返回。
+        onExitCallback.setEnabled(true);
     }
 
     @Override
