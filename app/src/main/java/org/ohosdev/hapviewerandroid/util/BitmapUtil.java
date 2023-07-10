@@ -16,11 +16,13 @@ public class BitmapUtil {
     private static final String TAG = "BitmapUtil";
 
     /**
+     * 模糊Bitmap
+     * <br>
      * <a href="https://www.jianshu.com/p/dc6120570cea">https://www.jianshu.com/p/dc6120570cea</a>
      * (这个类虽然废弃了，但是也可以用)
      *
-     * @param context
-     * @param bitmap
+     * @param context 上下文
+     * @param bitmap 要模糊的Bitmap
      */
     public static void blurBitmap(Context context, Bitmap bitmap) {
         RenderScript renderScript = RenderScript.create(context);

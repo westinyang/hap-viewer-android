@@ -222,9 +222,7 @@ public class MyFileUtil {
                 e.printStackTrace();
             }
         }
-
         return MyFileUtil.uriToFileApiQ(context, uri);
     }
-
 
 }
