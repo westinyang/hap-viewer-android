@@ -6,7 +6,6 @@ import android.content.ClipData;
 import android.content.ClipDescription;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -64,6 +63,7 @@ public class MainActivity extends AppCompatActivity implements View.OnDragListen
     private Uri nowUri = null;
     private final ActivityResultLauncher<String> selectFileResultLauncher = registerForActivityResult(
             new ActivityResultContracts.GetContent(), this::parse);
+    private OnExitCallback onExitCallback;
 
     @SuppressLint("SourceLockedOrientationActivity")
     @Override
@@ -78,8 +78,8 @@ public class MainActivity extends AppCompatActivity implements View.OnDragListen
 
         setSupportActionBar(binding.toolbar);
         ThemeHelper.fixSystemBarsAppearance(this);
-
-        getOnBackPressedDispatcher().addCallback(this, new OnExitCallback());
+        onExitCallback = new OnExitCallback();
+        getOnBackPressedDispatcher().addCallback(this, onExitCallback);
 
         infoAdapter = new InfoAdapter(this);
         RecyclerView recyclerView = binding.detailInfo.recyclerView;
@@ -145,6 +145,13 @@ public class MainActivity extends AppCompatActivity implements View.OnDragListen
                     .show();
 
         }
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        // Snackbar可能不会显示，也就不会重新启用，这时候就需要在重新进入应用时启用一下二次返回。
+        onExitCallback.setEnabled(true);
     }
 
     @Override
@@ -284,8 +291,8 @@ public class MainActivity extends AppCompatActivity implements View.OnDragListen
     }
 
     private class OnExitCallback extends OnBackPressedCallback {
-        private Snackbar snackbar;
         private final Handler handler = new Handler();
+        private Snackbar snackbar;
 
         public OnExitCallback() {
             super(true);
@@ -301,14 +308,8 @@ public class MainActivity extends AppCompatActivity implements View.OnDragListen
                 public void onDismissed(Snackbar transientBottomBar, int event) {
                     OnExitCallback.this.setEnabled(true);
                 }
-
-                @Override
-                public void onShown(Snackbar sb) {
-                    OnExitCallback.this.setEnabled(false);
-                }
             });
             snackbar.show();
-            handler.post(() -> OnExitCallback.this.setEnabled(!snackbar.isShown()));
         }
     }
 }
