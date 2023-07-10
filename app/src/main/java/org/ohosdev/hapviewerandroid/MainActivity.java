@@ -12,6 +12,7 @@ import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
 import android.util.Log;
 import android.view.DragEvent;
 import android.view.Menu;
@@ -221,7 +222,7 @@ public class MainActivity extends AppCompatActivity implements View.OnDragListen
         }
         binding.progressBar.setVisibility(View.VISIBLE);
         new Thread(() -> {
-            synchronized(this) {
+            synchronized (this) {
                 runOnUiThread(() -> binding.progressBar.setVisibility(View.VISIBLE));
                 File file = MyFileUtil.getOrCopyFile(MainActivity.this, uri);
                 if (file == null) {
@@ -334,13 +335,18 @@ public class MainActivity extends AppCompatActivity implements View.OnDragListen
     }
 
     private class OnExitCallback extends OnBackPressedCallback {
+        private Snackbar snackbar;
+        private Handler handler = new Handler();
+
         public OnExitCallback() {
             super(true);
         }
 
         @Override
         public void handleOnBackPressed() {
-            Snackbar snackbar = Snackbar.make(binding.getRoot(), R.string.exit_toast, Snackbar.LENGTH_SHORT);
+            Log.d(TAG, "handleOnBackPressed: ");
+            OnExitCallback.this.setEnabled(false);
+            snackbar = Snackbar.make(binding.getRoot(), R.string.exit_toast, Snackbar.LENGTH_SHORT);
             snackbar.setAnchorView(R.id.floatingActionButton);
             snackbar.addCallback(new Snackbar.Callback() {
                 @Override
@@ -354,6 +360,7 @@ public class MainActivity extends AppCompatActivity implements View.OnDragListen
                 }
             });
             snackbar.show();
+            handler.post(() -> OnExitCallback.this.setEnabled(!snackbar.isShown()));
         }
     }
 }
