@@ -233,8 +233,6 @@ public class MainActivity extends AppCompatActivity implements View.OnDragListen
             });
         } catch (IOException | RuntimeException e) {
             e.printStackTrace();
-            Log.d(TAG, "parseHapAndShowInfo: ", e);
-            // Toast.makeText(this, "hap文件解析失败，目前仅支持解析 API9+ (Stage模型) 的应用安装包", Toast.LENGTH_LONG).show();
             Snackbar.make(binding.getRoot(), R.string.parse_error_fail, Snackbar.LENGTH_SHORT)
                     .setAnchorView(R.id.floatingActionButton)
                     .show();
