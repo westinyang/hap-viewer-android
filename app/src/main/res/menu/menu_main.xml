@@ -23,7 +23,6 @@
     </item>
     <item
         android:id="@+id/action_about"
-        android:onClick="aboutClick"
         android:title="@string/menu_about"
         app:showAsAction="never" />
 </menu>

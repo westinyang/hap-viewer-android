@@ -136,7 +136,7 @@ public class MainActivity extends AppCompatActivity implements View.OnDragListen
         super.onOptionsItemSelected(item);
         int itemId = item.getItemId();
         if (itemId == R.id.action_about) {
-            aboutClick(item);
+            handelAboutClick(item);
         } else if (itemId == R.id.action_theme_material1) {
             ThemeManager.setAppThemeStyle(this, ThemeManager.ThemeStyle.Material1);
             checkTheme();
@@ -188,7 +188,7 @@ public class MainActivity extends AppCompatActivity implements View.OnDragListen
         }
     }
 
-    public void aboutClick(MenuItem item) {
+    public void handelAboutClick(MenuItem item) {
         // 使用 Material Dialog
         // 但是华为设备上拖拽阴影在 Material Dialog 有bug
         AlertDialog.Builder builder = new MaterialAlertDialogBuilder(this);
