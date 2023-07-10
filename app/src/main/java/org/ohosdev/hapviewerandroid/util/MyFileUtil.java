@@ -52,11 +52,13 @@ public class MyFileUtil {
                     int index = cursor.getColumnIndex(OpenableColumns.DISPLAY_NAME);
                     assert index >= 0 : new RuntimeException("index < 0.");
                     String displayName = cursor.getString(index);
-                    File cache = new File(Objects.requireNonNull(ctx.getExternalCacheDir()).getAbsolutePath(), Math.round((Math.random() + 1) * 1000) + displayName);
+                    File externalCacheDir = ctx.getExternalCacheDir();
+                    assert externalCacheDir != null : new RuntimeException("cannot find externalCacheDir");
+                    File cache = new File(externalCacheDir.getAbsolutePath(), Math.round((Math.random() + 1) * 1000) + displayName);
                     try (InputStream is = contentResolver.openInputStream(uri);
                          FileOutputStream fos = new FileOutputStream(cache)
                     ) {
-                        assert is != null : new RuntimeException("Cannot open contentResolver.openInputStream.");
+                        assert is != null : new IOException("Cannot open contentResolver.openInputStream.");
                         FileUtil.copyFile(is, fos);
                         file = cache;
                     } catch (IOException e) {
@@ -222,7 +224,13 @@ public class MyFileUtil {
                 e.printStackTrace();
             }
         }
-        return MyFileUtil.uriToFileApiQ(context, uri);
+
+        try {
+            return MyFileUtil.uriToFileApiQ(context, uri);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
     }
 
 }

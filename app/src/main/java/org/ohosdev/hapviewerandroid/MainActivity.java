@@ -234,6 +234,9 @@ public class MainActivity extends AppCompatActivity implements View.OnDragListen
                 }
                 // 解析hap
                 String path = file.getAbsolutePath();
+                if (getExternalCacheDir() != null && path.startsWith(getExternalCacheDir().getAbsolutePath())) {
+                    file.deleteOnExit();
+                }
                 String extName = path.substring(path.lastIndexOf(".") + 1);
                 if (path.length() > 0 && "hap".equals(extName)) {
                     parseHapAndShowInfo(path, uri);
@@ -333,8 +336,8 @@ public class MainActivity extends AppCompatActivity implements View.OnDragListen
     }
 
     private class OnExitCallback extends OnBackPressedCallback {
-        private Snackbar snackbar;
         private final Handler handler = new Handler();
+        private Snackbar snackbar;
 
         public OnExitCallback() {
             super(true);
