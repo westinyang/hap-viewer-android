@@ -188,6 +188,14 @@ public class MainActivity extends AppCompatActivity implements View.OnDragListen
         }
     }
 
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        if (currentHapInfo != null) {
+            HapUtil.destroyHapInfo(this, currentHapInfo);
+        }
+    }
+
     public void handelAboutClick(MenuItem item) {
         // 使用 Material Dialog
         // 但是华为设备上拖拽阴影在 Material Dialog 有bug
@@ -234,9 +242,6 @@ public class MainActivity extends AppCompatActivity implements View.OnDragListen
                 }
                 // 解析hap
                 String path = file.getAbsolutePath();
-                if (getExternalCacheDir() != null && path.startsWith(getExternalCacheDir().getAbsolutePath())) {
-                    file.deleteOnExit();
-                }
                 String extName = path.substring(path.lastIndexOf(".") + 1);
                 if (path.length() > 0 && "hap".equals(extName)) {
                     parseHapAndShowInfo(path, uri);
@@ -269,6 +274,9 @@ public class MainActivity extends AppCompatActivity implements View.OnDragListen
         runOnUiThread(() -> binding.progressBar.setVisibility(View.VISIBLE));
         try {
             hapInfo = HapUtil.parse(hapFilePath);
+            if (currentHapInfo != null && !currentHapInfo.hapFilePath.equalsIgnoreCase(hapInfo.hapFilePath)) {
+                HapUtil.destroyHapInfo(this, currentHapInfo);
+            }
             runOnUiThread(() -> {
                 currentHapInfo = hapInfo;
                 nowUri = uri;

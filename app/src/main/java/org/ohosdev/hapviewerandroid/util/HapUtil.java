@@ -179,17 +179,18 @@ public class HapUtil {
     }
 
     public static void destroyHapInfo(@NonNull Context context, @NonNull HapInfo hapInfo) {
-        // 删除临时文件
         if (hapInfo.hapFilePath != null
-                && MyFileUtil.isExternalCacheFile(context, hapInfo.hapFilePath)) {
+                && context.getExternalCacheDir() != null
+                && hapInfo.hapFilePath.startsWith(context.getExternalCacheDir().getAbsolutePath())) {
             File hapFile = new File(hapInfo.hapFilePath);
-            if (hapFile.isFile() && !hapFile.delete()) {
+            if (!hapFile.delete()) {
                 hapFile.deleteOnExit();
             }
         }
         if (hapInfo.icon != null) {
             hapInfo.icon.recycle();
         }
+
     }
 
 }
