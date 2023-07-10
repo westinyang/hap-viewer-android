@@ -369,14 +369,8 @@ public class MainActivity extends AppCompatActivity implements View.OnDragListen
                 public void onDismissed(Snackbar transientBottomBar, int event) {
                     OnExitCallback.this.setEnabled(true);
                 }
-
-                @Override
-                public void onShown(Snackbar sb) {
-                    OnExitCallback.this.setEnabled(false);
-                }
             });
             snackbar.show();
-            handler.post(() -> OnExitCallback.this.setEnabled(!snackbar.isShown()));
         }
     }
 }
