@@ -334,7 +334,7 @@ public class MainActivity extends AppCompatActivity implements View.OnDragListen
 
     private class OnExitCallback extends OnBackPressedCallback {
         private Snackbar snackbar;
-        private Handler handler = new Handler();
+        private final Handler handler = new Handler();
 
         public OnExitCallback() {
             super(true);
