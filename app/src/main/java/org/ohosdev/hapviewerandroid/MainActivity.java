@@ -12,7 +12,6 @@ import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
-import android.os.Handler;
 import android.util.Log;
 import android.view.DragEvent;
 import android.view.Menu;
@@ -105,11 +104,6 @@ public class MainActivity extends AppCompatActivity implements View.OnDragListen
 
         // setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);  // 禁用横屏
         // 禁用横屏会导致平板与折叠屏用户体验不佳。应用目前的布局对横屏已经非常友好，取消禁用并无大碍
-        // 初始化应用信息
-        infoAdapter.setInfo(new HapInfo(true));
-        BitmapDrawable defaultIconDrawable = (BitmapDrawable) Objects.requireNonNull(AppCompatResources.getDrawable(this, R.drawable.ic_default_new));
-        binding.basicInfo.imageView.setBackground(new BitmapDrawable(getResources(),
-                newShadowBitmap(defaultIconDrawable.getBitmap())));
 
         // 解析传入的 Intent
         if (savedInstanceState == null) {
@@ -377,17 +371,20 @@ public class MainActivity extends AppCompatActivity implements View.OnDragListen
     }
 
     private void onHapInfoChanged(HapInfo hapInfo) {
-        /* if (currentHapInfo != null && !currentHapInfo.hapFilePath.equalsIgnoreCase(hapInfo.hapFilePath)) {
-            HapUtil.destroyHapInfo(this, currentHapInfo);
-        } */
         if (hapInfo != null) {
-            // currentHapInfo = hapInfo;
             // 显示基础信息
             binding.basicInfo.appName.setText(hapInfo.appName);
             binding.basicInfo.version.setText(String.format("%s (%s)", hapInfo.versionName, hapInfo.versionCode));
             // 显示应用图标
-            binding.basicInfo.imageView.setImageBitmap(hapInfo.icon);
-            binding.basicInfo.imageView.setBackground(new BitmapDrawable(getResources(), newShadowBitmap(hapInfo.icon)));
+            if (hapInfo.icon != null) {
+                binding.basicInfo.imageView.setImageBitmap(hapInfo.icon);
+                binding.basicInfo.imageView.setBackground(new BitmapDrawable(getResources(), newShadowBitmap(hapInfo.icon)));
+            }else{
+                BitmapDrawable defaultIconDrawable = (BitmapDrawable) Objects.requireNonNull(AppCompatResources.getDrawable(this, R.drawable.ic_default_new));
+                binding.basicInfo.imageView.setBackground(new BitmapDrawable(getResources(),
+                        newShadowBitmap(defaultIconDrawable.getBitmap())));
+            }
+
             // 显示应用信息
             infoAdapter.setInfo(hapInfo);
         } else {
@@ -401,7 +398,7 @@ public class MainActivity extends AppCompatActivity implements View.OnDragListen
 
         public MutableLiveData<HapInfo> getHapInfo() {
             if (hapInfo == null) {
-                hapInfo = new MutableLiveData<>();
+                hapInfo = new MutableLiveData<>(new HapInfo(true));
             }
             return hapInfo;
         }
@@ -417,7 +414,6 @@ public class MainActivity extends AppCompatActivity implements View.OnDragListen
     }
 
     private class OnExitCallback extends OnBackPressedCallback {
-        private final Handler handler = new Handler();
         @Nullable
         private Snackbar snackbar;
 
