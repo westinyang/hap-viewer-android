@@ -13,7 +13,7 @@
         android:theme="?actionBarTheme"
         app:fitsSystemWindowsInsets="top|start|end"
         app:liftOnScroll="?liftOnScroll"
-        app:liftOnScrollTargetViewId="@id/nestedScrollView">
+        app:liftOnScrollTargetViewId="@id/nested_scroll_view">
 
         <com.google.android.material.appbar.MaterialToolbar
             android:id="@+id/toolbar"
@@ -25,7 +25,7 @@
 
     <!-- BUG:RecyclerView回收失效 -->
     <androidx.core.widget.NestedScrollView
-        android:id="@+id/nestedScrollView"
+        android:id="@+id/nested_scroll_view"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:clipToPadding="false"
@@ -47,15 +47,6 @@
 
         </androidx.constraintlayout.widget.ConstraintLayout>
     </androidx.core.widget.NestedScrollView>
-
-    <ProgressBar
-        android:id="@+id/progress_bar"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:visibility="gone"
-        app:layout_anchor="@+id/nestedScrollView"
-        app:layout_anchorGravity="center"
-        app:layout_fitsSystemWindowsInsets="bottom|start|end" />
 
     <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
         android:id="@+id/floatingActionButton"
@@ -82,33 +73,23 @@
         app:fitsSystemWindowsInsets="bottom"
         app:layout_insetEdge="bottom" />
 
-    <LinearLayout
-        android:id="@+id/drop_mask"
+    <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:alpha="0"
-        android:background="@drawable/drag_mask"
-        android:contentDescription="@string/drop_here"
-        android:gravity="center"
-        android:orientation="vertical"
+        android:orientation="horizontal"
         app:layout_behavior="com.google.android.material.appbar.AppBarLayout$ScrollingViewBehavior"
         app:layout_fitsSystemWindowsInsets="bottom|start|end">
 
-        <ImageView
-            android:layout_width="32dp"
-            android:layout_height="32dp"
-            android:layout_margin="4dp"
-            android:importantForAccessibility="no"
-            android:src="@drawable/ic_file_upload"
-            app:tint="?colorAccent" />
-
-        <TextView
+        <ProgressBar
+            android:id="@+id/progress_bar"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_margin="4dp"
-            android:text="@string/drop_here"
-            android:textColor="?colorAccent"
-            android:textSize="16sp" />
-    </LinearLayout>
+            android:layout_gravity="center"
+            android:visibility="gone" />
+
+        <include
+            android:id="@+id/drop_mask"
+            layout="@layout/drop_mask" />
+    </FrameLayout>
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

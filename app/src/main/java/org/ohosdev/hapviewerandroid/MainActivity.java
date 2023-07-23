@@ -102,7 +102,7 @@ public class MainActivity extends AppCompatActivity implements View.OnDragListen
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
 
         // 启用拖放
-        binding.dropMask.setOnDragListener(this);
+        binding.dropMask.getRoot().setOnDragListener(this);
 
         // setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);  // 禁用横屏
         // 禁用横屏会导致平板与折叠屏用户体验不佳。应用目前的布局对横屏已经非常友好，取消禁用并无大碍
