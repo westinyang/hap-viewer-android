@@ -204,6 +204,13 @@ public class MainActivity extends AppCompatActivity implements View.OnDragListen
     }
 
     @Override
+    protected void onPause() {
+        super.onPause();
+        // 退出时可能会显示Snackbar，以至于下一次弹出多个snackbar
+        onExitCallback.snackbar.dismiss();
+    }
+
+    @Override
     protected void onDestroy() {
         super.onDestroy();
         // 因为用了LiveData，所以不应该在这里销毁
