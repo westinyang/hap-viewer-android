@@ -207,7 +207,9 @@ public class MainActivity extends AppCompatActivity implements View.OnDragListen
     protected void onPause() {
         super.onPause();
         // 退出时可能会显示Snackbar，以至于下一次弹出多个snackbar
-        onExitCallback.snackbar.dismiss();
+        if (onExitCallback.snackbar != null) {
+            onExitCallback.snackbar.dismiss();
+        }
     }
 
     @Override
@@ -416,6 +418,7 @@ public class MainActivity extends AppCompatActivity implements View.OnDragListen
 
     private class OnExitCallback extends OnBackPressedCallback {
         private final Handler handler = new Handler();
+        @Nullable
         private Snackbar snackbar;
 
         public OnExitCallback() {
