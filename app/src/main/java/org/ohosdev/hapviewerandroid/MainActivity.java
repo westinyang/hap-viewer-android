@@ -29,6 +29,9 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.content.res.AppCompatResources;
 import androidx.core.app.ActivityCompat;
+import androidx.lifecycle.MutableLiveData;
+import androidx.lifecycle.ViewModel;
+import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -62,16 +65,17 @@ public class MainActivity extends AppCompatActivity implements View.OnDragListen
     private static final String KEY_NOW_URI = "now_uri";
     // 文件读写权限 请求码
     private static final int REQUEST_CODE_EXTERNAL_STORAGE = 1;
-    public static HapInfo currentHapInfo = null;
+    // public static HapInfo currentHapInfo = null;
     private ThemeManager themeManager;
     // private long exitTime = 0;
     private InfoAdapter infoAdapter;
     private ActivityMainBinding binding;
-    @Nullable
-    private Uri nowUri = null;
+    private OnExitCallback onExitCallback;
+    private MainActivityModel model;
+    /* @Nullable
+    private Uri nowUri = null; */
     private final ActivityResultLauncher<String> selectFileResultLauncher = registerForActivityResult(
             new ActivityResultContracts.GetContent(), this::parse);
-    private OnExitCallback onExitCallback;
 
     @SuppressLint("SourceLockedOrientationActivity")
     @Override
@@ -89,6 +93,7 @@ public class MainActivity extends AppCompatActivity implements View.OnDragListen
         setSupportActionBar(binding.toolbar);
         onExitCallback = new OnExitCallback();
         getOnBackPressedDispatcher().addCallback(this, onExitCallback);
+
 
         infoAdapter = new InfoAdapter(this);
         RecyclerView recyclerView = binding.detailInfo.recyclerView;
@@ -112,7 +117,8 @@ public class MainActivity extends AppCompatActivity implements View.OnDragListen
             parse(intent.getData());
         }
 
-
+        model = new ViewModelProvider(this).get(MainActivityModel.class);
+        model.getHapInfo().observe(this, this::onHapInfoChanged);
     }
 
     @Override
@@ -152,7 +158,7 @@ public class MainActivity extends AppCompatActivity implements View.OnDragListen
         return true;
     }
 
-    @Override
+    /* @Override
     protected void onSaveInstanceState(@NonNull Bundle outState) {
         super.onSaveInstanceState(outState);
         if (nowUri != null)
@@ -166,7 +172,7 @@ public class MainActivity extends AppCompatActivity implements View.OnDragListen
         if (nowUriString != null) {
             parse(Uri.parse(nowUriString));
         }
-    }
+    } */
 
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
@@ -200,9 +206,10 @@ public class MainActivity extends AppCompatActivity implements View.OnDragListen
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        if (currentHapInfo != null) {
+        // 因为用了LiveData，所以不应该在这里销毁
+        /* if (currentHapInfo != null) {
             HapUtil.destroyHapInfo(this, currentHapInfo);
-        }
+        } */
     }
 
     public void handelAboutClick(MenuItem item) {
@@ -296,21 +303,8 @@ public class MainActivity extends AppCompatActivity implements View.OnDragListen
         runOnUiThread(() -> binding.progressBar.setVisibility(View.VISIBLE));
         try {
             hapInfo = HapUtil.parse(hapFilePath);
-            if (currentHapInfo != null && !currentHapInfo.hapFilePath.equalsIgnoreCase(hapInfo.hapFilePath)) {
-                HapUtil.destroyHapInfo(this, currentHapInfo);
-            }
-            runOnUiThread(() -> {
-                currentHapInfo = hapInfo;
-                nowUri = uri;
-                // 显示基础信息
-                binding.basicInfo.appName.setText(hapInfo.appName);
-                binding.basicInfo.version.setText(String.format("%s (%s)", hapInfo.versionName, hapInfo.versionCode));
-                // 显示应用图标
-                binding.basicInfo.imageView.setImageBitmap(hapInfo.icon);
-                binding.basicInfo.imageView.setBackground(new BitmapDrawable(getResources(), newShadowBitmap(hapInfo.icon)));
-                // 显示应用信息
-                infoAdapter.setInfo(hapInfo);
-            });
+
+            runOnUiThread(() -> model.getHapInfo().setValue(hapInfo));
         } catch (IOException | RuntimeException e) {
             e.printStackTrace();
             Snackbar.make(binding.getRoot(), R.string.parse_error_fail, Snackbar.LENGTH_SHORT)
@@ -371,6 +365,46 @@ public class MainActivity extends AppCompatActivity implements View.OnDragListen
     protected void onNewIntent(Intent intent) {
         super.onNewIntent(intent);
         parse(intent.getData());
+    }
+
+    private void onHapInfoChanged(HapInfo hapInfo) {
+        /* if (currentHapInfo != null && !currentHapInfo.hapFilePath.equalsIgnoreCase(hapInfo.hapFilePath)) {
+            HapUtil.destroyHapInfo(this, currentHapInfo);
+        } */
+        if (hapInfo != null) {
+            // currentHapInfo = hapInfo;
+            // 显示基础信息
+            binding.basicInfo.appName.setText(hapInfo.appName);
+            binding.basicInfo.version.setText(String.format("%s (%s)", hapInfo.versionName, hapInfo.versionCode));
+            // 显示应用图标
+            binding.basicInfo.imageView.setImageBitmap(hapInfo.icon);
+            binding.basicInfo.imageView.setBackground(new BitmapDrawable(getResources(), newShadowBitmap(hapInfo.icon)));
+            // 显示应用信息
+            infoAdapter.setInfo(hapInfo);
+        } else {
+            infoAdapter.setInfo(new HapInfo(true));
+        }
+    }
+
+    public static class MainActivityModel extends ViewModel {
+
+        private MutableLiveData<HapInfo> hapInfo;
+
+        public MutableLiveData<HapInfo> getHapInfo() {
+            if (hapInfo == null) {
+                hapInfo = new MutableLiveData<>();
+            }
+            return hapInfo;
+        }
+
+        @Override
+        protected void onCleared() {
+            super.onCleared();
+            HapInfo hapInfoValue = hapInfo.getValue();
+            if (hapInfoValue != null && hapInfoValue.icon != null) {
+                hapInfoValue.icon.recycle();
+            }
+        }
     }
 
     private class OnExitCallback extends OnBackPressedCallback {
