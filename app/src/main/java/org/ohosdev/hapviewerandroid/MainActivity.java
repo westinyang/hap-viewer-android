@@ -12,6 +12,7 @@ import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.text.util.Linkify;
 import android.util.Log;
 import android.view.DragEvent;
 import android.view.Menu;
@@ -36,6 +37,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.android.material.snackbar.Snackbar;
+import com.onegravity.rteditor.RTEditorMovementMethod;
 
 import org.ohosdev.hapviewerandroid.adapter.InfoAdapter;
 import org.ohosdev.hapviewerandroid.databinding.ActivityMainBinding;
@@ -221,10 +223,13 @@ public class MainActivity extends AppCompatActivity implements View.OnDragListen
         // 但是华为设备上拖拽阴影在 Material Dialog 有bug
         AlertDialog.Builder builder = new MaterialAlertDialogBuilder(this);
         AlertDialog alertDialog = builder.setTitle(R.string.about)
-                .setMessage(String.format(getString(R.string.about_message), BuildConfig.VERSION_NAME))
+                .setMessage("")
                 .setPositiveButton(android.R.string.ok, null)
                 .show();
-        DialogHelper.setDialogContentSelectable(alertDialog, true);
+        DialogHelper.setContentSelectable(alertDialog, true);
+        DialogHelper.setContentAutoLinkMask(alertDialog, Linkify.WEB_URLS);
+        DialogHelper.setContentMovementMethod(alertDialog, RTEditorMovementMethod.getInstance());
+        alertDialog.setMessage(String.format(getString(R.string.about_message), BuildConfig.VERSION_NAME));
     }
 
     public void handelFabClick(View view) {
