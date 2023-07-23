@@ -1,8 +1,9 @@
 <resources>
 
     <style name="Platform.V23.Theme.HapViewerAndroid.Material3" parent="Theme.Material3.DynamicColors.DayNight">
-        <item name="colorPrimaryDark">@android:color/transparent</item>
+        <item name="android:statusBarColor">@color/system_window_scrim</item>
         <item name="android:navigationBarColor">@color/system_window_scrim_compat</item>
+        <item name="android:windowLightStatusBar">?windowLightStatusBar</item>
         <item name="windowLightStatusBar">?isLightTheme</item>
         <item name="windowLightNavigationBar">?isLightTheme</item>
     </style>

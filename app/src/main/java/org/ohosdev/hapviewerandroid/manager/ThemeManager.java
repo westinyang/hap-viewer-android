@@ -115,9 +115,10 @@ public class ThemeManager {
                     WindowCompat.getInsetsController(window, window.getDecorView());
 
             windowInsetsController.setAppearanceLightStatusBars(windowLightStatusBar);
-            if (SDK_INT >= Build.VERSION_CODES.O && windowLightNavigationBar) {
-                windowInsetsController.setAppearanceLightNavigationBars(true);
-                window.setNavigationBarColor(context.getResources().getColor(R.color.system_window_scrim, context.getTheme()));
+            window.setNavigationBarColor(0);
+            if (SDK_INT >= Build.VERSION_CODES.O) {
+                windowInsetsController.setAppearanceLightNavigationBars(windowLightNavigationBar);
+                window.setNavigationBarColor(0);
             }
         }
     }
