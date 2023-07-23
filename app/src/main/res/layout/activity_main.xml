@@ -28,7 +28,6 @@
         android:id="@+id/nestedScrollView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@drawable/drag_mask"
         android:clipToPadding="false"
         app:fitsSystemWindowsInsets="start|end|bottom"
         app:layout_behavior="com.google.android.material.appbar.AppBarLayout$ScrollingViewBehavior">
@@ -82,5 +81,34 @@
         android:background="@drawable/navigation_bar_background"
         app:fitsSystemWindowsInsets="bottom"
         app:layout_insetEdge="bottom" />
+
+    <LinearLayout
+        android:id="@+id/drop_mask"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:alpha="0"
+        android:background="@drawable/drag_mask"
+        android:contentDescription="@string/drop_here"
+        android:gravity="center"
+        android:orientation="vertical"
+        app:layout_behavior="com.google.android.material.appbar.AppBarLayout$ScrollingViewBehavior"
+        app:layout_fitsSystemWindowsInsets="bottom|start|end">
+
+        <ImageView
+            android:layout_width="32dp"
+            android:layout_height="32dp"
+            android:layout_margin="4dp"
+            android:importantForAccessibility="no"
+            android:src="@drawable/ic_file_upload"
+            app:tint="?colorAccent" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="4dp"
+            android:text="@string/drop_here"
+            android:textColor="?colorAccent"
+            android:textSize="16sp" />
+    </LinearLayout>
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

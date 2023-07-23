@@ -19,5 +19,6 @@
     <string name="parse_continue_ignoreError">忽略错误，继续解析</string>
     <string name="separator_words">、</string>
     <string name="menu_theme">主题</string>
+    <string name="drop_here">拖到此处</string>
 
 </resources>

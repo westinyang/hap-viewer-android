@@ -96,7 +96,7 @@ public class MainActivity extends AppCompatActivity implements View.OnDragListen
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
 
         // 启用拖放
-        binding.nestedScrollView.setOnDragListener(this);
+        binding.dropMask.setOnDragListener(this);
 
         // setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);  // 禁用横屏
         // 禁用横屏会导致平板与折叠屏用户体验不佳。应用目前的布局对横屏已经非常友好，取消禁用并无大碍
@@ -341,8 +341,10 @@ public class MainActivity extends AppCompatActivity implements View.OnDragListen
         switch (event.getAction()) {
             case DragEvent.ACTION_DRAG_STARTED: {
                 for (int i = 0; i < event.getClipDescription().getMimeTypeCount(); i++) {
-                    if (!event.getClipDescription().getMimeType(i).equals(ClipDescription.MIMETYPE_TEXT_PLAIN))
+                    if (!event.getClipDescription().getMimeType(i).equals(ClipDescription.MIMETYPE_TEXT_PLAIN)) {
+                        v.setAlpha(1);
                         return true;
+                    }
                 }
                 return false;
             }
@@ -355,6 +357,10 @@ public class MainActivity extends AppCompatActivity implements View.OnDragListen
                         break;
                     }
                 }
+                break;
+            }
+            case DragEvent.ACTION_DRAG_ENDED: {
+                v.setAlpha(0);
                 break;
             }
         }
