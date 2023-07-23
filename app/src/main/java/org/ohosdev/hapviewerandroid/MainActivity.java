@@ -61,7 +61,7 @@ public class MainActivity extends AppCompatActivity implements View.OnDragListen
     private static final String[] PERMISSIONS_EXTERNAL_STORAGE = {
             Manifest.permission.READ_EXTERNAL_STORAGE
     };
-    private static final String KEY_NOW_URI = "now_uri";
+    // private static final String KEY_NOW_URI = "now_uri";
     // 文件读写权限 请求码
     private static final int REQUEST_CODE_EXTERNAL_STORAGE = 1;
     // public static HapInfo currentHapInfo = null;
@@ -152,6 +152,7 @@ public class MainActivity extends AppCompatActivity implements View.OnDragListen
         return true;
     }
 
+    // 由于引入了ViewModel和LiveData，就不需要以这种方式保存数据了
     /* @Override
     protected void onSaveInstanceState(@NonNull Bundle outState) {
         super.onSaveInstanceState(outState);
@@ -222,8 +223,6 @@ public class MainActivity extends AppCompatActivity implements View.OnDragListen
         AlertDialog alertDialog = builder.setTitle(R.string.about)
                 .setMessage(String.format(getString(R.string.about_message), BuildConfig.VERSION_NAME))
                 .setPositiveButton(android.R.string.ok, null)
-                // .setCancelable(false)
-                // 此处禁止取消对话框并无任何业务，可以取消禁用
                 .show();
         DialogHelper.setDialogContentSelectable(alertDialog, true);
     }
@@ -379,7 +378,7 @@ public class MainActivity extends AppCompatActivity implements View.OnDragListen
             if (hapInfo.icon != null) {
                 binding.basicInfo.imageView.setImageBitmap(hapInfo.icon);
                 binding.basicInfo.imageView.setBackground(new BitmapDrawable(getResources(), newShadowBitmap(hapInfo.icon)));
-            }else{
+            } else {
                 BitmapDrawable defaultIconDrawable = (BitmapDrawable) Objects.requireNonNull(AppCompatResources.getDrawable(this, R.drawable.ic_default_new));
                 binding.basicInfo.imageView.setBackground(new BitmapDrawable(getResources(),
                         newShadowBitmap(defaultIconDrawable.getBitmap())));
@@ -392,8 +391,8 @@ public class MainActivity extends AppCompatActivity implements View.OnDragListen
         }
     }
 
+    // https://developer.android.google.cn/topic/libraries/architecture/viewmodel?hl=zh-cn
     public static class MainActivityModel extends ViewModel {
-
         private MutableLiveData<HapInfo> hapInfo;
 
         public MutableLiveData<HapInfo> getHapInfo() {
