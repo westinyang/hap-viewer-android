@@ -4,7 +4,7 @@
         <selector>
             <item android:state_drag_hovered="true">
                 <shape android:shape="rectangle">
-                    <solid android:color="@color/accent_emphasis_disabled" />
+                    <solid android:color="@color/accent_emphasis_disabled_background" />
                 </shape>
             </item>
         </selector>
