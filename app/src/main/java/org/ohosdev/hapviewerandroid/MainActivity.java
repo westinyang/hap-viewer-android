@@ -72,7 +72,7 @@ public class MainActivity extends AppCompatActivity implements View.OnDragListen
     private InfoAdapter infoAdapter;
     private ActivityMainBinding binding;
     private OnExitCallback onExitCallback;
-    private MainActivityModel model;
+    private MainViewModel model;
     /* @Nullable
     private Uri nowUri = null; */
     private final ActivityResultLauncher<String> selectFileResultLauncher = registerForActivityResult(
@@ -113,7 +113,7 @@ public class MainActivity extends AppCompatActivity implements View.OnDragListen
             parse(intent.getData());
         }
 
-        model = new ViewModelProvider(this).get(MainActivityModel.class);
+        model = new ViewModelProvider(this).get(MainViewModel.class);
         model.getHapInfo().observe(this, this::onHapInfoChanged);
     }
 
@@ -397,7 +397,7 @@ public class MainActivity extends AppCompatActivity implements View.OnDragListen
     }
 
     // https://developer.android.google.cn/topic/libraries/architecture/viewmodel?hl=zh-cn
-    public static class MainActivityModel extends ViewModel {
+    public static class MainViewModel extends ViewModel {
         private MutableLiveData<HapInfo> hapInfo;
 
         public MutableLiveData<HapInfo> getHapInfo() {
