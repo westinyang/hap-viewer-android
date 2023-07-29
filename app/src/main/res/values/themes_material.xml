@@ -20,6 +20,7 @@
         <item name="materialCardViewElevatedStyle">@style/Widget.HapViewerAndroid.CardView.Elevated</item>
         <item name="materialCardViewStyle">?materialCardViewElevatedStyle</item>
         <item name="liftOnScroll">false</item>
+        <item name="paddingBottomFabSize">64dp</item>
     </style>
 
     <style name="Theme.HapViewerAndroid" parent="Base.Theme.HapViewerAndroid" />

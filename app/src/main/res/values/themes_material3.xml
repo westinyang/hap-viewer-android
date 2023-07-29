@@ -16,6 +16,7 @@
         <item name="colorAccent">?colorPrimary</item>
         <item name="materialCardViewStyle">?materialCardViewElevatedStyle</item>
         <item name="liftOnScroll">true</item>
+        <item name="paddingBottomFabSize">72dp</item>
     </style>
 
     <style name="Theme.HapViewerAndroid.Material3" parent="Base.Theme.HapViewerAndroid.Material3" />

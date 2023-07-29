@@ -32,6 +32,7 @@
         <item name="toolbarSurfaceStyle">@style/Widget.HapViewerAndroid.Toolbar.Surface</item>
         <item name="toolbarStyle">?toolbarSurfaceStyle</item>
         <item name="liftOnScroll">true</item>
+        <item name="paddingBottomFabSize">64dp</item>
     </style>
 
     <style name="Theme.HapViewerAndroid.Material2" parent="Base.Theme.HapViewerAndroid.Material2" />

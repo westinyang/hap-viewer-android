@@ -104,6 +104,8 @@ public class MainActivity extends AppCompatActivity implements View.OnDragListen
         // 启用拖放
         binding.dropMask.getRoot().setOnDragListener(this);
 
+        binding.floatingActionButton.setOnClickListener(this::onFabClick);
+
         // setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);  // 禁用横屏
         // 禁用横屏会导致平板与折叠屏用户体验不佳。应用目前的布局对横屏已经非常友好，取消禁用并无大碍
 
@@ -116,6 +118,8 @@ public class MainActivity extends AppCompatActivity implements View.OnDragListen
         model = new ViewModelProvider(this).get(MainViewModel.class);
         model.getHapInfo().observe(this, this::onHapInfoChanged);
     }
+
+
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -232,7 +236,7 @@ public class MainActivity extends AppCompatActivity implements View.OnDragListen
         alertDialog.setMessage(String.format(getString(R.string.about_message), BuildConfig.VERSION_NAME));
     }
 
-    public void handelFabClick(View view) {
+    public void onFabClick(View view) {
         // 申请权限
         // 安卓10及以上不需要存储权限，可以直接使用
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.Q

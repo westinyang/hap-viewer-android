@@ -3,6 +3,8 @@
 
     <style name="Platform.V29.Theme.HapViewerAndroid.Material2" parent="Platform.V28.Theme.HapViewerAndroid.Material2">
         <item name="android:forceDarkAllowed">false</item>
+        <item name="android:enforceNavigationBarContrast">false</item>
+        <item name="android:enforceStatusBarContrast">false</item>
     </style>
 
     <style name="Platform.Theme.HapViewerAndroid.Material2" parent="Platform.V29.Theme.HapViewerAndroid.Material2" />

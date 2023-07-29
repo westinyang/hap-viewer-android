@@ -2,4 +2,5 @@
 <resources>
     <attr name="windowLightStatusBar" format="boolean" />
     <attr name="windowLightNavigationBar" format="boolean" />
+    <attr name="paddingBottomFabSize" format="dimension" />
 </resources>
