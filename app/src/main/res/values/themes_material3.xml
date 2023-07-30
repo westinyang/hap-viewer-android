@@ -1,0 +1,23 @@
+<resources>
+
+    <style name="Platform.V23.Theme.HapViewerAndroid.Material3" parent="Theme.Material3.DynamicColors.DayNight">
+        <item name="android:statusBarColor">@color/system_window_scrim</item>
+        <item name="android:navigationBarColor">@color/system_window_scrim_compat</item>
+        <item name="android:windowLightStatusBar">?windowLightStatusBar</item>
+        <item name="windowLightStatusBar">?isLightTheme</item>
+        <item name="windowLightNavigationBar">?isLightTheme</item>
+    </style>
+
+    <style name="Platform.Theme.HapViewerAndroid.Material3" parent="Platform.V23.Theme.HapViewerAndroid.Material3" />
+
+    <style name="Base.Theme.HapViewerAndroid.Material3" parent="Platform.Theme.HapViewerAndroid.Material3">
+        <item name="windowActionBar">false</item>
+        <item name="windowNoTitle">true</item>
+        <item name="colorAccent">?colorPrimary</item>
+        <item name="materialCardViewStyle">?materialCardViewElevatedStyle</item>
+        <item name="liftOnScroll">true</item>
+        <item name="paddingBottomFabSize">72dp</item>
+    </style>
+
+    <style name="Theme.HapViewerAndroid.Material3" parent="Base.Theme.HapViewerAndroid.Material3" />
+</resources>

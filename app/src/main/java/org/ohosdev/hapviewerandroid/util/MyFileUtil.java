@@ -56,7 +56,7 @@ public class MyFileUtil {
                     try (InputStream is = contentResolver.openInputStream(uri);
                          FileOutputStream fos = new FileOutputStream(cache)
                     ) {
-                        assert is != null : new RuntimeException("Cannot open contentResolver.openInputStream.");
+                        assert is != null : new IOException("Cannot open contentResolver.openInputStream.");
                         FileUtil.copyFile(is, fos);
                         file = cache;
                     } catch (IOException e) {
@@ -223,7 +223,12 @@ public class MyFileUtil {
             }
         }
 
-        return MyFileUtil.uriToFileApiQ(context, uri);
+        try {
+            return MyFileUtil.uriToFileApiQ(context, uri);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
     }
 
     public static boolean isExternalCacheFile(@NonNull Context context, @NonNull String filePath) {
@@ -231,7 +236,7 @@ public class MyFileUtil {
                 && filePath.startsWith(context.getExternalCacheDir().getAbsolutePath());
     }
 
-    public static void deleteExternalCacheFile(@NonNull Context context, @NonNull String filePath){
+    public static void deleteExternalCacheFile(@NonNull Context context, @NonNull String filePath) {
         if (isExternalCacheFile(context, filePath)) {
             File hapFile = new File(filePath);
             if (hapFile.delete()) {

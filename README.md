@@ -40,6 +40,8 @@
   - [Material Components for Android](https://github.com/material-components/material-components-android) `Apache-2.0 license`
   - [Android Jetpack](https://github.com/androidx/androidx) `Apache-2.0 license`
   - [AndroidFastScroll](https://github.com/zhanghai/AndroidFastScroll) `Apache-2.0 license`
+  - [Pictogrammers Material Design Icons](https://pictogrammers.com/library/mdi/) `Apache-2.0 license`
+  - [Android-RTEditor](https://github.com/1gravity/Android-RTEditor) `Apache-2.0 license`
 
 ## 开源贡献
 

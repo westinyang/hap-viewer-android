@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources xmlns:tools="http://schemas.android.com/tools" tools:ignore="PrivateResource">
+
+    <!-- CardView -->
+    <style name="Widget.HapViewerAndroid.CardView.Elevated" parent="Widget.MaterialComponents.CardView">
+        <item name="cardElevation">@dimen/cardview_default_elevation</item>
+    </style>
+
+    <style name="Widget.HapViewerAndroid.CardView.Outlined" parent="Widget.MaterialComponents.CardView">
+        <item name="cardElevation">0dp</item>
+        <item name="strokeWidth">@dimen/mtrl_btn_stroke_size</item>
+        <item name="strokeColor">@color/mtrl_btn_stroke_color_selector</item>
+    </style>
+
+    <!-- Toolbar -->
+    <style name="ThemeOverlay.HapViewerAndroid.Toolbar.Surface" parent="ThemeOverlay.MaterialComponents.Toolbar.Surface">
+        <item name="colorControlNormal">@color/material_on_surface_emphasis_high_type</item>
+        <item name="actionMenuTextColor">@color/material_on_surface_emphasis_high_type</item>
+    </style>
+
+    <style name="Widget.HapViewerAndroid.Toolbar.Surface" parent="Widget.MaterialComponents.Toolbar.Surface">
+        <item name="android:background">?attr/colorSurface</item>
+        <item name="titleTextColor">@color/material_on_surface_emphasis_high_type</item>
+        <item name="subtitleTextColor">@color/material_on_surface_emphasis_medium</item>
+        <item name="android:theme">@style/ThemeOverlay.MaterialComponents.Toolbar.Surface</item>
+    </style>
+</resources>

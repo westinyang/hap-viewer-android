@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <style name="Platform.V28.Theme.HapViewerAndroid.Material2" parent="Platform.V26.Theme.HapViewerAndroid.Material2">
+        <item name="android:windowLayoutInDisplayCutoutMode">shortEdges</item>
+    </style>
+
+    <style name="Platform.Theme.HapViewerAndroid.Material2" parent="Platform.V28.Theme.HapViewerAndroid.Material2" />
+</resources>

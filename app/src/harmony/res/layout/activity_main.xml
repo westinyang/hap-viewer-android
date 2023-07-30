@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:clipToPadding="true"
+    app:edgeToEdge="true">
+
+    <!-- BUG:RecyclerView回收失效 -->
+    <androidx.core.widget.NestedScrollView
+        android:id="@+id/nestedScrollView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@drawable/drag_mask"
+        app:layout_behavior="com.google.android.material.appbar.AppBarLayout$ScrollingViewBehavior">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/content_container"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            app:fitsSystemWindowsInsets="start|end">
+
+            <include
+                android:id="@+id/basic_info"
+                layout="@layout/info_basic" />
+
+            <include
+                android:id="@+id/detail_info"
+                layout="@layout/info_details" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </androidx.core.widget.NestedScrollView>
+
+    <com.google.android.material.appbar.AppBarLayout
+        android:id="@+id/appbar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:fitsSystemWindows="true"
+        android:theme="?actionBarTheme"
+        app:fitsSystemWindowsInsets="top|start|end">
+
+        <com.google.android.material.appbar.MaterialToolbar
+            android:id="@+id/toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="?attr/actionBarSize"
+            app:popupTheme="?actionBarPopupTheme" />
+    </com.google.android.material.appbar.AppBarLayout>
+
+    <com.huawei.uikit.hwfloatingactionbutton.widget.HwFloatingActionButton
+        android:id="@+id/floatingActionButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="16dp"
+        android:clickable="true"
+        android:focusable="true"
+        android:onClick="fabClick"
+        android:src="@drawable/ic_file"
+        android:tint="@android:color/white"
+        app:hwFabTitleString="@string/select_file_hap"
+        app:layout_anchor="@id/bottom_stub"
+        app:layout_anchorGravity="top|end"
+        app:layout_dodgeInsetEdges="bottom"
+        app:layout_fitsSystemWindowsInsets="end" />
+
+    <!-- 悬浮球不能直接设置底部衬边，也不能给CoordinatorLayout设置衬边，只好通过这种方法解决底部边距问题了 -->
+    <FrameLayout
+        android:id="@+id/bottom_stub"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom"
+        app:fitsSystemWindowsInsets="bottom"
+        app:layout_insetEdge="bottom" />
+
+</androidx.coordinatorlayout.widget.CoordinatorLayout>

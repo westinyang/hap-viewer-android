@@ -3,37 +3,41 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:clipToPadding="true"
+    android:clipToPadding="false"
     app:edgeToEdge="true">
 
     <com.google.android.material.appbar.AppBarLayout
         android:id="@+id/appbar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:fitsSystemWindows="true"
         android:theme="?actionBarTheme"
-        app:fitsSystemWindowsInsets="top|start|end">
+        app:fitsSystemWindowsInsets="top|start|end"
+        app:liftOnScroll="?liftOnScroll"
+        app:liftOnScrollTargetViewId="@id/nested_scroll_view">
 
         <com.google.android.material.appbar.MaterialToolbar
             android:id="@+id/toolbar"
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
+            android:background="@null"
             app:popupTheme="?actionBarPopupTheme" />
     </com.google.android.material.appbar.AppBarLayout>
 
     <!-- BUG:RecyclerView回收失效 -->
     <androidx.core.widget.NestedScrollView
-        android:id="@+id/nestedScrollView"
+        android:id="@+id/nested_scroll_view"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@drawable/drag_mask"
-        app:layout_behavior="com.google.android.material.appbar.AppBarLayout$ScrollingViewBehavior">
+        android:clipToPadding="false"
+        app:fitsSystemWindowsInsets="start|end|bottom"
+        app:layout_behavior="com.google.android.material.appbar.AppBarLayout$ScrollingViewBehavior"
+        android:paddingBottom="?paddingBottomFabSize">
+
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/content_container"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            app:fitsSystemWindowsInsets="start|end">
+            android:layout_height="match_parent">
 
             <include
                 android:id="@+id/basic_info"
@@ -46,15 +50,6 @@
         </androidx.constraintlayout.widget.ConstraintLayout>
     </androidx.core.widget.NestedScrollView>
 
-    <ProgressBar
-        android:id="@+id/progress_bar"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:visibility="gone"
-        app:layout_anchor="@+id/nestedScrollView"
-        app:layout_anchorGravity="center"
-        app:layout_fitsSystemWindowsInsets="bottom|start|end" />
-
     <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
         android:id="@+id/floatingActionButton"
         android:layout_width="wrap_content"
@@ -62,21 +57,40 @@
         android:layout_margin="16dp"
         android:clickable="true"
         android:focusable="true"
-        android:onClick="handelFabClick"
         android:text="@string/select_file_hap"
-        app:icon="@drawable/ic_folder"
-        app:layout_anchor="@id/bottom_stub"
+        app:icon="@drawable/ic_file"
+        app:layout_anchor="@id/bottom_scrim"
         app:layout_anchorGravity="top|end"
         app:layout_dodgeInsetEdges="bottom"
         app:layout_fitsSystemWindowsInsets="end" />
 
     <!-- 悬浮球不能直接设置底部衬边，也不能给CoordinatorLayout设置衬边，只好通过这种方法解决底部边距问题了 -->
     <FrameLayout
-        android:id="@+id/bottom_stub"
+        android:id="@+id/bottom_scrim"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="bottom"
+        android:background="@drawable/navigation_bar_background"
         app:fitsSystemWindowsInsets="bottom"
         app:layout_insetEdge="bottom" />
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="horizontal"
+        app:layout_behavior="com.google.android.material.appbar.AppBarLayout$ScrollingViewBehavior"
+        app:layout_fitsSystemWindowsInsets="bottom|start|end">
+
+        <ProgressBar
+            android:id="@+id/progress_bar"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:visibility="gone" />
+
+        <include
+            android:id="@+id/drop_mask"
+            layout="@layout/drop_mask" />
+    </FrameLayout>
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

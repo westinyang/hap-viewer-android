@@ -14,12 +14,22 @@ android {
         versionName "1.2.0"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+
+        // resConfigs "en", "zh-rCN"
     }
 
     buildTypes {
         release {
-            minifyEnabled false
+            minifyEnabled true
+            // shrinkResources true
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+            signingConfig signingConfigs.debug
+        }
+        debug {
+            minifyEnabled true
+            // shrinkResources true
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+            signingConfig signingConfigs.debug
         }
     }
 
@@ -30,6 +40,15 @@ android {
 
     buildFeatures {
         viewBinding true
+    }
+    flavorDimensions 'theme'
+    productFlavors {
+        material {
+            dimension 'theme'
+        }
+        /* harmony {
+            dimension 'theme'
+        } */
     }
 }
 
@@ -46,6 +65,10 @@ dependencies {
     implementation 'com.alibaba:fastjson:1.2.83'
     implementation 'dev.rikka.rikkax.insets:insets:1.3.0'
     implementation 'dev.rikka.rikkax.layoutinflater:layoutinflater:1.3.0'
+
+    // implementation 'com.huawei.ui.uikit:hwbutton-phone:1.0.0.500'
+    // implementation 'com.huawei.ui.uikit:hwfloatingactionbutton-phone:1.0.0.500'
+    // implementation 'com.github.bumptech.glide:glide:4.15.1'
 
     //    implementation 'com.android.tools:desugar_jdk_libs:1.1.8'
 }

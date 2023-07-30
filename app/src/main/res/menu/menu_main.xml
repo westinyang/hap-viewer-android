@@ -3,10 +3,26 @@
     xmlns:tools="http://schemas.android.com/tools"
     tools:context="com.example.myapp.MainActivity">
     <item
-        android:id="@+id/action_settings"
-        android:orderInCategory="100"
+        android:id="@+id/action_theme"
+        android:title="@string/menu_theme"
+        app:showAsAction="never">
+        <menu>
+            <group
+                android:checkableBehavior="single">
+                <item
+                    android:id="@+id/action_theme_material1"
+                    android:title="@string/material1" />
+                <item
+                    android:id="@+id/action_theme_material2"
+                    android:title="@string/material2" />
+                <item
+                    android:id="@+id/action_theme_material3"
+                    android:title="@string/material3" />
+            </group>
+        </menu>
+    </item>
+    <item
+        android:id="@+id/action_about"
         android:title="@string/menu_about"
-        app:showAsAction="never"
-        android:onClick="handelAboutClick"
-        />
+        app:showAsAction="never" />
 </menu>

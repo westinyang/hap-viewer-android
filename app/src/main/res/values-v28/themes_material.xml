@@ -5,10 +5,4 @@
     </style>
 
     <style name="Platform.Theme.HapViewerAndroid" parent="Platform.V28.Theme.HapViewerAndroid" />
-
-    <style name="Platform.V28.Theme.HapViewerAndroid.Material3" parent="Platform.V26.Theme.HapViewerAndroid.Material3">
-        <item name="android:windowLayoutInDisplayCutoutMode">shortEdges</item>
-    </style>
-
-    <style name="Platform.Theme.HapViewerAndroid.Material3" parent="Platform.V28.Theme.HapViewerAndroid.Material3" />
 </resources>
