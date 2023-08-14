@@ -232,8 +232,9 @@ public class MainActivity extends AppCompatActivity implements View.OnDragListen
                 .show();
         DialogHelper.setContentSelectable(alertDialog, true);
         DialogHelper.setContentAutoLinkMask(alertDialog, Linkify.WEB_URLS);
-        DialogHelper.setContentMovementMethod(alertDialog, RTEditorMovementMethod.getInstance());
         alertDialog.setMessage(String.format(getString(R.string.about_message), BuildConfig.VERSION_NAME));
+        DialogHelper.setContentAutoLinkMask(alertDialog, 0);
+        DialogHelper.setContentMovementMethod(alertDialog, RTEditorMovementMethod.getInstance());
     }
 
     public void onFabClick(View view) {
