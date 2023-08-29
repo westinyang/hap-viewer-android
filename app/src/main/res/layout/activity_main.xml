@@ -12,6 +12,7 @@
         android:layout_height="wrap_content"
         android:theme="?actionBarTheme"
         app:fitsSystemWindowsInsets="top|start|end"
+        app:layout_behavior="org.ohosdev.hapviewerandroid.AppBarLayoutBehavior"
         app:liftOnScroll="?liftOnScroll"
         app:liftOnScrollTargetViewId="@id/nested_scroll_view">
 
