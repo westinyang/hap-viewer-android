@@ -34,17 +34,11 @@
         <item name="toolbarSurfaceStyle">@style/Widget.Harmony.Toolbar.Surface
         </item>
         <item name="toolbarStyle">?toolbarSurfaceStyle</item>
-        <item name="actionOverflowButtonStyle">
-            @style/Widget.Harmony.ActionButton.Overflow
-        </item>
+        <item name="actionOverflowButtonStyle">@style/Widget.Harmony.ActionButton.Overflow</item>
         <!-- Menu -->
         <item name="popupMenuBackground">@drawable/harmony_popupmenu_background</item>
-        <item name="actionOverflowMenuStyle">
-            @style/Widget.Harmony.PopupMenu.Overflow
-        </item>
-        <item name="android:dropDownListViewStyle">
-            @style/Widget.Harmony.ListView.DropDown
-        </item>
+        <item name="actionOverflowMenuStyle">@style/Widget.Harmony.PopupMenu.Overflow</item>
+        <item name="android:dropDownListViewStyle">@style/Widget.Harmony.ListView.DropDown</item>
 
         <!-- Dialog -->
         <item name="android:dialogCornerRadius" tools:targetApi="p">?dialogCornerRadius</item>
@@ -67,6 +61,9 @@
         <item name="android:listDivider">@drawable/harmony_divider</item>
         <item name="enableDivider">true</item>
         <item name="materialDividerStyle">@style/Widget.Harmony.MaterialDivider</item>
+
+        <!-- <item name="android:listChoiceIndicatorSingle">@drawable/harmony_btn_radio</item> -->
+        <item name="radioButtonStyle">@style/Widget.Harmony.CompoundButton.RadioButton</item>
 
         <item name="liftOnScroll">false</item>
         <item name="android:outlineSpotShadowColor" tools:targetApi="p">#00001E</item>

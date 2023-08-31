@@ -15,6 +15,8 @@
     <color name="harmony_color_hovered_dark">#0Cffffff</color>
     <color name="harmony_color_divider_light">#33000000</color>
     <color name="harmony_color_divider_dark">#33FFFFFF</color>
+    <color name="harmony_color_common_light">#19000000</color>
+    <color name="harmony_color_common_dark">#19FFFFFF</color>
 
 
 
@@ -24,5 +26,8 @@
     <color name="harmony_color_pressed">@color/harmony_color_pressed_light</color>
     <color name="harmony_color_hovered">@color/harmony_color_hovered_light</color>
     <color name="harmony_color_divider">@color/harmony_color_divider_light</color>
+    <color name="harmony_color_common">@color/harmony_color_common_light</color>
+
+    <color name="emui_accent">@color/harmony_color_primary</color>
 
 </resources>

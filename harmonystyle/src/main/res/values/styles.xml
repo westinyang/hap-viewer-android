@@ -100,4 +100,9 @@
         <item name="buttonBarPositiveButtonStyle">?buttonBarButtonStyle</item>
         <item name="android:windowAnimationStyle">@style/Animation.Harmony.AlertDialog</item>
     </style>
+
+    <style name="Widget.Harmony.CompoundButton.RadioButton" parent="Widget.Emui.HwRadioButton">
+        <item name="android:background">@null</item>
+    </style>
+
 </resources>
