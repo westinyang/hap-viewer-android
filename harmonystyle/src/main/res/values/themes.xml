@@ -68,8 +68,6 @@
         <item name="enableDivider">true</item>
         <item name="materialDividerStyle">@style/Widget.Harmony.MaterialDivider</item>
 
-        <item name="android:progressBarStyle">@style/Widget.Harmony.ProgressBar</item>
-
         <item name="liftOnScroll">false</item>
         <item name="android:outlineSpotShadowColor" tools:targetApi="p">#00001E</item>
         <item name="cardPaddingVertical">4dp</item>
