@@ -50,7 +50,7 @@
         <item name="android:dialogCornerRadius" tools:targetApi="p">?dialogCornerRadius</item>
         <item name="dialogCornerRadius">24dp</item>
         <item name="materialAlertDialogTheme">?alertDialogTheme</item>
-        <item name="alertDialogTheme">@style/ThemeOverlay.HapViewerAndroid.Harmony.Dialog.Alert</item>
+        <item name="alertDialogTheme">@style/ThemeOverlay.Harmony.Dialog.Alert</item>
         <item name="alertDialogStyle">@style/AlertDialog.Harmony</item>
 
         <!-- ItemBackground -->
@@ -66,8 +66,9 @@
         <!-- Divider -->
         <item name="android:listDivider">@drawable/harmony_divider</item>
         <item name="enableDivider">true</item>
-        <item name="materialDividerStyle">@style/Widget.Harmony.MaterialDivider
-        </item>
+        <item name="materialDividerStyle">@style/Widget.Harmony.MaterialDivider</item>
+
+        <item name="android:progressBarStyle">@style/Widget.Harmony.ProgressBar</item>
 
         <item name="liftOnScroll">false</item>
         <item name="android:outlineSpotShadowColor" tools:targetApi="p">#00001E</item>

@@ -82,7 +82,7 @@
         <item name="android:layout">@layout/harmony_alert_dialog_material</item>
     </style>
 
-    <style name="Widget.HapViewerAndroid.Harmony.Button.Dialog" parent="Widget.AppCompat.Button">
+    <style name="Widget.Harmony.Button.Dialog" parent="Widget.AppCompat.Button">
         <item name="android:background">@drawable/harmony_button</item>
         <item name="android:textSize">16sp</item>
         <item name="android:textColor">?colorPrimary</item>
@@ -90,13 +90,11 @@
         <item name="backgroundTint">@null</item>
     </style>
 
-    <style name="ThemeOverlay.HapViewerAndroid.Harmony.Dialog.Alert" parent="ThemeOverlay.AppCompat.Dialog.Alert">
+    <style name="ThemeOverlay.Harmony.Dialog.Alert" parent="ThemeOverlay.AppCompat.Dialog.Alert">
         <item name="android:backgroundDimAmount">0.2</item>
         <item name="android:windowElevation">0dp</item>
 
-        <item name="buttonBarButtonStyle">
-            @style/Widget.HapViewerAndroid.Harmony.Button.Dialog
-        </item>
+        <item name="buttonBarButtonStyle">@style/Widget.Harmony.Button.Dialog</item>
         <item name="buttonBarNeutralButtonStyle">?buttonBarButtonStyle</item>
         <item name="buttonBarNegativeButtonStyle">?buttonBarButtonStyle</item>
         <item name="buttonBarPositiveButtonStyle">?buttonBarButtonStyle</item>
