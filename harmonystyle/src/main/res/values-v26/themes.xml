@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources xmlns:tools="http://schemas.android.com/tools">
+    <style name="Platform.V26.Theme.Harmony" parent="Platform.V23.Theme.Harmony">
+        <!-- v26支持动态设置亮色导航栏 -->
+        <item name="android:windowLightNavigationBar" tools:targetApi="o_mr1">?windowLightNavigationBar</item>
+    </style>
+    <style name="Platform.Theme.Harmony" parent="Platform.V26.Theme.Harmony" />
+</resources>

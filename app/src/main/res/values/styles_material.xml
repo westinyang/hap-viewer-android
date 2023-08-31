@@ -13,15 +13,14 @@
     </style>
 
     <!-- Toolbar -->
-    <style name="ThemeOverlay.HapViewerAndroid.Toolbar.Surface" parent="ThemeOverlay.MaterialComponents.Toolbar.Surface">
+    <style name="ThemeOverlay.HapViewerAndroid.ActionBar.Surface" parent="ThemeOverlay.MaterialComponents.ActionBar.Surface">
         <item name="colorControlNormal">@color/material_on_surface_emphasis_high_type</item>
         <item name="actionMenuTextColor">@color/material_on_surface_emphasis_high_type</item>
     </style>
 
     <style name="Widget.HapViewerAndroid.Toolbar.Surface" parent="Widget.MaterialComponents.Toolbar.Surface">
-        <item name="android:background">?attr/colorSurface</item>
+        <item name="android:background">@null</item>
         <item name="titleTextColor">@color/material_on_surface_emphasis_high_type</item>
         <item name="subtitleTextColor">@color/material_on_surface_emphasis_medium</item>
-        <item name="android:theme">@style/ThemeOverlay.MaterialComponents.Toolbar.Surface</item>
     </style>
 </resources>

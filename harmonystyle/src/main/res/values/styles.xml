@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <!-- AppBar -->
+    <style name="Widget.Harmony.AppBarLayout.Surface" parent="Widget.MaterialComponents.AppBarLayout.Surface">
+        <item name="liftOnScrollColor">?android:colorBackground</item>
+        <item name="android:background">?android:colorBackground</item>
+        <item name="elevation">0dp</item>
+        <item name="android:paddingStart">@dimen/harmony_dimen_defaultPaddingStart</item>
+        <item name="android:paddingEnd">@dimen/harmony_dimen_defaultPaddingEnd</item>
+    </style>
+
+    <style name="Widget.Harmony.ActionButton.Overflow" parent="Widget.AppCompat.ActionButton.Overflow">
+        <item name="android:src">@drawable/harmony_ic_public_more</item>
+        <item name="android:minWidth">48dp</item>
+        <item name="android:minHeight">48dp</item>
+        <item name="android:paddingStart">12dp</item>
+        <item name="android:paddingTop">12dp</item>
+        <item name="android:paddingEnd">12dp</item>
+        <item name="android:paddingBottom">12dp</item>
+    </style>
+
+    <!-- Toolbar -->
+    <style name="ThemeOverlay.Harmony.ActionBar.Surface" parent="ThemeOverlay.MaterialComponents.ActionBar.Surface">
+        <item name="colorControlNormal">@color/harmony_on_background</item>
+        <item name="actionMenuTextColor">@color/harmony_on_background</item>
+    </style>
+
+    <style name="Widget.Harmony.Toolbar.Surface" parent="Widget.MaterialComponents.Toolbar.Surface">
+        <item name="android:background">@null</item>
+        <item name="titleTextColor">@color/material_on_surface_emphasis_high_type</item>
+        <item name="subtitleTextColor">@color/material_on_surface_emphasis_medium</item>
+    </style>
+
+    <style name="Animation.Harmony.PopupWindow" parent="">
+        <item name="android:windowEnterAnimation">@anim/harmony_menu_enter</item>
+        <item name="android:windowExitAnimation">@anim/harmony_menu_exit</item>
+    </style>
+
+    <style name="Widget.Harmony.PopupMenu.Overflow" parent="Widget.MaterialComponents.PopupMenu.Overflow">
+        <item name="overlapAnchor">false</item>
+        <item name="android:popupElevation">50dp</item>
+        <item name="android:popupEnterTransition">@null</item>
+        <item name="android:popupExitTransition">@null</item>
+        <item name="android:popupAnimationStyle">
+            @style/Animation.Harmony.PopupWindow
+        </item>
+        <item name="android:dropDownVerticalOffset">0dp</item>
+        <item name="android:dropDownHorizontalOffset">-12dp</item>
+    </style>
+
+    <style name="Widget.Harmony.ListView.DropDown" parent="Widget.AppCompat.ListView.DropDown">
+        <item name="android:divider">@drawable/harmony_divider</item>
+        <item name="android:dividerHeight">0.5dp</item>
+        <item name="android:listSelector">@drawable/harmony_list_choice_background_indicator_menu
+        </item>
+    </style>
+
+    <!-- Card -->
+    <style name="Widget.Harmony.CardView" parent="Widget.MaterialComponents.CardView">
+        <item name="cardElevation">0dp</item>
+        <item name="cardCornerRadius">@dimen/harmony_dimen_radius_card</item>
+        <item name="cardBackgroundColor">?colorSurface</item>
+    </style>
+
+    <!-- Divider -->
+    <style name="Widget.Harmony.MaterialDivider" parent="Widget.MaterialComponents.MaterialDivider">
+        <item name="dividerColor">@color/harmony_color_divider</item>
+        <item name="dividerThickness">0.5dp</item>
+        <item name="dividerInsetStart">16dp</item>
+        <item name="dividerInsetEnd">16dp</item>
+    </style>
+
+    <!-- Dialog -->
+    <style name="Animation.Harmony.AlertDialog" parent="">
+        <item name="android:windowEnterAnimation">@anim/harmony_dialog_enter</item>
+        <item name="android:windowExitAnimation">@anim/harmony_dialog_exit</item>
+    </style>
+
+    <style name="AlertDialog.Harmony" parent="AlertDialog.AppCompat">
+        <item name="android:layout_gravity">bottom|center_horizontal</item>
+        <item name="android:layout">@layout/harmony_alert_dialog_material</item>
+    </style>
+
+    <style name="Widget.HapViewerAndroid.Harmony.Button.Dialog" parent="Widget.AppCompat.Button">
+        <item name="android:background">@drawable/harmony_button</item>
+        <item name="android:textSize">16sp</item>
+        <item name="android:textColor">?colorPrimary</item>
+        <item name="android:minHeight">40dp</item>
+        <item name="backgroundTint">@null</item>
+    </style>
+
+    <style name="ThemeOverlay.HapViewerAndroid.Harmony.Dialog.Alert" parent="ThemeOverlay.AppCompat.Dialog.Alert">
+        <item name="android:backgroundDimAmount">0.2</item>
+        <item name="android:windowElevation">0dp</item>
+
+        <item name="buttonBarButtonStyle">
+            @style/Widget.HapViewerAndroid.Harmony.Button.Dialog
+        </item>
+        <item name="buttonBarNeutralButtonStyle">?buttonBarButtonStyle</item>
+        <item name="buttonBarNegativeButtonStyle">?buttonBarButtonStyle</item>
+        <item name="buttonBarPositiveButtonStyle">?buttonBarButtonStyle</item>
+        <item name="android:windowAnimationStyle">@style/Animation.Harmony.AlertDialog</item>
+    </style>
+</resources>

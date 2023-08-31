@@ -1,0 +1,79 @@
+<resources xmlns:tools="http://schemas.android.com/tools">
+
+    <style name="Platform.V23.Theme.Harmony" parent="Theme.MaterialComponents.DayNight">
+        <item name="android:statusBarColor">?android:colorBackground</item>
+        <item name="android:navigationBarColor">?android:colorBackground</item>
+        <item name="android:windowLightStatusBar">?windowLightStatusBar</item>
+        <item name="windowLightStatusBar">?isLightTheme</item>
+        <item name="windowLightNavigationBar">?isLightTheme</item>
+    </style>
+
+    <style name="Platform.Theme.Harmony" parent="Platform.V23.Theme.Harmony" />
+
+    <style name="Base.Theme.Harmony" parent="Platform.Theme.Harmony">
+        <item name="windowActionBar">false</item>
+        <item name="windowNoTitle">true</item>
+
+        <item name="colorPrimary">@color/harmony_color_primary</item>
+        <item name="colorOnPrimary">@android:color/white</item>
+        <item name="colorSecondary">?colorPrimary</item>
+        <item name="colorOnSecondary">?colorOnPrimary</item>
+        <item name="colorAccent">?colorPrimary</item>
+        <item name="colorSurface">@color/harmony_color_surface</item>
+        <item name="colorBackgroundFloating">?colorSurface</item>
+
+        <item name="android:colorBackground">@color/harmony_color_background</item>
+
+        <item name="materialCardViewStyle">@style/Widget.Harmony.CardView</item>
+
+        <!-- Toolbar -->
+        <item name="actionBarTheme">@style/ThemeOverlay.Harmony.ActionBar.Surface
+        </item>
+        <item name="appBarLayoutStyle">@style/Widget.Harmony.AppBarLayout.Surface
+        </item>
+        <item name="toolbarSurfaceStyle">@style/Widget.Harmony.Toolbar.Surface
+        </item>
+        <item name="toolbarStyle">?toolbarSurfaceStyle</item>
+        <item name="actionOverflowButtonStyle">
+            @style/Widget.Harmony.ActionButton.Overflow
+        </item>
+        <!-- Menu -->
+        <item name="popupMenuBackground">@drawable/harmony_popupmenu_background</item>
+        <item name="actionOverflowMenuStyle">
+            @style/Widget.Harmony.PopupMenu.Overflow
+        </item>
+        <item name="android:dropDownListViewStyle">
+            @style/Widget.Harmony.ListView.DropDown
+        </item>
+
+        <!-- Dialog -->
+        <item name="android:dialogCornerRadius" tools:targetApi="p">?dialogCornerRadius</item>
+        <item name="dialogCornerRadius">24dp</item>
+        <item name="materialAlertDialogTheme">?alertDialogTheme</item>
+        <item name="alertDialogTheme">@style/ThemeOverlay.HapViewerAndroid.Harmony.Dialog.Alert</item>
+        <item name="alertDialogStyle">@style/AlertDialog.Harmony</item>
+
+        <!-- ItemBackground -->
+        <item name="selectableItemBackground">?listChoiceBackgroundIndicator</item>
+        <item name="selectableItemBackgroundBorderless">?listChoiceBackgroundIndicator</item>
+        <item name="listChoiceBackgroundIndicator">
+            @drawable/harmony_list_choice_background_indicator
+        </item>
+        <item name="android:listChoiceBackgroundIndicator">?listChoiceBackgroundIndicator</item>
+        <item name="actionBarItemBackground">@drawable/harmony_action_bar_item_background</item>
+        <item name="android:actionBarItemBackground">?actionBarItemBackground</item>
+
+        <!-- Divider -->
+        <item name="android:listDivider">@drawable/harmony_divider</item>
+        <item name="enableDivider">true</item>
+        <item name="materialDividerStyle">@style/Widget.Harmony.MaterialDivider
+        </item>
+
+        <item name="liftOnScroll">false</item>
+        <item name="android:outlineSpotShadowColor" tools:targetApi="p">#00001E</item>
+        <item name="cardPaddingVertical">4dp</item>
+    </style>
+
+    <style name="Theme.Harmony" parent="Base.Theme.Harmony" />
+
+</resources>

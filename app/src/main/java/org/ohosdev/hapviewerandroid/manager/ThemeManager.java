@@ -83,17 +83,20 @@ public class ThemeManager {
                 return R.style.Theme_HapViewerAndroid_Material2;
             case Material3:
                 return R.style.Theme_HapViewerAndroid_Material3;
+            case Harmony:
+                return R.style.Theme_HapViewerAndroid_Harmony;
         }
         return 0;
     }
 
     public static ThemeStyle getPlatformThemeStyle() {
-        if (SDK_INT >= Build.VERSION_CODES.S) {
+        return ThemeStyle.Harmony;
+        /* if (SDK_INT >= Build.VERSION_CODES.S) {
             return ThemeStyle.Material3;
         } else if (SDK_INT >= Build.VERSION_CODES.P) {
             return ThemeStyle.Material2;
         } else
-            return ThemeStyle.Material1;
+            return ThemeStyle.Material1; */
     }
 
     public void applyTheme() {
@@ -132,6 +135,6 @@ public class ThemeManager {
     }
 
     public enum ThemeStyle {
-        Material1, Material2, Material3
+        Material1, Material2, Material3, Harmony
     }
 }

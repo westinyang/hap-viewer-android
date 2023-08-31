@@ -18,6 +18,9 @@
                 <item
                     android:id="@+id/action_theme_material3"
                     android:title="@string/material3" />
+                <item
+                    android:id="@+id/action_theme_harmony"
+                    android:title="@string/harmony" />
             </group>
         </menu>
     </item>

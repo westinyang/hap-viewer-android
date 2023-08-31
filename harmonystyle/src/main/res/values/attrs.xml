@@ -2,8 +2,6 @@
 <resources>
     <attr name="windowLightStatusBar" format="boolean" />
     <attr name="windowLightNavigationBar" format="boolean" />
-    <attr name="paddingBottomFabSize" format="dimension" />
-    <attr name="cardPaddingVertical" format="dimension" />
-    <attr name="selectFileIcon" format="reference" />
     <attr name="enableDivider" format="boolean" />
+    <attr name="cardPaddingVertical" format="dimension" />
 </resources>

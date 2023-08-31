@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <style name="Platform.V29.Theme.Harmony" parent="Platform.V28.Theme.Harmony">
+        <item name="android:forceDarkAllowed">false</item>
+        <item name="android:enforceNavigationBarContrast">false</item>
+        <item name="android:enforceStatusBarContrast">false</item>
+    </style>
+
+    <style name="Platform.Theme.Harmony" parent="Platform.V29.Theme.Harmony" />
+</resources>
