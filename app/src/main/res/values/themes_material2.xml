@@ -27,12 +27,14 @@
         </item>
         <item name="materialCardViewStyle">?materialCardViewOutlinedStyle</item>
         <item name="actionBarStyle">@style/Widget.MaterialComponents.ActionBar.Surface</item>
-        <item name="actionBarTheme">@style/ThemeOverlay.MaterialComponents.ActionBar.Surface</item>
+        <item name="actionBarTheme">@style/ThemeOverlay.HapViewerAndroid.ActionBar.Surface</item>
         <item name="appBarLayoutStyle">@style/Widget.MaterialComponents.AppBarLayout.Surface</item>
         <item name="toolbarSurfaceStyle">@style/Widget.HapViewerAndroid.Toolbar.Surface</item>
         <item name="toolbarStyle">?toolbarSurfaceStyle</item>
         <item name="liftOnScroll">true</item>
         <item name="paddingBottomFabSize">64dp</item>
+        <item name="cardPaddingVertical">8dp</item>
+        <item name="selectFileIcon">@drawable/ic_file</item>
     </style>
 
     <style name="Theme.HapViewerAndroid.Material2" parent="Base.Theme.HapViewerAndroid.Material2" />

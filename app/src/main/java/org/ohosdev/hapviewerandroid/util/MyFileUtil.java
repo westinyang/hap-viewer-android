@@ -7,7 +7,6 @@ import android.content.Context;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.net.Uri;
-import android.os.Build;
 import android.os.Environment;
 import android.provider.DocumentsContract;
 import android.provider.MediaStore;
@@ -36,21 +35,16 @@ public class MyFileUtil {
      * @param uri
      * @return File
      */
-    // @RequiresApi(api = Build.VERSION_CODES.Q)
     @Nullable
-    public static File uriToFileApiQ(@NonNull Context ctx, @NonNull Uri uri) throws RuntimeException {
+    public static File copyAndGetPath(@NonNull Context ctx, @NonNull Uri uri) throws RuntimeException {
         File file = null;
-        // android10以上转换
-        if (Objects.equals(uri.getScheme(), ContentResolver.SCHEME_FILE)) {
-            file = new File(Objects.requireNonNull(uri.getPath()));
-        } else if (Objects.equals(uri.getScheme(), ContentResolver.SCHEME_CONTENT)) {
+        if (Objects.equals(uri.getScheme(), ContentResolver.SCHEME_CONTENT)) {
             // 把文件复制到沙盒目录
             ContentResolver contentResolver = ctx.getContentResolver();
             try (Cursor cursor = contentResolver.query(uri, null, null, null, null)) {
                 assert cursor != null : new RuntimeException("Cursor is null.");
                 if (cursor.moveToFirst()) {
-                    int index = cursor.getColumnIndex(OpenableColumns.DISPLAY_NAME);
-                    assert index >= 0 : new RuntimeException("index < 0.");
+                    int index = cursor.getColumnIndexOrThrow(OpenableColumns.DISPLAY_NAME);
                     String displayName = cursor.getString(index);
                     File cache = new File(Objects.requireNonNull(ctx.getExternalCacheDir()).getAbsolutePath(), displayName);
                     try (InputStream is = contentResolver.openInputStream(uri);
@@ -83,10 +77,8 @@ public class MyFileUtil {
     @Nullable
     public static String getPath(@NonNull final Context context, @NonNull final Uri uri) {
 
-        final boolean isKitKat = Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT;
-
         // DocumentProvider
-        if (isKitKat && DocumentsContract.isDocumentUri(context, uri)) {
+        if (DocumentsContract.isDocumentUri(context, uri)) {
             // ExternalStorageProvider
             if (isExternalStorageDocument(uri)) {
                 final String docId = DocumentsContract.getDocumentId(uri);
@@ -101,7 +93,6 @@ public class MyFileUtil {
             }
             // DownloadsProvider
             else if (isDownloadsDocument(uri)) {
-
                 final String id = DocumentsContract.getDocumentId(uri);
                 final Uri contentUri = ContentUris.withAppendedId(
                         Uri.parse("content://downloads/public_downloads"), Long.parseLong(id));
@@ -121,6 +112,10 @@ public class MyFileUtil {
                     contentUri = MediaStore.Video.Media.EXTERNAL_CONTENT_URI;
                 } else if ("audio".equals(type)) {
                     contentUri = MediaStore.Audio.Media.EXTERNAL_CONTENT_URI;
+                }
+
+                if (contentUri == null) {
+                    return null;
                 }
 
                 final String selection = "_id=?";
@@ -167,7 +162,7 @@ public class MyFileUtil {
             cursor = context.getContentResolver().query(uri, projection, selection, selectionArgs,
                     null);
             if (cursor != null && cursor.moveToFirst()) {
-                final int column_index = cursor.getColumnIndexOrThrow(column);
+                final int column_index = cursor.getColumnIndex(column);
                 return cursor.getString(column_index);
             }
         } finally {
@@ -224,7 +219,7 @@ public class MyFileUtil {
         }
 
         try {
-            return MyFileUtil.uriToFileApiQ(context, uri);
+            return MyFileUtil.copyAndGetPath(context, uri);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -238,10 +233,12 @@ public class MyFileUtil {
 
     public static void deleteExternalCacheFile(@NonNull Context context, @NonNull String filePath) {
         if (isExternalCacheFile(context, filePath)) {
-            File hapFile = new File(filePath);
-            if (hapFile.delete()) {
-                hapFile.deleteOnExit();
+            File file = new File(filePath);
+            if (!file.delete()) {
+                file.deleteOnExit();
             }
         }
     }
+
+
 }

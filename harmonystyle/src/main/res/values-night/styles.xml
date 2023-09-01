@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <style name="Widget.Harmony.CompoundButton.RadioButton" parent="Widget.Emui.HwRadioButton.Translucent">
+        <item name="android:background">@null</item>
+    </style>
+</resources>

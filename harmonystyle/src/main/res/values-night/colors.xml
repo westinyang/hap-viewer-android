@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="harmony_color_primary">@color/harmony_color_primary_dark</color>
+    <color name="harmony_color_surface">@color/harmony_color_surface_dark</color>
+    <color name="harmony_color_background">@color/harmony_color_background_dark</color>
+    <color name="harmony_color_pressed">@color/harmony_color_pressed_dark</color>
+    <color name="harmony_color_divider">@color/harmony_color_divider_dark</color>
+    <color name="harmony_color_hovered">@color/harmony_color_hovered_dark</color>
+    <color name="harmony_color_common">@color/harmony_color_common_dark</color>
+
+</resources>

@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- https://developer.harmonyos.com/cn/docs/design/des-guides/color-0000001156818443 -->
+    <color name="harmony_color_primary_light">#0A59F7</color>
+    <color name="harmony_color_primary_dark">#317AF7</color>
+    <color name="harmony_color_surface_light">#FFFFFF</color>
+    <color name="harmony_color_surface_dark">#2E3033</color>
+    <color name="harmony_color_on_background_light">#000000</color>
+    <color name="harmony_color_on_background_dark">#FFFFFF</color>
+    <color name="harmony_color_background_light">#F1F3F5</color>
+    <color name="harmony_color_background_dark">#000000</color>
+    <color name="harmony_color_pressed_light">#19000000</color>
+    <color name="harmony_color_pressed_dark">#26FFFFFF</color>
+    <color name="harmony_color_hovered_light">#0C000000</color>
+    <color name="harmony_color_hovered_dark">#0Cffffff</color>
+    <color name="harmony_color_divider_light">#33000000</color>
+    <color name="harmony_color_divider_dark">#33FFFFFF</color>
+    <color name="harmony_color_common_light">#19000000</color>
+    <color name="harmony_color_common_dark">#19FFFFFF</color>
+
+
+
+    <color name="harmony_color_primary">@color/harmony_color_primary_light</color>
+    <color name="harmony_color_surface">@color/harmony_color_surface_light</color>
+    <color name="harmony_color_background">@color/harmony_color_background_light</color>
+    <color name="harmony_color_pressed">@color/harmony_color_pressed_light</color>
+    <color name="harmony_color_hovered">@color/harmony_color_hovered_light</color>
+    <color name="harmony_color_divider">@color/harmony_color_divider_light</color>
+    <color name="harmony_color_common">@color/harmony_color_common_light</color>
+
+    <color name="emui_accent">@color/harmony_color_primary</color>
+
+</resources>

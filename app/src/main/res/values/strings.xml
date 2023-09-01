@@ -25,5 +25,6 @@
     <string name="material1" translatable="false">Material 1</string>
     <string name="material3" translatable="false">Material 3</string>
     <string name="drop_here">drop here</string>
+    <string name="harmony" translatable="false">HarmonyOS</string>
 
 </resources>

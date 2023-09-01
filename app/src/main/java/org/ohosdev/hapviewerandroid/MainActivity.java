@@ -6,6 +6,7 @@ import android.content.ClipData;
 import android.content.ClipDescription;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.content.res.TypedArray;
 import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.drawable.BitmapDrawable;
@@ -32,10 +33,12 @@ import androidx.core.app.ActivityCompat;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
+import com.google.android.material.divider.MaterialDividerItemDecoration;
 import com.google.android.material.snackbar.Snackbar;
 import com.onegravity.rteditor.RTEditorMovementMethod;
 
@@ -101,6 +104,21 @@ public class MainActivity extends AppCompatActivity implements View.OnDragListen
         recyclerView.setAdapter(infoAdapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
 
+        TypedArray dividerTypedArray = getTheme().obtainStyledAttributes(new int[]{
+                R.attr.enableDivider});
+
+        if (dividerTypedArray.getBoolean(0, false)) {
+            recyclerView.addItemDecoration(new MaterialDividerItemDecoration(this, DividerItemDecoration.VERTICAL) {
+                @Override
+                protected boolean shouldDrawDivider(int position, @Nullable RecyclerView.Adapter<?> adapter) {
+                    if (adapter != null) {
+                        return position != adapter.getItemCount() - 1;
+                    }
+                    return false;
+                }
+            });
+        }
+
         // 启用拖放
         binding.dropMask.getRoot().setOnDragListener(this);
 
@@ -120,7 +138,6 @@ public class MainActivity extends AppCompatActivity implements View.OnDragListen
     }
 
 
-
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();
@@ -134,6 +151,9 @@ public class MainActivity extends AppCompatActivity implements View.OnDragListen
                 break;
             case Material3:
                 menu.findItem(R.id.action_theme_material3).setChecked(true);
+                break;
+            case Harmony:
+                menu.findItem(R.id.action_theme_harmony).setChecked(true);
                 break;
         }
         return true;
@@ -153,6 +173,9 @@ public class MainActivity extends AppCompatActivity implements View.OnDragListen
             checkTheme();
         } else if (itemId == R.id.action_theme_material3) {
             ThemeManager.setAppThemeStyle(this, ThemeManager.ThemeStyle.Material3);
+            checkTheme();
+        } else if (itemId == R.id.action_theme_harmony) {
+            ThemeManager.setAppThemeStyle(this, ThemeManager.ThemeStyle.Harmony);
             checkTheme();
         }
         return true;
