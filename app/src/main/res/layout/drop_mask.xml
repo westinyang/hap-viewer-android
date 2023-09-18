@@ -14,7 +14,7 @@
         android:layout_height="32dp"
         android:layout_margin="4dp"
         android:importantForAccessibility="no"
-        android:src="@drawable/ic_file_upload"
+        android:src="?dropFileIcon"
         app:tint="?colorAccent" />
 
     <TextView
