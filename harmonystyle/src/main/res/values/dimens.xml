@@ -1,6 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <dimen name="harmony_dimen_radius_card">16dp</dimen>
+    <dimen name="harmony_corner_radius_card">16dp</dimen>
+    <dimen name="harmony_corner_radius_clicked">8dp</dimen>
+    <dimen name="harmony_corner_radius_menu">16dp</dimen>
     <dimen name="harmony_dimen_defaultPaddingStart">12dp</dimen>
     <dimen name="harmony_dimen_defaultPaddingEnd">12dp</dimen>
 </resources>

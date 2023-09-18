@@ -8,13 +8,15 @@
             <corners android:radius="16dp" />
         </shape>
     </item>
-    <item>
+    <item
+        android:end="4dp"
+        android:start="4dp">
         <selector>
             <item android:state_focused="true">
                 <shape android:shape="rectangle">
                     <stroke
                         android:width="2dp"
-                        android:color="?colorPrimary" />
+                        android:color="@color/harmony_color_focused" />
                     <corners android:radius="16dp" />
                 </shape>
             </item>
