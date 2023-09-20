@@ -12,8 +12,8 @@
                 <shape android:shape="rectangle">
                     <stroke
                         android:width="2dp"
-                        android:color="?colorPrimary" />
-                    <corners android:radius="16dp" />
+                        android:color="@color/harmony_color_focused" />
+                    <corners android:radius="20dp" />
                 </shape>
             </item>
         </selector>

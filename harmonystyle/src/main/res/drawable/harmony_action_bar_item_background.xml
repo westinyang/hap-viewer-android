@@ -3,7 +3,19 @@
     <item>
         <shape>
             <solid android:color="@color/harmony_pressed" />
-            <corners android:radius="8dp" />
+            <corners android:radius="@dimen/harmony_corner_radius_clicked" />
         </shape>
+    </item>
+    <item>
+        <selector>
+            <item android:state_focused="true">
+                <shape android:shape="rectangle">
+                    <stroke
+                        android:width="2dp"
+                        android:color="@color/harmony_color_focused" />
+                    <corners android:radius="@dimen/harmony_corner_radius_clicked" />
+                </shape>
+            </item>
+        </selector>
     </item>
 </layer-list>
