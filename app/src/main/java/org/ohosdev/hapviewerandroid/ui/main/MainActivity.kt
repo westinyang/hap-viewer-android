@@ -1,4 +1,4 @@
-package org.ohosdev.hapviewerandroid
+package org.ohosdev.hapviewerandroid.ui.main
 
 import android.Manifest
 import android.content.ClipDescription
@@ -23,8 +23,6 @@ import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.content.res.AppCompatResources
 import androidx.core.app.ActivityCompat
-import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -32,6 +30,8 @@ import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.divider.MaterialDividerItemDecoration
 import com.google.android.material.snackbar.Snackbar
 import com.onegravity.rteditor.RTEditorMovementMethod
+import org.ohosdev.hapviewerandroid.BuildConfig
+import org.ohosdev.hapviewerandroid.R
 import org.ohosdev.hapviewerandroid.adapter.InfoAdapter
 import org.ohosdev.hapviewerandroid.app.AppPreference.ThemeType.HARMONY
 import org.ohosdev.hapviewerandroid.app.AppPreference.ThemeType.MATERIAL1
@@ -412,20 +412,6 @@ class MainActivity : AppCompatActivity(), OnDragListener {
             infoAdapter!!.setInfo(hapInfo)
         } else {
             infoAdapter!!.setInfo(HapInfo(true))
-        }
-    }
-
-    // https://developer.android.google.cn/topic/libraries/architecture/viewmodel?hl=zh-cn
-    class MainViewModel : ViewModel() {
-
-        val hapInfo: MutableLiveData<HapInfo> by lazy {
-            MutableLiveData(HapInfo(true))
-        }
-
-        override fun onCleared() {
-            super.onCleared()
-            val hapInfoValue = hapInfo.value
-            hapInfoValue?.icon?.recycle()
         }
     }
 
