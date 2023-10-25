@@ -20,14 +20,11 @@ import android.view.View.OnDragListener
 import androidx.activity.OnBackPressedCallback
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
-import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.content.res.AppCompatResources
+import androidx.coordinatorlayout.widget.CoordinatorLayout
 import androidx.core.app.ActivityCompat
-import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
-import com.google.android.material.divider.MaterialDividerItemDecoration
 import com.google.android.material.snackbar.Snackbar
 import com.onegravity.rteditor.RTEditorMovementMethod
 import org.ohosdev.hapviewerandroid.BuildConfig
@@ -37,7 +34,9 @@ import org.ohosdev.hapviewerandroid.app.AppPreference.ThemeType.HARMONY
 import org.ohosdev.hapviewerandroid.app.AppPreference.ThemeType.MATERIAL1
 import org.ohosdev.hapviewerandroid.app.AppPreference.ThemeType.MATERIAL2
 import org.ohosdev.hapviewerandroid.app.AppPreference.ThemeType.MATERIAL3
+import org.ohosdev.hapviewerandroid.app.BaseActivity
 import org.ohosdev.hapviewerandroid.databinding.ActivityMainBinding
+import org.ohosdev.hapviewerandroid.extensions.applyDividerIfEnabled
 import org.ohosdev.hapviewerandroid.extensions.contentMovementMethod
 import org.ohosdev.hapviewerandroid.extensions.contentSelectable
 import org.ohosdev.hapviewerandroid.extensions.setContentAutoLinkMask
@@ -49,17 +48,17 @@ import org.ohosdev.hapviewerandroid.util.HapUtil
 import org.ohosdev.hapviewerandroid.util.MyFileUtil
 import rikka.insets.WindowInsetsHelper
 import rikka.layoutinflater.view.LayoutInflaterFactory
-import java.io.IOException
-import java.util.Objects
 import java.util.concurrent.atomic.AtomicBoolean
 
-class MainActivity : AppCompatActivity(), OnDragListener {
+class MainActivity : BaseActivity(), OnDragListener {
     private val themeManager: ThemeManager = ThemeManager(this)
 
-    private var infoAdapter: InfoAdapter? = null
-    private lateinit var binding: ActivityMainBinding
+    private val infoAdapter by lazy { InfoAdapter(this) }
 
-    private lateinit var onExitCallback: OnExitCallback
+    private val binding by lazy { ActivityMainBinding.inflate(layoutInflater) }
+    override val rootView: CoordinatorLayout get() = binding.root
+
+    private val onExitCallback by lazy { OnExitCallback() }
     private val model: MainViewModel by viewModels()
 
     private val selectFileResultLauncher =
@@ -72,39 +71,26 @@ class MainActivity : AppCompatActivity(), OnDragListener {
             .addOnViewCreatedListener(WindowInsetsHelper.LISTENER)
         super.onCreate(savedInstanceState)
         themeManager.applyTheme()
-
-        window.statusBarColor = Color.TRANSPARENT
-        binding = ActivityMainBinding.inflate(layoutInflater)
-
-        setContentView(binding.root)
-        setSupportActionBar(binding.toolbar)
-
-        onExitCallback = OnExitCallback()
+        initViews()
 
         onBackPressedDispatcher.addCallback(this, onExitCallback)
 
-        infoAdapter = InfoAdapter(this)
+        // 解析传入的 Intent
+        if (savedInstanceState == null) {
+            parse(intent.data)
+        }
 
-        val recyclerView = binding.detailInfo.recyclerView
-        recyclerView.adapter = infoAdapter
-        recyclerView.layoutManager = LinearLayoutManager(this)
+        model.hapInfo.observe(this) { hapInfo: HapInfo? -> onHapInfoChanged(hapInfo) }
+    }
 
-        val dividerTypedArray = theme.obtainStyledAttributes(
-            intArrayOf(R.attr.enableDivider)
-        )
-
-        if (dividerTypedArray.getBoolean(0, false)) {
-            recyclerView.addItemDecoration(object :
-                MaterialDividerItemDecoration(this, DividerItemDecoration.VERTICAL) {
-                override fun shouldDrawDivider(
-                    position: Int,
-                    adapter: RecyclerView.Adapter<*>?
-                ): Boolean {
-                    return if (adapter != null) {
-                        position != adapter.itemCount - 1
-                    } else false
-                }
-            })
+    private fun initViews() {
+        window.statusBarColor = Color.TRANSPARENT
+        setContentView(binding.root)
+        setSupportActionBar(binding.toolbar)
+        binding.detailInfo.recyclerView.apply {
+            adapter = infoAdapter
+            layoutManager = LinearLayoutManager(this@MainActivity)
+            applyDividerIfEnabled()
         }
 
         // 启用拖放
@@ -115,17 +101,6 @@ class MainActivity : AppCompatActivity(), OnDragListener {
             )
         }
 
-        // 解析传入的 Intent
-        if (savedInstanceState == null) {
-            val intent = intent
-            parse(intent.data)
-        }
-
-        model.hapInfo.observe(this) { hapInfo: HapInfo? ->
-            onHapInfoChanged(
-                hapInfo
-            )
-        }
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
@@ -167,21 +142,16 @@ class MainActivity : AppCompatActivity(), OnDragListener {
         grantResults: IntArray
     ) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
-        var successCount = 0
+
         for (i in permissions.indices) {
             Log.i(TAG, "申请权限：" + permissions[i] + "，申请结果：" + grantResults[i])
-            if (grantResults[i] == 0) {
-                successCount++
-            }
         }
-        if (successCount == permissions.size) {
-            if (requestCode == REQUEST_CODE_EXTERNAL_STORAGE) {
+        if (grantResults.all { it == PackageManager.PERMISSION_GRANTED }) {
+            if (requestCode == REQUEST_CODE_SELECT_FILE) {
                 selectFile()
             }
         } else {
-            Snackbar.make(binding.root, R.string.permission_grant_fail, Snackbar.LENGTH_SHORT)
-                .setAnchorView(R.id.floatingActionButton)
-                .show()
+            showSnackBar(R.string.permission_grant_fail)
         }
     }
 
@@ -195,7 +165,7 @@ class MainActivity : AppCompatActivity(), OnDragListener {
         super.onPause()
 
         // 退出时可能会显示Snackbar，以至于下一次弹出多个snackbar
-        onExitCallback.snackbar?.dismiss()
+        onExitCallback.closeSnackBar()
     }
 
 
@@ -220,14 +190,13 @@ class MainActivity : AppCompatActivity(), OnDragListener {
         // 安卓10及以上不需要存储权限，可以直接使用
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.Q
             && ActivityCompat.checkSelfPermission(
-                this,
-                Manifest.permission.READ_EXTERNAL_STORAGE
+                this, Manifest.permission.READ_EXTERNAL_STORAGE
             ) != PackageManager.PERMISSION_GRANTED
         ) {
             ActivityCompat.requestPermissions(
                 this@MainActivity,
                 PERMISSIONS_EXTERNAL_STORAGE,
-                REQUEST_CODE_EXTERNAL_STORAGE
+                REQUEST_CODE_SELECT_FILE
             )
         } else {
             selectFile()
@@ -235,6 +204,7 @@ class MainActivity : AppCompatActivity(), OnDragListener {
     }
 
     private fun selectFile() {
+        // Hap 文件 mime 类型未知，使用 */* 更保险
         selectFileResultLauncher.launch("*/*")
     }
 
@@ -248,24 +218,18 @@ class MainActivity : AppCompatActivity(), OnDragListener {
                 runOnUiThread { binding.progressBar.visibility = View.VISIBLE }
                 val file = MyFileUtil.getOrCopyFile(this@MainActivity, uri)
                 if (file == null) {
-                    Snackbar.make(
-                        binding.root,
-                        R.string.parse_error_fail_obtain,
-                        Snackbar.LENGTH_SHORT
-                    )
-                        .setAnchorView(R.id.floatingActionButton)
-                        .show()
+                    showSnackBar(R.string.parse_error_fail_obtain)
                     runOnUiThread { binding.progressBar.visibility = View.GONE }
                     return@Runnable
                 }
                 // 解析hap
                 val path = file.absolutePath
                 val extName = path.substring(path.lastIndexOf(".") + 1)
-                if (path.length > 0 && "hap" == extName) {
+                if (path.isNotEmpty() && "hap" == extName) {
                     parseHapAndShowInfo(path, uri)
                 } else {
-                    val continueFlag =
-                        AtomicBoolean(false)
+                    val continueFlag = AtomicBoolean(false)
+
                     Snackbar.make(
                         binding.root,
                         R.string.parse_error_type,
@@ -314,16 +278,9 @@ class MainActivity : AppCompatActivity(), OnDragListener {
         try {
             hapInfo = HapUtil.parse(hapFilePath)
             runOnUiThread { model.hapInfo.setValue(hapInfo) }
-        } catch (e: IOException) {
+        } catch (e: Exception) {
             e.printStackTrace()
-            Snackbar.make(binding.root, R.string.parse_error_fail, Snackbar.LENGTH_SHORT)
-                .setAnchorView(R.id.floatingActionButton)
-                .show()
-        } catch (e: RuntimeException) {
-            e.printStackTrace()
-            Snackbar.make(binding.root, R.string.parse_error_fail, Snackbar.LENGTH_SHORT)
-                .setAnchorView(R.id.floatingActionButton)
-                .show()
+            showSnackBar(R.string.parse_error_fail)
         }
         // 到此为止，这个临时文件没用了，可以删掉了
         MyFileUtil.deleteExternalCacheFile(this, hapFilePath)
@@ -331,17 +288,19 @@ class MainActivity : AppCompatActivity(), OnDragListener {
     }
 
     /**
-     * 创建阴影 Bitmap
+     * 创建图标的带有边距的阴影 Drawable
      *
      * @param src 原始 Bitmap
-     * @return 阴影Bitmap
+     * @return 阴影 BitmapDrawable
      */
-    private fun newShadowBitmap(src: Bitmap): Bitmap {
-        return BitmapUtil.newShadowBitmap(
-            this, src,
-            this.resources.getDimensionPixelSize(R.dimen.icon_padding),
-            this.resources.getDimensionPixelSize(R.dimen.icon_width),
-            this.resources.getDimensionPixelSize(R.dimen.icon_width)
+    private fun newIconShadowDrawable(src: Bitmap): BitmapDrawable {
+        return BitmapDrawable(
+            resources, BitmapUtil.newShadowBitmap(
+                this, src,
+                resources.getDimensionPixelSize(R.dimen.icon_padding),
+                resources.getDimensionPixelSize(R.dimen.icon_width),
+                resources.getDimensionPixelSize(R.dimen.icon_width)
+            )
         )
     }
 
@@ -384,49 +343,63 @@ class MainActivity : AppCompatActivity(), OnDragListener {
         parse(intent.data)
     }
 
+    override fun showSnackBar(text: String): Snackbar {
+        // 重写该方法，将 SnackBar 放置到悬浮按钮之上
+        return Snackbar.make(binding.root, text, Snackbar.LENGTH_SHORT)
+            .setAnchorView(R.id.floatingActionButton)
+            .apply { show() }
+    }
+
     private fun onHapInfoChanged(hapInfo: HapInfo?) {
         if (hapInfo != null) {
             // 显示基础信息
-            binding.basicInfo.appName.text = hapInfo.appName
-            binding.basicInfo.version.text =
-                String.format("%s (%s)", hapInfo.versionName, hapInfo.versionCode)
-            // 显示应用图标
-            if (hapInfo.icon != null) {
-                binding.basicInfo.imageView.setImageBitmap(hapInfo.icon)
-                binding.basicInfo.imageView.background =
-                    BitmapDrawable(resources, newShadowBitmap(hapInfo.icon))
-            } else {
-                val defaultIconDrawable = Objects.requireNonNull(
-                    AppCompatResources.getDrawable(
-                        this,
+            binding.basicInfo.apply {
+                appName.text = hapInfo.appName
+                version.text = String.format("%s (%s)", hapInfo.versionName, hapInfo.versionCode)
+                // 显示应用图标
+                if (hapInfo.icon != null) {
+                    imageView.setImageBitmap(hapInfo.icon)
+                    imageView.background = newIconShadowDrawable(hapInfo.icon)
+                } else {
+                    val defaultIconDrawable = AppCompatResources.getDrawable(
+                        this@MainActivity,
                         R.drawable.ic_default_new
-                    )
-                ) as BitmapDrawable
-                binding.basicInfo.imageView.background = BitmapDrawable(
-                    resources,
-                    newShadowBitmap(defaultIconDrawable.bitmap)
-                )
+                    ) as BitmapDrawable
+                    imageView.background = newIconShadowDrawable(defaultIconDrawable.bitmap)
+                }
             }
 
             // 显示应用信息
-            infoAdapter!!.setInfo(hapInfo)
+            infoAdapter.setInfo(hapInfo)
         } else {
-            infoAdapter!!.setInfo(HapInfo(true))
+            infoAdapter.setInfo(HapInfo(true))
         }
     }
 
     private inner class OnExitCallback : OnBackPressedCallback(true) {
+        // 不能共用一个 SnackBar
         var snackbar: Snackbar? = null
         override fun handleOnBackPressed() {
             isEnabled = false
             snackbar = Snackbar.make(binding.root, R.string.exit_toast, Snackbar.LENGTH_SHORT)
-            snackbar!!.setAnchorView(R.id.floatingActionButton)
-            snackbar!!.addCallback(object : Snackbar.Callback() {
-                override fun onDismissed(transientBottomBar: Snackbar, event: Int) {
-                    isEnabled = true
+                .apply {
+                    setAnchorView(R.id.floatingActionButton)
+                    addCallback(object : Snackbar.Callback() {
+                        override fun onDismissed(transientBottomBar: Snackbar, event: Int) {
+                            // 如果关闭 SnackBar 的同时对象不一致，说明用户再次点击返回键，此时应保持
+                            // OnExitCallback 不被启用。
+                            if (snackbar == this@apply)
+                                isEnabled = true
+                            else
+                                Log.w(TAG, "onDismissed: SnackBar 已更改但此时没有消失。")
+                        }
+                    })
+                    show()
                 }
-            })
-            snackbar!!.show()
+        }
+
+        fun closeSnackBar() {
+            snackbar?.dismiss()
         }
     }
 
@@ -441,8 +414,8 @@ class MainActivity : AppCompatActivity(), OnDragListener {
         )
 
         /**
-         * 文件读写权限 请求码
+         * 文件读写权限，用于选择文件 请求码
          * */
-        private const val REQUEST_CODE_EXTERNAL_STORAGE = 1
+        private const val REQUEST_CODE_SELECT_FILE = 1
     }
 }
