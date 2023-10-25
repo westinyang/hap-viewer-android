@@ -10,6 +10,7 @@ class MainViewModel : ViewModel() {
     val hapInfo: MutableLiveData<HapInfo> by lazy {
         MutableLiveData(HapInfo(true))
     }
+    val isParsing = MutableLiveData(false)
 
     override fun onCleared() {
         super.onCleared()

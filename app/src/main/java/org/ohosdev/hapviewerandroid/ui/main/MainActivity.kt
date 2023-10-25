@@ -1,7 +1,6 @@
 package org.ohosdev.hapviewerandroid.ui.main
 
 import android.Manifest
-import android.content.ClipDescription
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.graphics.Bitmap
@@ -81,7 +80,10 @@ class MainActivity : BaseActivity(), OnDragListener {
             parse(intent.data)
         }
 
-        model.hapInfo.observe(this) { hapInfo: HapInfo? -> onHapInfoChanged(hapInfo) }
+        model.hapInfo.observe(this) { onHapInfoChanged(it) }
+        model.isParsing.observe(this) {
+            binding.progressBar.visibility = if (it) View.VISIBLE else View.GONE
+        }
     }
 
     private fun initViews() {
@@ -213,14 +215,14 @@ class MainActivity : BaseActivity(), OnDragListener {
         if (uri == null) {
             return
         }
-        binding.progressBar.visibility = View.VISIBLE
+        model.isParsing.value = true
         Thread(Runnable {
             synchronized(this) {
-                runOnUiThread { binding.progressBar.visibility = View.VISIBLE }
+                model.isParsing.postValue(true)
                 val file = MyFileUtil.getOrCopyFile(this@MainActivity, uri)
                 if (file == null) {
                     showSnackBar(R.string.parse_error_fail_obtain)
-                    runOnUiThread { binding.progressBar.visibility = View.GONE }
+                    model.isParsing.postValue(false)
                     return@Runnable
                 }
                 // 解析hap
@@ -255,7 +257,7 @@ class MainActivity : BaseActivity(), OnDragListener {
                         })
                         .show()
                 }
-                runOnUiThread { binding.progressBar.visibility = View.GONE }
+                model.isParsing.postValue(false)
             }
         }).start()
     }
@@ -275,17 +277,17 @@ class MainActivity : BaseActivity(), OnDragListener {
     private fun parseHapAndShowInfo(hapFilePath: String, uri: Uri) {
         // 解析hap
         val hapInfo: HapInfo
-        runOnUiThread { binding.progressBar.visibility = View.VISIBLE }
+        model.isParsing.postValue(true)
         try {
             hapInfo = HapUtil.parse(hapFilePath)
-            runOnUiThread { model.hapInfo.setValue(hapInfo) }
+            model.hapInfo.postValue(hapInfo)
         } catch (e: Exception) {
             e.printStackTrace()
             showSnackBar(R.string.parse_error_fail)
         }
         // 到此为止，这个临时文件没用了，可以删掉了
         MyFileUtil.deleteExternalCacheFile(this, hapFilePath)
-        runOnUiThread { binding.progressBar.visibility = View.GONE }
+        model.isParsing.postValue(false)
     }
 
     /**
@@ -308,15 +310,11 @@ class MainActivity : BaseActivity(), OnDragListener {
     override fun onDrag(v: View, event: DragEvent): Boolean {
         when (event.action) {
             DragEvent.ACTION_DRAG_STARTED -> {
-                if (event.hasFileMime()) {
-                    v.alpha = 1f
-                    return true
-                }
-                return false
+                return event.hasFileMime().also { if (it) v.alpha = 1f }
             }
 
             DragEvent.ACTION_DROP -> {
-                for (index in 0 until event.clipData.itemCount){
+                for (index in 0 until event.clipData.itemCount) {
                     val item = event.clipData.getItemAt(0)
                     if (item.uri != null) {
                         requestDragAndDropPermissions(event)
