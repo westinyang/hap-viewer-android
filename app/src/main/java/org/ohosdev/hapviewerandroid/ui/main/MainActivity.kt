@@ -35,6 +35,7 @@ import org.ohosdev.hapviewerandroid.app.AppPreference.ThemeType.MATERIAL1
 import org.ohosdev.hapviewerandroid.app.AppPreference.ThemeType.MATERIAL2
 import org.ohosdev.hapviewerandroid.app.AppPreference.ThemeType.MATERIAL3
 import org.ohosdev.hapviewerandroid.app.BaseActivity
+import org.ohosdev.hapviewerandroid.app.hasFileMime
 import org.ohosdev.hapviewerandroid.databinding.ActivityMainBinding
 import org.ohosdev.hapviewerandroid.extensions.applyDividerIfEnabled
 import org.ohosdev.hapviewerandroid.extensions.contentMovementMethod
@@ -307,27 +308,21 @@ class MainActivity : BaseActivity(), OnDragListener {
     override fun onDrag(v: View, event: DragEvent): Boolean {
         when (event.action) {
             DragEvent.ACTION_DRAG_STARTED -> {
-                var i = 0
-                while (i < event.clipDescription.mimeTypeCount) {
-                    if (event.clipDescription.getMimeType(i) != ClipDescription.MIMETYPE_TEXT_PLAIN) {
-                        v.alpha = 1f
-                        return true
-                    }
-                    i++
+                if (event.hasFileMime()) {
+                    v.alpha = 1f
+                    return true
                 }
                 return false
             }
 
             DragEvent.ACTION_DROP -> {
-                var i = 0
-                while (i < event.clipData.itemCount) {
+                for (index in 0 until event.clipData.itemCount){
                     val item = event.clipData.getItemAt(0)
                     if (item.uri != null) {
                         requestDragAndDropPermissions(event)
                         parse(item.uri)
                         break
                     }
-                    i++
                 }
             }
 
