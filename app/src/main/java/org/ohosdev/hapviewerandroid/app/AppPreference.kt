@@ -33,6 +33,6 @@ fun String.toThemeType(): ThemeType {
         ThemeType.MATERIAL2.value -> ThemeType.MATERIAL2
         ThemeType.MATERIAL3.value -> ThemeType.MATERIAL3
         ThemeType.HARMONY.value -> ThemeType.HARMONY
-        else -> ThemeType.MATERIAL2
+        else -> ThemeType.HARMONY
     }
 }
