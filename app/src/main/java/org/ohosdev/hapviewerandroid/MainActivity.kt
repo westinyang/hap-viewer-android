@@ -1,7 +1,6 @@
 package org.ohosdev.hapviewerandroid
 
 import android.Manifest
-import android.annotation.SuppressLint
 import android.content.ClipDescription
 import android.content.Intent
 import android.content.pm.PackageManager
@@ -68,7 +67,6 @@ class MainActivity : AppCompatActivity(), OnDragListener {
             parse(uri)
         }
 
-    @SuppressLint("SourceLockedOrientationActivity")
     override fun onCreate(savedInstanceState: Bundle?) {
         layoutInflater.factory2 = LayoutInflaterFactory(delegate)
             .addOnViewCreatedListener(WindowInsetsHelper.LISTENER)
@@ -92,9 +90,7 @@ class MainActivity : AppCompatActivity(), OnDragListener {
         recyclerView.layoutManager = LinearLayoutManager(this)
 
         val dividerTypedArray = theme.obtainStyledAttributes(
-            intArrayOf(
-                R.attr.enableDivider
-            )
+            intArrayOf(R.attr.enableDivider)
         )
 
         if (dividerTypedArray.getBoolean(0, false)) {
@@ -200,18 +196,10 @@ class MainActivity : AppCompatActivity(), OnDragListener {
 
         // 退出时可能会显示Snackbar，以至于下一次弹出多个snackbar
         onExitCallback.snackbar?.dismiss()
-
     }
 
-    override fun onDestroy() {
-        super.onDestroy()
-        // 因为用了LiveData，所以不应该在这里销毁
-        /* if (currentHapInfo != null) {
-            HapUtil.destroyHapInfo(this, currentHapInfo);
-        } */
-    }
 
-    fun handelAboutClick(item: MenuItem?) {
+    private fun handelAboutClick(item: MenuItem?) {
         // 使用 Material Dialog
         // 但是华为设备上拖拽阴影在 Material Dialog 有bug
         MaterialAlertDialogBuilder(this)
@@ -227,7 +215,7 @@ class MainActivity : AppCompatActivity(), OnDragListener {
             }
     }
 
-    fun onFabClick(view: View?) {
+    private fun onFabClick(view: View?) {
         // 申请权限
         // 安卓10及以上不需要存储权限，可以直接使用
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.Q
@@ -246,7 +234,7 @@ class MainActivity : AppCompatActivity(), OnDragListener {
         }
     }
 
-    fun selectFile() {
+    private fun selectFile() {
         selectFileResultLauncher.launch("*/*")
     }
 
@@ -399,13 +387,13 @@ class MainActivity : AppCompatActivity(), OnDragListener {
     private fun onHapInfoChanged(hapInfo: HapInfo?) {
         if (hapInfo != null) {
             // 显示基础信息
-            binding!!.basicInfo.appName.text = hapInfo.appName
-            binding!!.basicInfo.version.text =
+            binding.basicInfo.appName.text = hapInfo.appName
+            binding.basicInfo.version.text =
                 String.format("%s (%s)", hapInfo.versionName, hapInfo.versionCode)
             // 显示应用图标
             if (hapInfo.icon != null) {
-                binding!!.basicInfo.imageView.setImageBitmap(hapInfo.icon)
-                binding!!.basicInfo.imageView.background =
+                binding.basicInfo.imageView.setImageBitmap(hapInfo.icon)
+                binding.basicInfo.imageView.background =
                     BitmapDrawable(resources, newShadowBitmap(hapInfo.icon))
             } else {
                 val defaultIconDrawable = Objects.requireNonNull(
@@ -414,7 +402,7 @@ class MainActivity : AppCompatActivity(), OnDragListener {
                         R.drawable.ic_default_new
                     )
                 ) as BitmapDrawable
-                binding!!.basicInfo.imageView.background = BitmapDrawable(
+                binding.basicInfo.imageView.background = BitmapDrawable(
                     resources,
                     newShadowBitmap(defaultIconDrawable.bitmap)
                 )
@@ -445,7 +433,7 @@ class MainActivity : AppCompatActivity(), OnDragListener {
         var snackbar: Snackbar? = null
         override fun handleOnBackPressed() {
             isEnabled = false
-            snackbar = Snackbar.make(binding!!.root, R.string.exit_toast, Snackbar.LENGTH_SHORT)
+            snackbar = Snackbar.make(binding.root, R.string.exit_toast, Snackbar.LENGTH_SHORT)
             snackbar!!.setAnchorView(R.id.floatingActionButton)
             snackbar!!.addCallback(object : Snackbar.Callback() {
                 override fun onDismissed(transientBottomBar: Snackbar, event: Int) {
