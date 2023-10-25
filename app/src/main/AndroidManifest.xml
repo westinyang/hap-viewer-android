@@ -12,6 +12,7 @@
         tools:ignore="ScopedStorage" /> -->
 
     <application
+        android:name=".app.HapViewerApp"
         android:allowBackup="true"
         android:dataExtractionRules="@xml/data_extraction_rules"
         android:enableOnBackInvokedCallback="@bool/not_enable_until_u"
