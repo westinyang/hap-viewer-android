@@ -53,7 +53,7 @@ import java.util.concurrent.atomic.AtomicBoolean
 class MainActivity : BaseActivity(), OnDragListener {
     private val themeManager: ThemeManager = ThemeManager(this)
 
-    private val infoAdapter = InfoAdapter(this)
+    private val infoAdapter by lazy { InfoAdapter(this) }
 
     private val binding by lazy { ActivityMainBinding.inflate(layoutInflater) }
     override val rootView: CoordinatorLayout get() = binding.root
