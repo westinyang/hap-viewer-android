@@ -53,7 +53,7 @@ import java.util.concurrent.atomic.AtomicBoolean
 class MainActivity : BaseActivity(), OnDragListener {
     private val themeManager: ThemeManager = ThemeManager(this)
 
-    private val infoAdapter by lazy { InfoAdapter(this) }
+    private val infoAdapter = InfoAdapter(this)
 
     private val binding by lazy { ActivityMainBinding.inflate(layoutInflater) }
     override val rootView: CoordinatorLayout get() = binding.root
@@ -62,9 +62,7 @@ class MainActivity : BaseActivity(), OnDragListener {
     private val model: MainViewModel by viewModels()
 
     private val selectFileResultLauncher =
-        registerForActivityResult<String, Uri>(ActivityResultContracts.GetContent()) { uri: Uri? ->
-            parse(uri)
-        }
+        registerForActivityResult<String, Uri>(ActivityResultContracts.GetContent()) { parse(it) }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         layoutInflater.factory2 = LayoutInflaterFactory(delegate)
@@ -98,12 +96,7 @@ class MainActivity : BaseActivity(), OnDragListener {
 
         // 启用拖放
         binding.dropMask.root.setOnDragListener(this)
-        binding.floatingActionButton.setOnClickListener { view: View? ->
-            onFabClick(
-                view
-            )
-        }
-
+        binding.floatingActionButton.setOnClickListener { onFabClick(it) }
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
