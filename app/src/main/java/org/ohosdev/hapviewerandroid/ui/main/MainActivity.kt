@@ -86,6 +86,10 @@ class MainActivity : BaseActivity(), OnDragListener {
 
     private fun initViews() {
         window.statusBarColor = Color.TRANSPARENT
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O_MR1)
+            window.navigationBarColor = Color.TRANSPARENT
+        else
+            binding.bottomScrim.background = null
         setContentView(binding.root)
         setSupportActionBar(binding.toolbar)
         binding.detailInfo.recyclerView.apply {
