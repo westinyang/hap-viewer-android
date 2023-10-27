@@ -44,11 +44,8 @@ import org.ohosdev.hapviewerandroid.extensions.thisApp
 import org.ohosdev.hapviewerandroid.manager.ThemeManager
 import org.ohosdev.hapviewerandroid.model.HapInfo
 import org.ohosdev.hapviewerandroid.util.BitmapUtil
-import org.ohosdev.hapviewerandroid.util.HapUtil
-import org.ohosdev.hapviewerandroid.util.MyFileUtil
 import rikka.insets.WindowInsetsHelper
 import rikka.layoutinflater.view.LayoutInflaterFactory
-import java.util.concurrent.atomic.AtomicBoolean
 
 class MainActivity : BaseActivity(), OnDragListener {
     private val themeManager: ThemeManager = ThemeManager(this)
@@ -81,6 +78,11 @@ class MainActivity : BaseActivity(), OnDragListener {
         model.hapInfo.observe(this) { onHapInfoChanged(it) }
         model.isParsing.observe(this) {
             binding.progressBar.visibility = if (it) View.VISIBLE else View.GONE
+        }
+        model.snackBarEvent.observe(this) {
+            if (it.consume()) {
+                showSnackBar(it.text)
+            }
         }
     }
 
@@ -212,79 +214,13 @@ class MainActivity : BaseActivity(), OnDragListener {
         if (uri == null) {
             return
         }
-        model.isParsing.value = true
-        Thread(Runnable {
-            synchronized(this) {
-                model.isParsing.postValue(true)
-                val file = MyFileUtil.getOrCopyFile(this@MainActivity, uri)
-                if (file == null) {
-                    showSnackBar(R.string.parse_error_fail_obtain)
-                    model.isParsing.postValue(false)
-                    return@Runnable
-                }
-                // 解析hap
-                val path = file.absolutePath
-                val extName = path.substring(path.lastIndexOf(".") + 1)
-                if (path.isNotEmpty() && "hap" == extName) {
-                    parseHapAndShowInfo(path, uri)
-                } else {
-                    val continueFlag = AtomicBoolean(false)
-
-                    Snackbar.make(
-                        binding.root,
-                        R.string.parse_error_type,
-                        Snackbar.LENGTH_SHORT
-                    )
-                        .setAction(R.string.parse_continue_ignoreError) { v ->
-                            continueFlag.set(true)
-                            parseHapAndShowInfo(path, uri)
-                        }
-                        .setAnchorView(R.id.floatingActionButton)
-                        .addCallback(object :
-                            Snackbar.Callback() {
-                            override fun onDismissed(
-                                transientBottomBar: Snackbar,
-                                event: Int
-                            ) {
-                                // 不继续解析，说明此文件没用了
-                                if (!continueFlag.get()) {
-                                    MyFileUtil.deleteExternalCacheFile(this@MainActivity, path)
-                                }
-                            }
-                        })
-                        .show()
-                }
-                model.isParsing.postValue(false)
-            }
-        }).start()
+        model.handelUri(uri)
     }
 
     private fun checkTheme() {
         if (themeManager.isThemeChanged()) {
             recreate()
         }
-    }
-
-    /**
-     * 解析hap并显示信息
-     *
-     * @param hapFilePath
-     * @param uri
-     */
-    private fun parseHapAndShowInfo(hapFilePath: String, uri: Uri) {
-        // 解析hap
-        val hapInfo: HapInfo
-        model.isParsing.postValue(true)
-        try {
-            hapInfo = HapUtil.parse(hapFilePath)
-            model.hapInfo.postValue(hapInfo)
-        } catch (e: Exception) {
-            e.printStackTrace()
-            showSnackBar(R.string.parse_error_fail)
-        }
-        // 到此为止，这个临时文件没用了，可以删掉了
-        MyFileUtil.deleteExternalCacheFile(this, hapFilePath)
-        model.isParsing.postValue(false)
     }
 
     /**
@@ -368,17 +304,17 @@ class MainActivity : BaseActivity(), OnDragListener {
 
     private inner class OnExitCallback : OnBackPressedCallback(true) {
         // 不能共用一个 SnackBar
-        var snackbar: Snackbar? = null
+        var snackBar: Snackbar? = null
         override fun handleOnBackPressed() {
             isEnabled = false
-            snackbar = Snackbar.make(binding.root, R.string.exit_toast, Snackbar.LENGTH_SHORT)
+            snackBar = Snackbar.make(binding.root, R.string.exit_toast, Snackbar.LENGTH_SHORT)
                 .apply {
                     setAnchorView(R.id.floatingActionButton)
                     addCallback(object : Snackbar.Callback() {
                         override fun onDismissed(transientBottomBar: Snackbar, event: Int) {
                             // 如果关闭 SnackBar 的同时对象不一致，说明用户再次点击返回键，此时应保持
                             // OnExitCallback 不被启用。
-                            if (snackbar == this@apply)
+                            if (snackBar == this@apply)
                                 isEnabled = true
                             else
                                 Log.w(TAG, "onDismissed: SnackBar 已更改但此时没有消失。")
@@ -389,7 +325,7 @@ class MainActivity : BaseActivity(), OnDragListener {
         }
 
         fun closeSnackBar() {
-            snackbar?.dismiss()
+            snackBar?.dismiss()
         }
     }
 
