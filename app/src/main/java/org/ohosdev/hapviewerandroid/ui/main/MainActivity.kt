@@ -19,7 +19,6 @@ import android.view.View.OnDragListener
 import androidx.activity.OnBackPressedCallback
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
-import androidx.appcompat.content.res.AppCompatResources
 import androidx.coordinatorlayout.widget.CoordinatorLayout
 import androidx.core.app.ActivityCompat
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -39,6 +38,8 @@ import org.ohosdev.hapviewerandroid.databinding.ActivityMainBinding
 import org.ohosdev.hapviewerandroid.extensions.applyDividerIfEnabled
 import org.ohosdev.hapviewerandroid.extensions.contentMovementMethod
 import org.ohosdev.hapviewerandroid.extensions.contentSelectable
+import org.ohosdev.hapviewerandroid.extensions.getBitmap
+import org.ohosdev.hapviewerandroid.extensions.isPermissionGranted
 import org.ohosdev.hapviewerandroid.extensions.setContentAutoLinkMask
 import org.ohosdev.hapviewerandroid.extensions.thisApp
 import org.ohosdev.hapviewerandroid.manager.ThemeManager
@@ -59,7 +60,7 @@ class MainActivity : BaseActivity(), OnDragListener {
     private val model: MainViewModel by viewModels()
 
     private val selectFileResultLauncher =
-        registerForActivityResult<String, Uri>(ActivityResultContracts.GetContent()) { parse(it) }
+        registerForActivityResult<String, Uri>(ActivityResultContracts.GetContent()) { handelUri(it) }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         layoutInflater.factory2 = LayoutInflaterFactory(delegate)
@@ -72,7 +73,7 @@ class MainActivity : BaseActivity(), OnDragListener {
 
         // 解析传入的 Intent
         if (savedInstanceState == null) {
-            parse(intent.data)
+            handelUri(intent.data)
         }
 
         model.hapInfo.observe(this) { onHapInfoChanged(it) }
@@ -150,7 +151,7 @@ class MainActivity : BaseActivity(), OnDragListener {
         }
         if (grantResults.all { it == PackageManager.PERMISSION_GRANTED }) {
             if (requestCode == REQUEST_CODE_SELECT_FILE) {
-                selectFile()
+                selectHapFile()
             }
         } else {
             showSnackBar(R.string.permission_grant_fail)
@@ -191,32 +192,33 @@ class MainActivity : BaseActivity(), OnDragListener {
         // 申请权限
         // 安卓10及以上不需要存储权限，可以直接使用
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.Q
-            && ActivityCompat.checkSelfPermission(
-                this, Manifest.permission.READ_EXTERNAL_STORAGE
-            ) != PackageManager.PERMISSION_GRANTED
+            && isPermissionGranted(Manifest.permission.READ_EXTERNAL_STORAGE)
         ) {
             ActivityCompat.requestPermissions(
-                this@MainActivity,
-                PERMISSIONS_EXTERNAL_STORAGE,
-                REQUEST_CODE_SELECT_FILE
+                this@MainActivity, PERMISSIONS_EXTERNAL_STORAGE, REQUEST_CODE_SELECT_FILE
             )
         } else {
-            selectFile()
+            selectHapFile()
         }
     }
 
-    private fun selectFile() {
+    private fun selectHapFile() {
         // Hap 文件 mime 类型未知，使用 */* 更保险
         selectFileResultLauncher.launch("*/*")
     }
 
-    private fun parse(uri: Uri?) {
-        if (uri == null) {
+    /**
+     * 解析 Uri，如果为空就什么都不做
+     * */
+    private fun handelUri(uri: Uri?) {
+        if (uri == null)
             return
-        }
         model.handelUri(uri)
     }
 
+    /**
+     * 检查主题，如果不同就重启
+     * */
     private fun checkTheme() {
         if (themeManager.isThemeChanged()) {
             recreate()
@@ -251,7 +253,7 @@ class MainActivity : BaseActivity(), OnDragListener {
                     val item = event.clipData.getItemAt(0)
                     if (item.uri != null) {
                         requestDragAndDropPermissions(event)
-                        parse(item.uri)
+                        handelUri(item.uri)
                         break
                     }
                 }
@@ -266,7 +268,7 @@ class MainActivity : BaseActivity(), OnDragListener {
 
     override fun onNewIntent(intent: Intent) {
         super.onNewIntent(intent)
-        parse(intent.data)
+        handelUri(intent.data)
     }
 
     override fun showSnackBar(text: String): Snackbar {
@@ -278,27 +280,37 @@ class MainActivity : BaseActivity(), OnDragListener {
 
     private fun onHapInfoChanged(hapInfo: HapInfo?) {
         if (hapInfo != null) {
-            // 显示基础信息
-            binding.basicInfo.apply {
-                appName.text = hapInfo.appName
-                version.text = String.format("%s (%s)", hapInfo.versionName, hapInfo.versionCode)
-                // 显示应用图标
-                if (hapInfo.icon != null) {
-                    imageView.setImageBitmap(hapInfo.icon)
-                    imageView.background = newIconShadowDrawable(hapInfo.icon)
-                } else {
-                    val defaultIconDrawable = AppCompatResources.getDrawable(
-                        this@MainActivity,
-                        R.drawable.ic_default_new
-                    ) as BitmapDrawable
-                    imageView.background = newIconShadowDrawable(defaultIconDrawable.bitmap)
+            hapInfo.let {
+                // 显示基础信息
+                binding.basicInfo.apply {
+                    appName.text = it.appName
+                    version.text = String.format("%s (%s)", it.versionName, it.versionCode)
+                    setHapIcon(it.icon)
                 }
             }
-
             // 显示应用信息
             infoAdapter.setInfo(hapInfo)
         } else {
             infoAdapter.setInfo(HapInfo(true))
+        }
+    }
+
+    /**
+     * 设置显示的 HAP 图标
+     *
+     * 如果bitmap为空，则显示默认图标。
+     * */
+    private fun setHapIcon(bitmap: Bitmap?) {
+        binding.basicInfo.apply {
+            if (bitmap != null) {
+                imageView.setImageBitmap(bitmap)
+                imageView.background = newIconShadowDrawable(bitmap)
+            } else {
+                R.drawable.ic_default_new.also {
+                    imageView.setImageResource(it)
+                    imageView.background = newIconShadowDrawable(getBitmap(it)!!)
+                }
+            }
         }
     }
 
