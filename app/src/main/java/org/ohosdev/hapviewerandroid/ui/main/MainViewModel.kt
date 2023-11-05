@@ -11,13 +11,15 @@ import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import org.ohosdev.hapviewerandroid.R
+import org.ohosdev.hapviewerandroid.extensions.deleteIfCache
+import org.ohosdev.hapviewerandroid.extensions.getOrCopyFile
 import org.ohosdev.hapviewerandroid.model.HapInfo
 import org.ohosdev.hapviewerandroid.util.HapUtil
-import org.ohosdev.hapviewerandroid.util.MyFileUtil
 import org.ohosdev.hapviewerandroid.util.event.SnackBarEvent
+import java.io.File
 
 // https://developer.android.google.cn/topic/libraries/architecture/viewmodel?hl=zh-cn
-class MainViewModel(private val application: Application) : AndroidViewModel(application) {
+class MainViewModel(private val app: Application) : AndroidViewModel(app) {
 
     val hapInfo: MutableLiveData<HapInfo> by lazy {
         MutableLiveData(HapInfo(true))
@@ -30,36 +32,34 @@ class MainViewModel(private val application: Application) : AndroidViewModel(app
             isParsing.postValue(true)
             withContext(Dispatchers.IO) {
                 // TODO: 文件名校验
-                val file = MyFileUtil.getOrCopyFile(application, uri)
+                val file = uri.getOrCopyFile(app)
                 if (file == null) {
                     showSnackBar(R.string.parse_error_fail_obtain)
                     return@withContext
                 }
-                parseHap(file.absolutePath)
+                parseHap(file)
             }
             isParsing.postValue(false)
         }
     }
 
-    private suspend fun parseHap(filePath: String) {
+    private suspend fun parseHap(file: File) {
         isParsing.postValue(true)
         coroutineScope {
-            val hapInfo: HapInfo
             try {
-                hapInfo = HapUtil.parse(filePath)
-                this@MainViewModel.hapInfo.postValue(hapInfo)
+                this@MainViewModel.hapInfo.postValue(HapUtil.parse(file.absolutePath))
             } catch (e: Exception) {
                 e.printStackTrace()
                 showSnackBar(R.string.parse_error_fail)
             }
             // 到此为止，这个临时文件没用了，可以删掉了
-            MyFileUtil.deleteExternalCacheFile(application, filePath)
+            file.deleteIfCache(app)
         }
         isParsing.postValue(false)
     }
 
     fun showSnackBar(@StringRes resId: Int) {
-        snackBarEvent.postValue(SnackBarEvent(application, resId))
+        snackBarEvent.postValue(SnackBarEvent(app, resId))
     }
 
     override fun onCleared() {
