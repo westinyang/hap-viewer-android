@@ -139,7 +139,6 @@ fun Uri.copyToPrivateFile(ctx: Context, cancellationSignal: CancellationSignal? 
  * 仅当有存储权限，且可以获取文件路径时返回原文件，否则返回临时文件
  *
  * @param context 上下文
- * @param uri     Uri
  * @return 获取到的文件路径，或者是复制到的新文件路径
  */
 fun Uri.getOrCopyFile(context: Context): File? {

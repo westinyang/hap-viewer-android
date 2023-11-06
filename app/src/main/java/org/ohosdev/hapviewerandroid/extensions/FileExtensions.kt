@@ -26,12 +26,13 @@ fun FileChannel.copyTo(out: FileChannel) {
 fun FileInputStream.copyTo(out: FileOutputStream) {
     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
         FileUtils.copy(this.fd, out.fd)
-    }
-    channel.use { inputChannel ->
-        out.channel.use { outputChannel ->
-            inputChannel.copyTo(
-                outputChannel
-            )
+    } else {
+        channel.use { inputChannel ->
+            out.channel.use { outputChannel ->
+                inputChannel.copyTo(
+                    outputChannel
+                )
+            }
         }
     }
 }
@@ -39,6 +40,8 @@ fun FileInputStream.copyTo(out: FileOutputStream) {
 fun InputStream.copyTo(out: OutputStream) {
     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
         FileUtils.copy(this, out)
+    } else if (this is FileInputStream && out is FileOutputStream) {
+        this.copyTo(out)
     } else {
         val b = ByteArray(1024 * 5)
         var len: Int
@@ -47,7 +50,6 @@ fun InputStream.copyTo(out: OutputStream) {
         }
         out.flush()
     }
-
 }
 
 fun File.copyTo(out: File) {
