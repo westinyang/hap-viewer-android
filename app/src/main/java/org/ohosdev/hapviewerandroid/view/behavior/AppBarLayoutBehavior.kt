@@ -34,7 +34,7 @@ class AppBarLayoutBehavior : AppBarLayout.Behavior {
             consumed
         )
         if (child.isLiftOnScroll && dyUnconsumed < 0) {
-            child.isLifted
+            child.isLifted = false
         }
     }
 }
