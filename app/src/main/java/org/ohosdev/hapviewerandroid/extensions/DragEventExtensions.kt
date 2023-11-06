@@ -1,4 +1,4 @@
-package org.ohosdev.hapviewerandroid.app
+package org.ohosdev.hapviewerandroid.extensions
 
 import android.content.ClipDescription
 import android.view.DragEvent

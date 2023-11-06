@@ -33,18 +33,18 @@ import org.ohosdev.hapviewerandroid.app.AppPreference.ThemeType.MATERIAL1
 import org.ohosdev.hapviewerandroid.app.AppPreference.ThemeType.MATERIAL2
 import org.ohosdev.hapviewerandroid.app.AppPreference.ThemeType.MATERIAL3
 import org.ohosdev.hapviewerandroid.app.BaseActivity
-import org.ohosdev.hapviewerandroid.app.hasFileMime
 import org.ohosdev.hapviewerandroid.databinding.ActivityMainBinding
 import org.ohosdev.hapviewerandroid.extensions.applyDividerIfEnabled
 import org.ohosdev.hapviewerandroid.extensions.contentMovementMethod
 import org.ohosdev.hapviewerandroid.extensions.contentSelectable
 import org.ohosdev.hapviewerandroid.extensions.getBitmap
+import org.ohosdev.hapviewerandroid.extensions.hasFileMime
 import org.ohosdev.hapviewerandroid.extensions.isPermissionGranted
+import org.ohosdev.hapviewerandroid.extensions.newShadowBitmap
 import org.ohosdev.hapviewerandroid.extensions.setContentAutoLinkMask
 import org.ohosdev.hapviewerandroid.extensions.thisApp
 import org.ohosdev.hapviewerandroid.manager.ThemeManager
 import org.ohosdev.hapviewerandroid.model.HapInfo
-import org.ohosdev.hapviewerandroid.util.BitmapUtil
 import rikka.insets.WindowInsetsHelper
 import rikka.layoutinflater.view.LayoutInflaterFactory
 
@@ -226,15 +226,15 @@ class MainActivity : BaseActivity(), OnDragListener {
     }
 
     /**
-     * 创建图标的带有边距的阴影 Drawable
+     * 创建图标的带有边距的背景阴影
      *
      * @param src 原始 Bitmap
      * @return 阴影 BitmapDrawable
      */
     private fun newIconShadowDrawable(src: Bitmap): BitmapDrawable {
         return BitmapDrawable(
-            resources, BitmapUtil.newShadowBitmap(
-                this, src,
+            resources, src.newShadowBitmap(
+                this,
                 resources.getDimensionPixelSize(R.dimen.icon_padding),
                 resources.getDimensionPixelSize(R.dimen.icon_width),
                 resources.getDimensionPixelSize(R.dimen.icon_width)
