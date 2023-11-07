@@ -9,6 +9,7 @@ import androidx.annotation.NonNull;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 
+import org.ohosdev.hapviewerandroid.extensions.FileExtensionsKt;
 import org.ohosdev.hapviewerandroid.model.HapInfo;
 
 import java.io.File;
@@ -180,11 +181,12 @@ public class HapUtil {
 
     public static void destroyHapInfo(@NonNull Context context, @NonNull HapInfo hapInfo) {
         // 删除临时文件
-        if (hapInfo.hapFilePath != null
-                && MyFileUtil.isExternalCacheFile(context, hapInfo.hapFilePath)) {
+        if (hapInfo.hapFilePath != null) {
             File hapFile = new File(hapInfo.hapFilePath);
-            if (hapFile.isFile() && !hapFile.delete()) {
-                hapFile.deleteOnExit();
+            if (FileExtensionsKt.isExternalCache(hapFile, context)) {
+                if (hapFile.isFile() && !hapFile.delete()) {
+                    hapFile.deleteOnExit();
+                }
             }
         }
         if (hapInfo.icon != null) {

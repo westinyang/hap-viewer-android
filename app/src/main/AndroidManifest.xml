@@ -12,6 +12,7 @@
         tools:ignore="ScopedStorage" /> -->
 
     <application
+        android:name=".app.HapViewerApp"
         android:allowBackup="true"
         android:dataExtractionRules="@xml/data_extraction_rules"
         android:enableOnBackInvokedCallback="@bool/not_enable_until_u"
@@ -23,7 +24,7 @@
         android:theme="@style/Theme.HapViewerAndroid.Material2"
         tools:targetApi="tiramisu">
         <activity
-            android:name=".MainActivity"
+            android:name=".ui.main.MainActivity"
             android:configChanges="orientation|smallestScreenSize|touchscreen|screenSize|screenLayout|keyboard|keyboardHidden"
             android:exported="true"
             android:launchMode="singleTask">
