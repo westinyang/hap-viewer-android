@@ -19,7 +19,6 @@
 ## 下载安装
 
 - https://gitee.com/ohos-dev/hap-viewer-android/releases
-- 酷安（即将上架）...
 
 ## 开发环境
 
