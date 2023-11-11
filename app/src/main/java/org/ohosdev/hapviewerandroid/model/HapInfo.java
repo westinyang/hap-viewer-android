@@ -9,9 +9,11 @@ import java.util.Set;
 
 /**
  * Hap安装包信息
+ *
  * @author westinyang
  */
 public class HapInfo {
+    public static final HapInfo INIT = new HapInfo(true);
     public boolean init = false;
 
     /* app. */
@@ -51,6 +53,10 @@ public class HapInfo {
         return techDesc;
     }
 
+    public void setTechDesc(String techDesc) {
+        this.techDesc = techDesc;
+    }
+
     public String getTechDesc(Context context) {
         if (techList != null && techList.size() > 0) {
             techDesc = String.join(context.getString(R.string.separator_words), techList);
@@ -58,9 +64,5 @@ public class HapInfo {
             techDesc = context.getString(R.string.info_tech_unknown);
         }
         return techDesc;
-    }
-
-    public void setTechDesc(String techDesc) {
-        this.techDesc = techDesc;
     }
 }

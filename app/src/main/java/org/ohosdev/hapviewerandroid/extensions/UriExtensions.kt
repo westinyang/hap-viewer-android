@@ -6,11 +6,9 @@ import android.content.ContentUris
 import android.content.Context
 import android.database.Cursor
 import android.net.Uri
-import android.os.CancellationSignal
 import android.os.Environment
 import android.provider.DocumentsContract
 import android.provider.MediaStore
-import android.provider.OpenableColumns
 import java.io.File
 import java.io.FileOutputStream
 import java.io.IOException
@@ -110,29 +108,25 @@ fun Uri.getPath(context: Context): String? {
  *
  */
 @Throws(IOException::class)
-fun Uri.copyToPrivateFile(ctx: Context, cancellationSignal: CancellationSignal? = null): File {
+fun Uri.copyToPrivateFile(
+    ctx: Context,
+    name: String
+): File {
     var file: File? = null
     if (scheme == ContentResolver.SCHEME_CONTENT) {
         // 把文件复制到沙盒目录
         val contentResolver = ctx.contentResolver
-        contentResolver.query(this, null, null, null, null, cancellationSignal).use { cursor ->
-            if (cursor?.moveToFirst() == true) {
-                val index = cursor.getColumnIndexOrThrow(OpenableColumns.DISPLAY_NAME)
-                val displayName = cursor.getString(index)
-                val cache = File((ctx.externalCacheDir ?: ctx.cacheDir).absolutePath, displayName)
-                contentResolver.openInputStream(this).use { inputStream ->
-                    if (inputStream == null) throw IOException("Cannot open ${this@copyToPrivateFile} using contentResolver.openInputStream.")
-                    FileOutputStream(cache).use { outputStream ->
-                        inputStream.copyTo(outputStream)
-                    }
-                }
-                file = cache
+        file = File((ctx.externalCacheDir ?: ctx.cacheDir).absolutePath, name)
+        contentResolver.openInputStream(this).use { inputStream ->
+            if (inputStream == null) throw IOException("Cannot open ${this@copyToPrivateFile} using contentResolver.openInputStream.")
+            FileOutputStream(file).use { outputStream ->
+                inputStream.copyTo(outputStream)
             }
         }
     }
     if (file == null)
         throw IOException("file is null.")
-    return file!!
+    return file
 }
 
 /**
@@ -141,7 +135,7 @@ fun Uri.copyToPrivateFile(ctx: Context, cancellationSignal: CancellationSignal? 
  * @param context 上下文
  * @return 获取到的文件路径，或者是复制到的新文件路径
  */
-fun Uri.getOrCopyFile(context: Context): File? {
+fun Uri.getOrCopyFile(context: Context, name: String): File? {
     if (context.isPermissionGranted(Manifest.permission.READ_EXTERNAL_STORAGE)) {
         try {
             val path = getPath(context)
@@ -155,7 +149,7 @@ fun Uri.getOrCopyFile(context: Context): File? {
         }
     }
     try {
-        return copyToPrivateFile(context)
+        return copyToPrivateFile(context, name)
     } catch (e: Exception) {
         e.printStackTrace()
     }

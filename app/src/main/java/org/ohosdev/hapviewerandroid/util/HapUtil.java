@@ -185,21 +185,6 @@ public class HapUtil {
         }
     }
 
-    public static void destroyHapInfo(@NonNull Context context, @NonNull HapInfo hapInfo) {
-        // 删除临时文件
-        if (hapInfo.hapFilePath != null) {
-            File hapFile = new File(hapInfo.hapFilePath);
-            if (FileExtensionsKt.isExternalCache(hapFile, context)) {
-                if (hapFile.isFile() && !hapFile.delete()) {
-                    hapFile.deleteOnExit();
-                }
-            }
-        }
-        if (hapInfo.icon != null) {
-            hapInfo.icon.recycle();
-        }
-    }
-
     public static ShizukuRemoteProcess installHap(String path) {
        return ShizukuUtil.Companion.newProcess(new String[]{"bm", "install", "-r", path}, SystemExtensionsKt.getPaths(), "/");
     }

@@ -9,6 +9,7 @@ import java.io.FileOutputStream
 import java.io.InputStream
 import java.io.OutputStream
 import java.nio.channels.FileChannel
+import kotlin.io.copyTo as ktCopyTo
 
 fun FileChannel.copyTo(out: FileChannel) {
     val size = this.size()
@@ -29,9 +30,7 @@ fun FileInputStream.copyTo(out: FileOutputStream) {
     } else {
         channel.use { inputChannel ->
             out.channel.use { outputChannel ->
-                inputChannel.copyTo(
-                    outputChannel
-                )
+                inputChannel.copyTo(outputChannel)
             }
         }
     }
@@ -43,12 +42,7 @@ fun InputStream.copyTo(out: OutputStream) {
     } else if (this is FileInputStream && out is FileOutputStream) {
         this.copyTo(out)
     } else {
-        val b = ByteArray(1024 * 5)
-        var len: Int
-        while (read(b).also { len = it } != -1) {
-            out.write(b, 0, len)
-        }
-        out.flush()
+        this.ktCopyTo(out)
     }
 }
 
