@@ -10,6 +10,7 @@ import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 
 import org.ohosdev.hapviewerandroid.extensions.FileExtensionsKt;
+import org.ohosdev.hapviewerandroid.extensions.SystemExtensionsKt;
 import org.ohosdev.hapviewerandroid.model.HapInfo;
 
 import java.io.File;
@@ -24,6 +25,7 @@ import java.util.zip.ZipFile;
 import cn.hutool.core.io.IoUtil;
 import cn.hutool.core.util.HexUtil;
 import cn.hutool.core.util.ReUtil;
+import rikka.shizuku.ShizukuRemoteProcess;
 
 /**
  * HapUtil
@@ -196,6 +198,10 @@ public class HapUtil {
         if (hapInfo.icon != null) {
             hapInfo.icon.recycle();
         }
+    }
+
+    public static ShizukuRemoteProcess installHap(String path) {
+       return ShizukuUtil.Companion.newProcess(new String[]{"bm", "install", "-r", path}, SystemExtensionsKt.getPaths(), "/");
     }
 
 }

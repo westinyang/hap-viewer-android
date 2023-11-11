@@ -4,8 +4,10 @@ import android.content.Context
 import android.content.pm.PackageManager
 import android.graphics.Bitmap
 import android.graphics.drawable.BitmapDrawable
+import android.net.Uri
 import androidx.annotation.DrawableRes
 import androidx.appcompat.content.res.AppCompatResources
+import androidx.browser.customtabs.CustomTabsIntent
 import androidx.core.content.ContextCompat
 import org.ohosdev.hapviewerandroid.app.HapViewerApp
 
@@ -21,4 +23,10 @@ fun Context.isPermissionGranted(permission: String) =
 fun Context.getBitmap(@DrawableRes resId: Int): Bitmap? {
     val drawable = AppCompatResources.getDrawable(this, resId)
     return if (drawable is BitmapDrawable) drawable.bitmap else null
+}
+
+fun Context.openUrl(url: String) {
+    val tabsIntent = CustomTabsIntent.Builder()
+        .build()
+    tabsIntent.launchUrl(this, Uri.parse(url))
 }

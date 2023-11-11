@@ -11,7 +11,6 @@ import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import org.ohosdev.hapviewerandroid.R
-import org.ohosdev.hapviewerandroid.extensions.deleteIfCache
 import org.ohosdev.hapviewerandroid.extensions.getOrCopyFile
 import org.ohosdev.hapviewerandroid.model.HapInfo
 import org.ohosdev.hapviewerandroid.util.HapUtil
@@ -53,7 +52,7 @@ class MainViewModel(private val app: Application) : AndroidViewModel(app) {
                 showSnackBar(R.string.parse_error_fail)
             }
             // 到此为止，这个临时文件没用了，可以删掉了
-            file.deleteIfCache(app)
+            // file.deleteIfCache(app)
         }
         isParsing.postValue(false)
     }

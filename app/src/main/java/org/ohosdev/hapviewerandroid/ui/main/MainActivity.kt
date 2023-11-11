@@ -28,6 +28,7 @@ import com.onegravity.rteditor.RTEditorMovementMethod
 import org.ohosdev.hapviewerandroid.BuildConfig
 import org.ohosdev.hapviewerandroid.R
 import org.ohosdev.hapviewerandroid.adapter.InfoAdapter
+import org.ohosdev.hapviewerandroid.app.AppPreference
 import org.ohosdev.hapviewerandroid.app.AppPreference.ThemeType.HARMONY
 import org.ohosdev.hapviewerandroid.app.AppPreference.ThemeType.MATERIAL1
 import org.ohosdev.hapviewerandroid.app.AppPreference.ThemeType.MATERIAL2
@@ -39,12 +40,18 @@ import org.ohosdev.hapviewerandroid.extensions.contentMovementMethod
 import org.ohosdev.hapviewerandroid.extensions.contentSelectable
 import org.ohosdev.hapviewerandroid.extensions.getBitmap
 import org.ohosdev.hapviewerandroid.extensions.hasFileMime
+import org.ohosdev.hapviewerandroid.extensions.isGranted
 import org.ohosdev.hapviewerandroid.extensions.isPermissionGranted
 import org.ohosdev.hapviewerandroid.extensions.newShadowBitmap
+import org.ohosdev.hapviewerandroid.extensions.openUrl
 import org.ohosdev.hapviewerandroid.extensions.setContentAutoLinkMask
 import org.ohosdev.hapviewerandroid.extensions.thisApp
 import org.ohosdev.hapviewerandroid.manager.ThemeManager
 import org.ohosdev.hapviewerandroid.model.HapInfo
+import org.ohosdev.hapviewerandroid.util.HapUtil
+import org.ohosdev.hapviewerandroid.util.HarmonyOSUtil
+import org.ohosdev.hapviewerandroid.util.RequestPermissionDialogBuilder
+import org.ohosdev.hapviewerandroid.util.ShizukuUtil
 import rikka.insets.WindowInsetsHelper
 import rikka.layoutinflater.view.LayoutInflaterFactory
 
@@ -62,6 +69,18 @@ class MainActivity : BaseActivity(), OnDragListener {
     private val selectFileResultLauncher =
         registerForActivityResult<String, Uri>(ActivityResultContracts.GetContent()) { handelUri(it) }
 
+    private val shizukuLifecycleObserver = ShizukuUtil.ShizukuLifecycleObserver()
+
+    init {
+        lifecycle.addObserver(shizukuLifecycleObserver)
+        // 调用onRequestPermissionsResult，统一处理
+        shizukuLifecycleObserver.setRequestPermissionResultListener { requestCode, grantResult ->
+            onRequestPermissionsResult(
+                requestCode, arrayOf(ShizukuUtil.PERMISSION), intArrayOf(grantResult)
+            )
+        }
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         layoutInflater.factory2 = LayoutInflaterFactory(delegate)
             .addOnViewCreatedListener(WindowInsetsHelper.LISTENER)
@@ -78,6 +97,7 @@ class MainActivity : BaseActivity(), OnDragListener {
 
         model.hapInfo.observe(this) { onHapInfoChanged(it) }
         model.isParsing.observe(this) {
+            invalidateMenu()
             binding.progressBar.visibility = if (it) View.VISIBLE else View.GONE
         }
         model.snackBarEvent.observe(this) {
@@ -85,6 +105,8 @@ class MainActivity : BaseActivity(), OnDragListener {
                 showSnackBar(it.text)
             }
         }
+
+
     }
 
     private fun initViews() {
@@ -118,23 +140,26 @@ class MainActivity : BaseActivity(), OnDragListener {
         return true
     }
 
+    override fun onPrepareOptionsMenu(menu: Menu?): Boolean {
+        menu?.let {
+            it.findItem(R.id.action_install).apply {
+                isVisible = HarmonyOSUtil.isHarmonyOS
+                isEnabled = !model.hapInfo.value?.init!! && !model.isParsing.value!!
+            }
+        }
+        return super.onPrepareOptionsMenu(menu)
+    }
+
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         super.onOptionsItemSelected(item)
-        val itemId = item.itemId
-        if (itemId == R.id.action_about) {
-            handelAboutClick(item)
-        } else if (itemId == R.id.action_theme_material1) {
-            thisApp.appPreference.themeType = MATERIAL1
-            checkTheme()
-        } else if (itemId == R.id.action_theme_material2) {
-            thisApp.appPreference.themeType = MATERIAL2
-            checkTheme()
-        } else if (itemId == R.id.action_theme_material3) {
-            thisApp.appPreference.themeType = MATERIAL3
-            checkTheme()
-        } else if (itemId == R.id.action_theme_harmony) {
-            thisApp.appPreference.themeType = HARMONY
-            checkTheme()
+        when (item.itemId) {
+            R.id.action_about -> handelAboutClick(item)
+            R.id.action_theme_material1 -> changeTheme(MATERIAL1)
+            R.id.action_theme_material2 -> changeTheme(MATERIAL2)
+            R.id.action_theme_material3 -> changeTheme(MATERIAL3)
+            R.id.action_theme_harmony -> changeTheme(HARMONY)
+            R.id.action_install -> model.hapInfo.value?.let { installHap(it) }
+            else -> return false
         }
         return true
     }
@@ -216,10 +241,8 @@ class MainActivity : BaseActivity(), OnDragListener {
         model.handelUri(uri)
     }
 
-    /**
-     * 检查主题，如果不同就重启
-     * */
-    private fun checkTheme() {
+    private fun changeTheme(themeType: AppPreference.ThemeType) {
+        thisApp.appPreference.themeType = themeType
         if (themeManager.isThemeChanged()) {
             recreate()
         }
@@ -341,6 +364,27 @@ class MainActivity : BaseActivity(), OnDragListener {
         }
     }
 
+    private fun installHap(hapInfo: HapInfo, showRequestDialog: Boolean = true) {
+        if (hapInfo.init) return
+        if (!ShizukuUtil.checkPermission().isGranted) {
+            if (showRequestDialog) {
+                RequestPermissionDialogBuilder(this)
+                    .setPermissionNames(arrayOf("Shizuku"))
+                    .setFunctionNames(arrayOf("Install hap"))
+                    .setOnRequest {
+                        ShizukuUtil.requestPermission(this, REQUEST_CODE_SHIZUKU_INSTALL)
+                    }
+                    .setNeutralButton("Guide") { _, _ ->
+                        openUrl(ShizukuUtil.URL_GUIDE)
+                    }
+                    .show()
+            }
+            return
+        }
+        HapUtil.installHap(hapInfo.hapFilePath)
+    }
+
+
     companion object {
         private const val TAG = "MainActivity"
 
@@ -355,5 +399,6 @@ class MainActivity : BaseActivity(), OnDragListener {
          * 文件读写权限，用于选择文件 请求码
          * */
         private const val REQUEST_CODE_SELECT_FILE = 1
+        private const val REQUEST_CODE_SHIZUKU_INSTALL = 2
     }
 }
