@@ -103,7 +103,7 @@ class MainActivity : BaseActivity(), OnDragListener {
 
         // 启用拖放
         binding.dropMask.root.setOnDragListener(this)
-        binding.floatingActionButton.setOnClickListener { onFabClick(it) }
+        binding.selectHapButton.setOnClickListener { onFabClick(it) }
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
@@ -274,7 +274,7 @@ class MainActivity : BaseActivity(), OnDragListener {
     override fun showSnackBar(text: String): Snackbar {
         // 重写该方法，将 SnackBar 放置到悬浮按钮之上
         return Snackbar.make(binding.root, text, Snackbar.LENGTH_SHORT)
-            .setAnchorView(R.id.floatingActionButton)
+            .setAnchorView(R.id.selectHapButton)
             .apply { show() }
     }
 
@@ -321,7 +321,7 @@ class MainActivity : BaseActivity(), OnDragListener {
             isEnabled = false
             snackBar = Snackbar.make(binding.root, R.string.exit_toast, Snackbar.LENGTH_SHORT)
                 .apply {
-                    setAnchorView(R.id.floatingActionButton)
+                    setAnchorView(R.id.selectHapButton)
                     addCallback(object : Snackbar.Callback() {
                         override fun onDismissed(transientBottomBar: Snackbar, event: Int) {
                             // 如果关闭 SnackBar 的同时对象不一致，说明用户再次点击返回键，此时应保持

@@ -128,7 +128,7 @@ public class InfoAdapter extends RecyclerView.Adapter<InfoAdapter.ViewHolder> {
             cm.setPrimaryClip(ClipData.newPlainText(null, this.content));
             String toastText = String.format(context.getString(R.string.copied_withName), name);
             Snackbar.make(itemView, toastText, Snackbar.LENGTH_SHORT)
-                    .setAnchorView(R.id.floatingActionButton)
+                    .setAnchorView(R.id.selectHapButton)
                     .show();
         }
 
