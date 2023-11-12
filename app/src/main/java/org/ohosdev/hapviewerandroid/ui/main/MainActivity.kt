@@ -99,6 +99,9 @@ class MainActivity : BaseActivity(), OnDragListener {
             invalidateMenu()
             binding.progressBar.visibility = if (it) View.VISIBLE else View.GONE
         }
+        model.isInstalling.observe(this) {
+            binding.backgroundProgressIndicator.visibility = if (it) View.VISIBLE else View.GONE
+        }
         model.snackBarEvent.observe(this) {
             it.consume {
                 showSnackBar(it.text)
