@@ -31,5 +31,7 @@
     <string name="guide">Guide</string>
     <string name="permission_request">Permissions request</string>
     <string name="install">Install</string>
+    <string name="unknown_error">Unknown error</string>
+    <string name="install_finished">Install finished</string>
 
 </resources>

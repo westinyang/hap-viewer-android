@@ -26,5 +26,7 @@
     <string name="guide">指南</string>
     <string name="permission_request">权限请求</string>
     <string name="install">安装</string>
+    <string name="unknown_error">未知错误</string>
+    <string name="install_finished">安装完成</string>
 
 </resources>

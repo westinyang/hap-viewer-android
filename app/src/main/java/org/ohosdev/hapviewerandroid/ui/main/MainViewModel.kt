@@ -101,10 +101,9 @@ class MainViewModel(private val app: Application) : AndroidViewModel(app) {
                         shizukuServiceHelper, this@MainViewModel.hapInfo.value!!.hapFilePath
                     )
                     // 不知为何无法显示结果
-                    showSnackBar("Install finished.")
-
+                    showSnackBar(R.string.install_finished)
                 }.onFailure {
-                    showSnackBar(it.message ?: "Unknown error")
+                    showSnackBar(it.message ?: app.getString(R.string.unknown_error))
                 }
             }
             isInstalling.postValue(false)
@@ -120,8 +119,9 @@ class MainViewModel(private val app: Application) : AndroidViewModel(app) {
             if (this.hapInfo.value != hapInfo
                 && isInstalling.value != true
                 && hapInfo != null
-            )
+            ) {
                 hapInfo.destroy(app)
+            }
         }
     }
 
