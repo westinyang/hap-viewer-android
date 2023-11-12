@@ -14,6 +14,7 @@ import kotlinx.coroutines.withContext
 import org.ohosdev.hapviewerandroid.R
 import org.ohosdev.hapviewerandroid.extensions.deleteIfCache
 import org.ohosdev.hapviewerandroid.extensions.destroy
+import org.ohosdev.hapviewerandroid.extensions.getFileName
 import org.ohosdev.hapviewerandroid.extensions.getOrCopyFile
 import org.ohosdev.hapviewerandroid.model.HapInfo
 import org.ohosdev.hapviewerandroid.util.HapUtil
@@ -34,7 +35,11 @@ class MainViewModel(private val app: Application) : AndroidViewModel(app) {
             isParsing.postValue(true)
             withContext(Dispatchers.IO) {
                 // TODO: 文件名校验
-                val file = uri.getOrCopyFile(app, UUID.randomUUID().toString(true))
+                val uuid = UUID.randomUUID().toString(true)
+                val fileName=uri.getFileName(app)
+                val name="${uuid}_$fileName"
+
+                val file = uri.getOrCopyFile(app, name)
                 if (file == null) {
                     showSnackBar(R.string.parse_error_fail_obtain)
                     return@withContext
@@ -49,7 +54,7 @@ class MainViewModel(private val app: Application) : AndroidViewModel(app) {
         isParsing.postValue(true)
         coroutineScope {
             try {
-                val oldHapInfo=hapInfo.value!!
+                val oldHapInfo = hapInfo.value!!
                 this@MainViewModel.hapInfo.postValue(HapUtil.parse(file.absolutePath))
                 oldHapInfo.destroy(app)
             } catch (e: Exception) {

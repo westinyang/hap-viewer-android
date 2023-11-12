@@ -9,6 +9,7 @@ import android.net.Uri
 import android.os.Environment
 import android.provider.DocumentsContract
 import android.provider.MediaStore
+import androidx.documentfile.provider.DocumentFile
 import java.io.File
 import java.io.FileOutputStream
 import java.io.IOException
@@ -154,4 +155,12 @@ fun Uri.getOrCopyFile(context: Context, name: String): File? {
         e.printStackTrace()
     }
     return null
+}
+
+fun Uri.getFileName(context: Context): String? {
+    return when (scheme) {
+        ContentResolver.SCHEME_FILE -> path?.let { File(it).name }
+        ContentResolver.SCHEME_CONTENT -> DocumentFile.fromSingleUri(context, this)?.name
+        else -> throw RuntimeException("Uri.getFileName: Not support scheme: $this")
+    }
 }
