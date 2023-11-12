@@ -101,12 +101,10 @@ class MainActivity : BaseActivity(), OnDragListener {
             binding.progressBar.visibility = if (it) View.VISIBLE else View.GONE
         }
         model.snackBarEvent.observe(this) {
-            if (it.consume()) {
+            it.consume {
                 showSnackBar(it.text)
             }
         }
-
-
     }
 
     private fun initViews() {
