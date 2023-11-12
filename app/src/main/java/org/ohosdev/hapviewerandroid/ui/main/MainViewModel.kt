@@ -31,9 +31,10 @@ class MainViewModel(private val app: Application) : AndroidViewModel(app) {
     val isParsing = MutableLiveData(false)
     val isInstalling = MutableLiveData(false)
     val snackBarEvent = MutableLiveData<SnackBarEvent>()
-    val isHapInfoInit get() = hapInfo.value!!.init
+    private val isHapInfoInit get() = hapInfo.value!!.init
 
     private val shizukuServiceHelper = ShizukuServiceHelper()
+
 
     fun handelUri(uri: Uri) {
         viewModelScope.launch {
@@ -106,6 +107,7 @@ class MainViewModel(private val app: Application) : AndroidViewModel(app) {
                     showSnackBar(it.message ?: app.getString(R.string.unknown_error))
                 }
             }
+
             isInstalling.postValue(false)
             autoDestroyHapInfoRunnable(hapInfo).run()
         }

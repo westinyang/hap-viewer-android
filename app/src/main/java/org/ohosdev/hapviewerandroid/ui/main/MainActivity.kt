@@ -144,7 +144,9 @@ class MainActivity : BaseActivity(), OnDragListener {
         menu?.let {
             it.findItem(R.id.action_install).apply {
                 isVisible = HarmonyOSUtil.isHarmonyOS
-                isEnabled = !model.hapInfo.value?.init!! && !model.isParsing.value!!
+                isEnabled = model.run {
+                    !hapInfo.value?.init!! && !isParsing.value!! && !isInstalling.value!!
+                }
             }
         }
         return super.onPrepareOptionsMenu(menu)
