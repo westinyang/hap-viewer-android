@@ -52,6 +52,7 @@ import org.ohosdev.hapviewerandroid.util.HapUtil
 import org.ohosdev.hapviewerandroid.util.HarmonyOSUtil
 import org.ohosdev.hapviewerandroid.util.RequestPermissionDialogBuilder
 import org.ohosdev.hapviewerandroid.util.ShizukuUtil
+import org.ohosdev.hapviewerandroid.util.helper.ShizukuServiceHelper
 import rikka.insets.WindowInsetsHelper
 import rikka.layoutinflater.view.LayoutInflaterFactory
 
@@ -70,6 +71,7 @@ class MainActivity : BaseActivity(), OnDragListener {
         registerForActivityResult<String, Uri>(ActivityResultContracts.GetContent()) { handelUri(it) }
 
     private val shizukuLifecycleObserver = ShizukuUtil.ShizukuLifecycleObserver()
+    private val shizukuServiceHelper = ShizukuServiceHelper()
 
     init {
         lifecycle.addObserver(shizukuLifecycleObserver)
@@ -173,8 +175,8 @@ class MainActivity : BaseActivity(), OnDragListener {
             Log.i(TAG, "申请权限：" + permissions[i] + "，申请结果：" + grantResults[i])
         }
         if (grantResults.all { it == PackageManager.PERMISSION_GRANTED }) {
-            if (requestCode == REQUEST_CODE_SELECT_FILE) {
-                selectHapFile()
+            when (requestCode) {
+                REQUEST_CODE_SELECT_FILE -> selectHapFile()
             }
         } else {
             showSnackBar(R.string.permission_grant_fail)
@@ -379,7 +381,8 @@ class MainActivity : BaseActivity(), OnDragListener {
             }
             return
         }
-        HapUtil.installHap(hapInfo.hapFilePath)
+
+        HapUtil.installHap(shizukuServiceHelper, hapInfo.hapFilePath)
     }
 
 

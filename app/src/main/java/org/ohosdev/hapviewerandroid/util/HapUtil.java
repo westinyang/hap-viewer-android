@@ -1,21 +1,19 @@
 package org.ohosdev.hapviewerandroid.util;
 
-import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-
-import androidx.annotation.NonNull;
+import android.os.RemoteException;
 
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 
-import org.ohosdev.hapviewerandroid.extensions.FileExtensionsKt;
 import org.ohosdev.hapviewerandroid.extensions.SystemExtensionsKt;
 import org.ohosdev.hapviewerandroid.model.HapInfo;
+import org.ohosdev.hapviewerandroid.util.helper.ShizukuServiceHelper;
 
-import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.Arrays;
 import java.util.Enumeration;
 import java.util.HashSet;
 import java.util.Set;
@@ -185,8 +183,12 @@ public class HapUtil {
         }
     }
 
+    @Deprecated
     public static ShizukuRemoteProcess installHap(String path) {
-       return ShizukuUtil.Companion.newProcess(new String[]{"bm", "install", "-r", path}, SystemExtensionsKt.getPaths(), "/");
+        return ShizukuUtil.Companion.newProcess(new String[]{"bm", "install", "-r", path}, SystemExtensionsKt.getPaths(), "/");
     }
 
+    public static ExecuteResult installHap(ShizukuServiceHelper helper, String path) throws RemoteException {
+        return helper.getService().execute(Arrays.asList("bm", "install", "-r", path), null, null);
+    }
 }

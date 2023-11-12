@@ -11,6 +11,7 @@ import org.ohosdev.hapviewerandroid.util.ShizukuUtil.ShizukuStatus.NOT_SUPPORT
 import org.ohosdev.hapviewerandroid.util.ShizukuUtil.ShizukuStatus.SHOULD_SHOW_REQUEST_PERMISSION_RATIONALE
 import rikka.shizuku.Shizuku
 import rikka.shizuku.ShizukuRemoteProcess
+import java.io.File
 
 
 class ShizukuUtil {
