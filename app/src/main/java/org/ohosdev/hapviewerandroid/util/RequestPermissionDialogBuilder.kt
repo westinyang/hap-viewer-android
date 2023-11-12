@@ -2,6 +2,8 @@ package org.ohosdev.hapviewerandroid.util
 
 import android.content.Context
 import androidx.appcompat.app.AlertDialog
+import org.ohosdev.hapviewerandroid.R
+import org.ohosdev.hapviewerandroid.extensions.getQuantityString
 
 class RequestPermissionDialogBuilder(context: Context) :
     DialogBuilder<RequestPermissionDialogBuilder>(context) {
@@ -22,8 +24,18 @@ class RequestPermissionDialogBuilder(context: Context) :
         return this
     }
 
+    fun setPermissionNames(names: Array<Int>): RequestPermissionDialogBuilder {
+        this.permissionNames = Array(names.size) { context.getString(names[it]) }
+        return this
+    }
+
     fun setFunctionNames(names: Array<String>): RequestPermissionDialogBuilder {
         this.functionNames = names
+        return this
+    }
+
+    fun setFunctionNames(names: Array<Int>): RequestPermissionDialogBuilder {
+        this.functionNames = Array(names.size) { context.getString(names[it]) }
         return this
     }
 
@@ -33,13 +45,15 @@ class RequestPermissionDialogBuilder(context: Context) :
     }
 
     override fun create(): AlertDialog {
-        val permissionNamesText = permissionNames.joinToString {
-            it.lowercase()
-        }
-        val functionNamesText = functionNames.joinToString {
-            it.lowercase()
-        }
-        setMessage("We need $permissionNamesText to make sure $functionNamesText is working properly.")
+        val permissionNamesText = permissionNames.joinToString { it.lowercase() }
+        val functionNamesText = functionNames.joinToString { it.lowercase() }
+        setTitle(context.getQuantityString(R.plurals.permission_request, permissionNames.size))
+        setMessage(
+            context.getQuantityString(
+                R.plurals.permission_request_message, functionNames.size,
+                permissionNamesText, functionNamesText
+            )
+        )
         return super.create()
     }
 

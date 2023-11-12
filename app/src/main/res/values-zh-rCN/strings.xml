@@ -22,5 +22,9 @@
     <string name="separator_words">、</string>
     <string name="menu_theme">主题</string>
     <string name="drop_here">拖到此处</string>
+    <string name="function_install_hap">安装 HAP</string>
+    <string name="guide">指南</string>
+    <string name="permission_request">权限请求</string>
+    <string name="install">安装</string>
 
 </resources>

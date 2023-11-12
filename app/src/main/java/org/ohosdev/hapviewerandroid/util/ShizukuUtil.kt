@@ -10,8 +10,6 @@ import org.ohosdev.hapviewerandroid.util.ShizukuUtil.ShizukuStatus.NOT_GRANTED
 import org.ohosdev.hapviewerandroid.util.ShizukuUtil.ShizukuStatus.NOT_SUPPORT
 import org.ohosdev.hapviewerandroid.util.ShizukuUtil.ShizukuStatus.SHOULD_SHOW_REQUEST_PERMISSION_RATIONALE
 import rikka.shizuku.Shizuku
-import rikka.shizuku.ShizukuRemoteProcess
-import java.io.File
 
 
 class ShizukuUtil {
@@ -41,19 +39,6 @@ class ShizukuUtil {
                     requestCode, arrayOf(PERMISSION), intArrayOf(PackageManager.PERMISSION_DENIED)
                 )
             }
-        }
-
-        @Deprecated("Use UserService")
-        fun newProcess(cmd: Array<String>, env: Array<String>?, dir: String?):
-                ShizukuRemoteProcess {
-            val method = Shizuku::class.java.getDeclaredMethod(
-                "newProcess",
-                Array<String>::class.java,
-                Array<String>::class.java,
-                String::class.java
-            )
-            method.isAccessible = true
-            return method.invoke(null, cmd, env, dir) as ShizukuRemoteProcess
         }
     }
 

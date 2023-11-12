@@ -48,11 +48,9 @@ import org.ohosdev.hapviewerandroid.extensions.setContentAutoLinkMask
 import org.ohosdev.hapviewerandroid.extensions.thisApp
 import org.ohosdev.hapviewerandroid.manager.ThemeManager
 import org.ohosdev.hapviewerandroid.model.HapInfo
-import org.ohosdev.hapviewerandroid.util.HapUtil
 import org.ohosdev.hapviewerandroid.util.HarmonyOSUtil
 import org.ohosdev.hapviewerandroid.util.RequestPermissionDialogBuilder
 import org.ohosdev.hapviewerandroid.util.ShizukuUtil
-import org.ohosdev.hapviewerandroid.util.helper.ShizukuServiceHelper
 import rikka.insets.WindowInsetsHelper
 import rikka.layoutinflater.view.LayoutInflaterFactory
 
@@ -71,7 +69,6 @@ class MainActivity : BaseActivity(), OnDragListener {
         registerForActivityResult<String, Uri>(ActivityResultContracts.GetContent()) { handelUri(it) }
 
     private val shizukuLifecycleObserver = ShizukuUtil.ShizukuLifecycleObserver()
-    private val shizukuServiceHelper = ShizukuServiceHelper()
 
     init {
         lifecycle.addObserver(shizukuLifecycleObserver)
@@ -177,6 +174,7 @@ class MainActivity : BaseActivity(), OnDragListener {
         if (grantResults.all { it == PackageManager.PERMISSION_GRANTED }) {
             when (requestCode) {
                 REQUEST_CODE_SELECT_FILE -> selectHapFile()
+                REQUEST_CODE_SHIZUKU_INSTALL -> installHap(model.hapInfo.value!!)
             }
         } else {
             showSnackBar(R.string.permission_grant_fail)
@@ -369,20 +367,19 @@ class MainActivity : BaseActivity(), OnDragListener {
         if (!ShizukuUtil.checkPermission().isGranted) {
             if (showRequestDialog) {
                 RequestPermissionDialogBuilder(this)
-                    .setPermissionNames(arrayOf("Shizuku"))
-                    .setFunctionNames(arrayOf("Install hap"))
+                    .setPermissionNames(arrayOf(R.string.permission_shizuku))
+                    .setFunctionNames(arrayOf(R.string.function_install_hap))
                     .setOnRequest {
                         ShizukuUtil.requestPermission(this, REQUEST_CODE_SHIZUKU_INSTALL)
                     }
-                    .setNeutralButton("Guide") { _, _ ->
+                    .setNeutralButton(R.string.guide) { _, _ ->
                         openUrl(ShizukuUtil.URL_GUIDE)
                     }
                     .show()
             }
             return
         }
-
-        HapUtil.installHap(shizukuServiceHelper, hapInfo.hapFilePath)
+        model.installHapWaitingShizuku(hapInfo)
     }
 
 

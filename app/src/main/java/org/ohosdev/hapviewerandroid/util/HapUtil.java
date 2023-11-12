@@ -3,11 +3,14 @@ package org.ohosdev.hapviewerandroid.util;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.RemoteException;
+import android.util.Log;
+
+import androidx.annotation.NonNull;
 
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 
-import org.ohosdev.hapviewerandroid.extensions.SystemExtensionsKt;
+import org.ohosdev.hapviewerandroid.IUserService;
 import org.ohosdev.hapviewerandroid.model.HapInfo;
 import org.ohosdev.hapviewerandroid.util.helper.ShizukuServiceHelper;
 
@@ -16,6 +19,7 @@ import java.io.InputStream;
 import java.util.Arrays;
 import java.util.Enumeration;
 import java.util.HashSet;
+import java.util.Objects;
 import java.util.Set;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
@@ -23,7 +27,6 @@ import java.util.zip.ZipFile;
 import cn.hutool.core.io.IoUtil;
 import cn.hutool.core.util.HexUtil;
 import cn.hutool.core.util.ReUtil;
-import rikka.shizuku.ShizukuRemoteProcess;
 
 /**
  * HapUtil
@@ -31,6 +34,8 @@ import rikka.shizuku.ShizukuRemoteProcess;
  * @author westinyang
  */
 public class HapUtil {
+
+    private static final String TAG = "HapUtil";
 
     /**
      * 解析hap
@@ -183,12 +188,14 @@ public class HapUtil {
         }
     }
 
-    @Deprecated
-    public static ShizukuRemoteProcess installHap(String path) {
-        return ShizukuUtil.Companion.newProcess(new String[]{"bm", "install", "-r", path}, SystemExtensionsKt.getPaths(), "/");
-    }
-
+    @NonNull
     public static ExecuteResult installHap(ShizukuServiceHelper helper, String path) throws RemoteException {
-        return helper.getService().execute(Arrays.asList("bm", "install", "-r", path), null, null);
+        if (!helper.isServiceBound()) {
+            throw new RuntimeException("Shizuku not bound.");
+        }
+        IUserService service = Objects.requireNonNull(helper.getService());
+        ExecuteResult result = service.execute(Arrays.asList("bm", "install", "-r", path), null, null);
+        Log.i(TAG, "installHap: " + result);
+        return result;
     }
 }

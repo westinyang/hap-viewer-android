@@ -30,3 +30,6 @@ fun Context.openUrl(url: String) {
         .build()
     tabsIntent.launchUrl(this, Uri.parse(url))
 }
+
+fun Context.getQuantityString(id: Int, quantity: Int, vararg formatArgs: Any) =
+    resources.getQuantityString(id, quantity, *formatArgs)

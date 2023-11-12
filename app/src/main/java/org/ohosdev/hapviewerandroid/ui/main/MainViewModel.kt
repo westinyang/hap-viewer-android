@@ -19,6 +19,7 @@ import org.ohosdev.hapviewerandroid.extensions.getOrCopyFile
 import org.ohosdev.hapviewerandroid.model.HapInfo
 import org.ohosdev.hapviewerandroid.util.HapUtil
 import org.ohosdev.hapviewerandroid.util.event.SnackBarEvent
+import org.ohosdev.hapviewerandroid.util.helper.ShizukuServiceHelper
 import java.io.File
 
 // https://developer.android.google.cn/topic/libraries/architecture/viewmodel?hl=zh-cn
@@ -28,7 +29,11 @@ class MainViewModel(private val app: Application) : AndroidViewModel(app) {
         MutableLiveData(HapInfo.INIT)
     }
     val isParsing = MutableLiveData(false)
+    val isInstalling = MutableLiveData(false)
     val snackBarEvent = MutableLiveData<SnackBarEvent>()
+    val isHapInfoInit get() = hapInfo.value!!.init
+
+    private val shizukuServiceHelper = ShizukuServiceHelper()
 
     fun handelUri(uri: Uri) {
         viewModelScope.launch {
@@ -36,8 +41,8 @@ class MainViewModel(private val app: Application) : AndroidViewModel(app) {
             withContext(Dispatchers.IO) {
                 // TODO: 文件名校验
                 val uuid = UUID.randomUUID().toString(true)
-                val fileName=uri.getFileName(app)
-                val name="${uuid}_$fileName"
+                val fileName = uri.getFileName(app)
+                val name = "${uuid}_$fileName"
 
                 val file = uri.getOrCopyFile(app, name)
                 if (file == null) {
@@ -54,9 +59,9 @@ class MainViewModel(private val app: Application) : AndroidViewModel(app) {
         isParsing.postValue(true)
         coroutineScope {
             try {
-                val oldHapInfo = hapInfo.value!!
+                val destroyRunnable = autoDestroyHapInfoRunnable(hapInfo.value!!)
                 this@MainViewModel.hapInfo.postValue(HapUtil.parse(file.absolutePath))
-                oldHapInfo.destroy(app)
+                destroyRunnable.run()
             } catch (e: Exception) {
                 e.printStackTrace()
                 showSnackBar(R.string.parse_error_fail)
@@ -68,6 +73,56 @@ class MainViewModel(private val app: Application) : AndroidViewModel(app) {
 
     fun showSnackBar(@StringRes resId: Int) {
         snackBarEvent.postValue(SnackBarEvent(app, resId))
+    }
+
+    fun showSnackBar(text: String) {
+        snackBarEvent.postValue(SnackBarEvent(text))
+    }
+
+    fun installHapWaitingShizuku(hapInfo: HapInfo) {
+        if (isHapInfoInit) return
+        isInstalling.postValue(true)
+        runCatching {
+            shizukuServiceHelper.bindUserService {
+                installHap(hapInfo)
+            }
+        }.onFailure {
+            isInstalling.postValue(false)
+            showSnackBar(it.message ?: "Unknown error")
+        }
+    }
+
+    private fun installHap(hapInfo: HapInfo) {
+        isInstalling.postValue(true)
+        viewModelScope.launch {
+            withContext(Dispatchers.Default) {
+                runCatching {
+                    HapUtil.installHap(
+                        shizukuServiceHelper, this@MainViewModel.hapInfo.value!!.hapFilePath
+                    )
+                    // 不知为何无法显示结果
+                    showSnackBar("Install finished.")
+
+                }.onFailure {
+                    showSnackBar(it.message ?: "Unknown error")
+                }
+            }
+            isInstalling.postValue(false)
+            autoDestroyHapInfoRunnable(hapInfo).run()
+        }
+    }
+
+    /**
+     * 仅当没有任何工作，且hap已变更时销毁
+     * */
+    private fun autoDestroyHapInfoRunnable(hapInfo: HapInfo?): Runnable {
+        return Runnable {
+            if (this.hapInfo.value != hapInfo
+                && isInstalling.value != true
+                && hapInfo != null
+            )
+                hapInfo.destroy(app)
+        }
     }
 
     override fun onCleared() {
