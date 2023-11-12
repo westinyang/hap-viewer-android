@@ -1,140 +1,102 @@
-package org.ohosdev.hapviewerandroid.adapter;
+package org.ohosdev.hapviewerandroid.adapter
 
-import android.annotation.SuppressLint;
-import android.content.ClipData;
-import android.content.ClipboardManager;
-import android.content.Context;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.TextView;
+import android.annotation.SuppressLint
+import android.content.ClipData
+import android.content.ClipboardManager
+import android.content.Context
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
+import android.widget.TextView
+import androidx.recyclerview.widget.RecyclerView
+import org.ohosdev.hapviewerandroid.R
+import org.ohosdev.hapviewerandroid.app.BaseActivity
+import org.ohosdev.hapviewerandroid.model.HapInfo
 
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.recyclerview.widget.RecyclerView;
+class InfoAdapter(val context: BaseActivity) : RecyclerView.Adapter<InfoAdapter.ViewHolder>() {
+    private val layoutInflater: LayoutInflater = LayoutInflater.from(context)
+    private val unknownString: String = context.getString(android.R.string.unknownName)
+    private var info = HapInfo()
 
-import com.google.android.material.snackbar.Snackbar;
-
-import org.ohosdev.hapviewerandroid.R;
-import org.ohosdev.hapviewerandroid.model.HapInfo;
-
-public class InfoAdapter extends RecyclerView.Adapter<InfoAdapter.ViewHolder> {
-
-    private static final int MAX_ITEMS = 6;
-    private final LayoutInflater layoutInflater;
-    private final String unknownString;
-    @NonNull
-    private HapInfo info = new HapInfo();
-
-    public InfoAdapter(Context context) {
-        super();
-        layoutInflater = LayoutInflater.from(context);
-        unknownString = context.getString(android.R.string.unknownName);
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
+        return ViewHolder(layoutInflater.inflate(R.layout.item_info, parent, false))
     }
 
-    @NonNull
-    @Override
-    public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        return new ViewHolder(layoutInflater.inflate(R.layout.item_info, parent, false));
-    }
+    override fun onBindViewHolder(holder: ViewHolder, position: Int) {
+        when (position) {
+            0 -> holder.bind(R.string.info_appName, info.appName)
+            1 -> holder.bind(R.string.info_appPackageName, info.packageName)
+            2 -> holder.bind(R.string.info_versionName, info.versionName)
+            3 -> holder.bind(R.string.info_versionCode, info.versionCode)
+            4 -> holder.bind(
+                R.string.info_compileTarget, "API ${info.targetAPIVersion} (${info.apiReleaseType})"
+            )
 
-    @Override
-    public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-
-        switch (position) {
-            case 0:
-                holder.setName(R.string.info_appName);
-                holder.setContent(info.init ? unknownString : info.appName);
-                break;
-            case 1:
-                holder.setName(R.string.info_appPackageName);
-                holder.setContent(info.init ? unknownString : info.packageName);
-                break;
-            case 2:
-                holder.setName(R.string.info_versionName);
-                holder.setContent(info.init ? unknownString : info.versionName);
-                break;
-            case 3:
-                holder.setName(R.string.info_versionCode);
-                holder.setContent(info.init ? unknownString : info.versionCode);
-                break;
-            case 4:
-                holder.setName(R.string.info_compileTarget);
-                holder.setContent(info.init ? unknownString : String.format("API %s (%s)", info.targetAPIVersion, info.apiReleaseType));
-                break;
-            case 5:
-                holder.setName(R.string.info_tech);
-                holder.setContent(info.init ? unknownString : info.getTechDesc(holder.context));
-                break;
+            5 -> holder.bind(R.string.info_tech, info.getTechDesc(context))
         }
     }
 
-    @Override
-    public int getItemCount() {
-        return MAX_ITEMS;
+    override fun getItemCount(): Int {
+        return MAX_ITEMS
     }
 
     @SuppressLint("NotifyDataSetChanged")
-    public void setInfo(@NonNull HapInfo info) {
-        this.info = info;
-        notifyDataSetChanged();
+    fun setInfo(info: HapInfo) {
+        this.info = info
+        notifyDataSetChanged()
     }
 
+    inner class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView),
+        View.OnClickListener {
+        private val textView: TextView = itemView.findViewById(R.id.textView)
+        private var _name = ""
+        private var _content = ""
+        var name
+            get() = _name
+            set(value) {
+                _name = value
+            }
 
-    static class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
+        var content
+            get() = _content
+            set(value) {
+                _content = value
+            }
 
-        private final TextView textView;
-        private final Context context;
-        @NonNull
-        private String name = "";
-        @NonNull
-        private String content = "";
-
-        public ViewHolder(@NonNull View itemView) {
-            super(itemView);
-            textView = itemView.findViewById(R.id.textView);
-            itemView.setOnClickListener(this);
-            context = itemView.getContext();
+        init {
+            itemView.setOnClickListener(this)
         }
 
-        private void refresh() {
-            textView.setText(String.format("%s: %s", name, content));
+        @SuppressLint("SetTextI18n")
+        private fun refresh() {
+            textView.text = "${name}: $content"
         }
 
-        public void setName(@Nullable String name) {
-            if (name == null || name.equals(this.name))
-                return;
-            this.name = name;
-            refresh();
+        private fun setName(resId: Int) {
+            name = context.getString(resId)
         }
 
-        public void setName(int resId) {
-            setName(context.getString(resId));
+        private fun copyText() {
+            if (content.isEmpty()) return
+            val cm = context.getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
+            cm.setPrimaryClip(ClipData.newPlainText(null, content))
+
+            val toastText = context.getString(R.string.copied_withName, name)
+            context.showSnackBar(toastText)
         }
 
-        public void setContent(@Nullable String content) {
-            if (content == null || content.equals(this.content))
-                return;
-            this.content = content;
-            refresh();
+        override fun onClick(v: View) {
+            copyText()
         }
 
-        public void copyText() {
-            if (content.isEmpty())
-                return;
-
-            ClipboardManager cm = (ClipboardManager) context.getSystemService(Context.CLIPBOARD_SERVICE);
-            // 设置内容到剪切板
-            cm.setPrimaryClip(ClipData.newPlainText(null, this.content));
-            String toastText = String.format(context.getString(R.string.copied_withName), name);
-            Snackbar.make(itemView, toastText, Snackbar.LENGTH_SHORT)
-                    .setAnchorView(R.id.selectHapButton)
-                    .show();
+        fun bind(nameId: Int, content: String?) {
+            setName(nameId)
+            this.content = if (info.init || content == null) unknownString else content
+            refresh()
         }
+    }
 
-        @Override
-        public void onClick(View v) {
-            copyText();
-        }
+    companion object {
+        private const val MAX_ITEMS = 6
     }
 }
