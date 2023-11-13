@@ -104,10 +104,12 @@ fun Uri.getPath(context: Context): String? {
 }
 
 /**
- * Android 10+ Uri to File
+ * 把文件复制到沙盒目录
+ *
+ * 注意：scheme 为 file 的 uri不会被复制
  *
  * [android10以上 uri转file uri转真实路径](https://blog.csdn.net/jingzz1/article/details/106188462)
- *
+ * @throws IOException 当文件无法获取时抛出异常
  */
 @Throws(IOException::class)
 fun Uri.copyToPrivateFile(
@@ -116,10 +118,10 @@ fun Uri.copyToPrivateFile(
 ): File {
     var file: File? = null
     if (scheme == ContentResolver.SCHEME_CONTENT) {
-        // 把文件复制到沙盒目录
         val contentResolver = ctx.contentResolver
         val cacheDir = (ctx.externalCacheDir ?: ctx.cacheDir)
         file = File(cacheDir, "${DIR_PATH_EXTERNAL_FILES}/${name}")
+        file.parentFile?.mkdirs()
         contentResolver.openInputStream(this).use { inputStream ->
             if (inputStream == null) throw IOException("Cannot open ${this@copyToPrivateFile} using contentResolver.openInputStream.")
             FileOutputStream(file).use { outputStream ->
