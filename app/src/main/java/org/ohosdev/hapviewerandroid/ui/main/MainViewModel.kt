@@ -8,7 +8,6 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import cn.hutool.core.lang.UUID
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import org.ohosdev.hapviewerandroid.R
@@ -38,7 +37,7 @@ class MainViewModel(private val app: Application) : AndroidViewModel(app) {
 
     fun handelUri(uri: Uri) {
         viewModelScope.launch {
-            isParsing.postValue(true)
+            isParsing.value = true
             withContext(Dispatchers.IO) {
                 // TODO: 文件名校验
                 val uuid = UUID.randomUUID().toString(true)
@@ -52,24 +51,31 @@ class MainViewModel(private val app: Application) : AndroidViewModel(app) {
                 }
                 parseHap(file)
             }
-            isParsing.postValue(false)
+            isParsing.value = false
         }
     }
 
     private suspend fun parseHap(file: File) {
-        isParsing.postValue(true)
-        coroutineScope {
-            try {
-                val destroyRunnable = autoDestroyHapInfoRunnable(hapInfo.value!!)
-                this@MainViewModel.hapInfo.postValue(HapUtil.parse(file.absolutePath))
-                destroyRunnable.run()
-            } catch (e: Exception) {
-                e.printStackTrace()
+        withContext(Dispatchers.Main) {
+            isParsing.value = true
+        }
+        withContext(Dispatchers.Default) {
+            val destroyRunnable = autoDestroyHapInfoRunnable()
+            runCatching {
+                withContext(Dispatchers.Main) {
+                    this@MainViewModel.hapInfo.value = HapUtil.parse(file.absolutePath)
+                }
+            }.onFailure {
+                it.printStackTrace()
                 showSnackBar(R.string.parse_error_fail)
                 file.deleteIfCache(app)
+            }.onSuccess {
+                destroyRunnable.run()
             }
         }
-        isParsing.postValue(false)
+        withContext(Dispatchers.Main) {
+            isParsing.value = false
+        }
     }
 
     fun showSnackBar(@StringRes resId: Int) {
@@ -82,19 +88,20 @@ class MainViewModel(private val app: Application) : AndroidViewModel(app) {
 
     fun installHapWaitingShizuku(hapInfo: HapInfo) {
         if (isHapInfoInit) return
-        isInstalling.postValue(true)
+        isInstalling.value = true
         runCatching {
             shizukuServiceHelper.bindUserService {
                 installHap(hapInfo)
             }
         }.onFailure {
-            isInstalling.postValue(false)
-            showSnackBar(it.message ?: "Unknown error")
+            it.printStackTrace()
+            showSnackBar(it.message ?: app.getString(R.string.unknown_error))
+            isInstalling.value = false
         }
     }
 
     private fun installHap(hapInfo: HapInfo) {
-        isInstalling.postValue(true)
+        isInstalling.value = true
         viewModelScope.launch {
             withContext(Dispatchers.Default) {
                 runCatching {
@@ -104,31 +111,32 @@ class MainViewModel(private val app: Application) : AndroidViewModel(app) {
                     // 不知为何无法显示结果
                     showSnackBar(R.string.install_finished)
                 }.onFailure {
+                    it.printStackTrace()
                     showSnackBar(it.message ?: app.getString(R.string.unknown_error))
                 }
+                autoDestroyHapInfoRunnable(hapInfo).run()
             }
-
-            isInstalling.postValue(false)
-            autoDestroyHapInfoRunnable(hapInfo).run()
+            isInstalling.value = false
         }
     }
 
     /**
      * 仅当没有任何工作，且hap已变更时销毁
      * */
-    private fun autoDestroyHapInfoRunnable(hapInfo: HapInfo?): Runnable {
+    private fun autoDestroyHapInfoRunnable(
+        hapInfo: HapInfo = this.hapInfo.value!!,
+        ignoreCurrentHapInfo: Boolean = false
+    ): Runnable {
         return Runnable {
-            if (this.hapInfo.value != hapInfo
-                && isInstalling.value != true
-                && hapInfo != null
-            ) {
-                hapInfo.destroy(app)
-            }
+            if ((this.hapInfo.value != hapInfo || ignoreCurrentHapInfo)
+                && !isInstalling.value!!
+                && !hapInfo.init
+            ) hapInfo.destroy(app)
         }
     }
 
     override fun onCleared() {
         super.onCleared()
-        hapInfo.value?.destroy(app)
+        autoDestroyHapInfoRunnable(this.hapInfo.value!!, true)
     }
 }

@@ -10,6 +10,7 @@ import android.os.Environment
 import android.provider.DocumentsContract
 import android.provider.MediaStore
 import androidx.documentfile.provider.DocumentFile
+import org.ohosdev.hapviewerandroid.app.DIR_PATH_EXTERNAL_FILES
 import java.io.File
 import java.io.FileOutputStream
 import java.io.IOException
@@ -117,7 +118,8 @@ fun Uri.copyToPrivateFile(
     if (scheme == ContentResolver.SCHEME_CONTENT) {
         // 把文件复制到沙盒目录
         val contentResolver = ctx.contentResolver
-        file = File((ctx.externalCacheDir ?: ctx.cacheDir).absolutePath, name)
+        val cacheDir = (ctx.externalCacheDir ?: ctx.cacheDir)
+        file = File(cacheDir, "${DIR_PATH_EXTERNAL_FILES}/${name}")
         contentResolver.openInputStream(this).use { inputStream ->
             if (inputStream == null) throw IOException("Cannot open ${this@copyToPrivateFile} using contentResolver.openInputStream.")
             FileOutputStream(file).use { outputStream ->
