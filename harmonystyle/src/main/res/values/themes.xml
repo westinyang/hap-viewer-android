@@ -37,7 +37,9 @@
         <item name="actionOverflowButtonStyle">@style/Widget.Harmony.ActionButton.Overflow</item>
         <!-- Menu -->
         <item name="popupMenuBackground">@drawable/harmony_popupmenu_background</item>
+        <item name="popupMenuStyle">@style/Widget.Harmony.PopupMenu</item>
         <item name="actionOverflowMenuStyle">@style/Widget.Harmony.PopupMenu.Overflow</item>
+        <item name="actionBarPopupTheme">@null</item>
         <item name="android:dropDownListViewStyle">@style/Widget.Harmony.ListView.DropDown</item>
 
         <!-- Dialog -->
