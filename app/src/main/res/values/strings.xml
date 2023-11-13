@@ -5,9 +5,8 @@
     <string name="about_message">HAP Viewer for Android
 \n\nSupport for parsing OpenHarmony, HarmonyOS API 9+ (Stage model) application installation packages, support for running on Android devices with Android 7+
 \n\nVersion：%1$s
-\nOpen Source：https://gitee.com/ohos-dev/hap-viewer-android
+\nOpen Source：%2$s
 \nLicense：Apache 2.0
-\nOpen Source Software：https://gitee.com/ohos-dev/hap-viewer-android#许可声明
 \nContributors：westinyang、Jesse205
 \nQQ Group：752399947</string>
     <string name="select_file_hap">Select HAP file</string>
@@ -33,5 +32,8 @@
     <string name="install">Install</string>
     <string name="unknown_error">Unknown error</string>
     <string name="install_finished">Install finished</string>
+    <string name="legal_more">Legal info...</string>
+    <string name="privacy_policy">Privacy policy</string>
+    <string name="open_source_licenses">Open source licenses</string>
 
 </resources>

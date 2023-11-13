@@ -19,6 +19,8 @@ import android.view.View.OnDragListener
 import androidx.activity.OnBackPressedCallback
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
+import androidx.appcompat.app.AlertDialog
+import androidx.appcompat.widget.PopupMenu
 import androidx.coordinatorlayout.widget.CoordinatorLayout
 import androidx.core.app.ActivityCompat
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -34,6 +36,9 @@ import org.ohosdev.hapviewerandroid.app.AppPreference.ThemeType.MATERIAL1
 import org.ohosdev.hapviewerandroid.app.AppPreference.ThemeType.MATERIAL2
 import org.ohosdev.hapviewerandroid.app.AppPreference.ThemeType.MATERIAL3
 import org.ohosdev.hapviewerandroid.app.BaseActivity
+import org.ohosdev.hapviewerandroid.app.URL_OPEN_SOURCE_LICENSES
+import org.ohosdev.hapviewerandroid.app.URL_PRIVACY_POLICY
+import org.ohosdev.hapviewerandroid.app.URL_REPOSITORY
 import org.ohosdev.hapviewerandroid.databinding.ActivityMainBinding
 import org.ohosdev.hapviewerandroid.extensions.applyDividerIfEnabled
 import org.ohosdev.hapviewerandroid.extensions.contentMovementMethod
@@ -155,7 +160,7 @@ class MainActivity : BaseActivity(), OnDragListener {
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         super.onOptionsItemSelected(item)
         when (item.itemId) {
-            R.id.action_about -> handelAboutClick(item)
+            R.id.action_about -> showAboutDialog()
             R.id.action_theme_material1 -> changeTheme(MATERIAL1)
             R.id.action_theme_material2 -> changeTheme(MATERIAL2)
             R.id.action_theme_material3 -> changeTheme(MATERIAL3)
@@ -200,19 +205,36 @@ class MainActivity : BaseActivity(), OnDragListener {
     }
 
 
-    private fun handelAboutClick(item: MenuItem?) {
-        // 使用 Material Dialog
-        // 但是华为设备上拖拽阴影在 Material Dialog 有bug
+    private fun showAboutDialog() {
+        // 华为设备上拖拽阴影在 Material Dialog 有bug
         MaterialAlertDialogBuilder(this)
             .setTitle(R.string.about)
-            .setMessage("")
+            .setMessage("") // 在 apply 中设置
             .setPositiveButton(android.R.string.ok, null)
+            .setNeutralButton(R.string.legal_more, null)
             .show().apply {
                 contentSelectable = true
                 setContentAutoLinkMask(Linkify.WEB_URLS)
-                setMessage(getString(R.string.about_message, BuildConfig.VERSION_NAME))
+                setMessage(
+                    getString(R.string.about_message, BuildConfig.VERSION_NAME, URL_REPOSITORY)
+                )
                 setContentAutoLinkMask(0)
                 contentMovementMethod = RTEditorMovementMethod.getInstance()
+                getButton(AlertDialog.BUTTON_NEUTRAL).apply {
+                    val popupMenu = PopupMenu(this@MainActivity, this)
+                    popupMenu.inflate(R.menu.menu_legal)
+                    setOnTouchListener(popupMenu.dragToOpenListener)
+                    setOnClickListener { popupMenu.show() }
+                    popupMenu.setOnMenuItemClickListener {
+                        val link = when (it.itemId) {
+                            R.id.action_privacy_policy -> URL_PRIVACY_POLICY
+                            R.id.action_open_source_licenses -> URL_OPEN_SOURCE_LICENSES
+                            else -> throw RuntimeException("Unknown itemId: $it")
+                        }
+                        openUrl(link)
+                        true
+                    }
+                }
             }
     }
 
