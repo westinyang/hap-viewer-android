@@ -55,10 +55,8 @@ fun File.copyTo(out: File) {
 }
 
 fun File.isExternalCache(context: Context): Boolean {
-    return absolutePath.run {
-        context.externalCacheDir?.let { startsWith(it.absolutePath) } ?: false
-                || startsWith(context.cacheDir)
-    }
+    return context.externalCacheDir?.let { startsWith(it) } ?: false
+            || startsWith(context.cacheDir)
 }
 
 
