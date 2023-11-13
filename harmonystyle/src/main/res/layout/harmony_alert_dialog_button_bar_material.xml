@@ -28,9 +28,9 @@
         android:gravity="bottom"
         android:layoutDirection="locale"
         android:orientation="horizontal"
-        android:paddingLeft="16dp"
+        android:paddingLeft="12dp"
         android:paddingTop="8dp"
-        android:paddingRight="16dp"
+        android:paddingRight="12dp"
         android:paddingBottom="16dp">
 
         <Button
@@ -38,6 +38,7 @@
             style="?attr/buttonBarNeutralButtonStyle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginHorizontal="4dp"
             android:layout_weight="1" />
 
         <Button
@@ -45,6 +46,7 @@
             style="?attr/buttonBarNegativeButtonStyle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginHorizontal="4dp"
             android:layout_weight="1" />
 
         <Button
@@ -52,6 +54,7 @@
             style="?attr/buttonBarPositiveButtonStyle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginHorizontal="4dp"
             android:layout_weight="1" />
 
     </androidx.appcompat.widget.ButtonBarLayout>
