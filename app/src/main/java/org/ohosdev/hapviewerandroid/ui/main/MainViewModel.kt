@@ -137,6 +137,7 @@ class MainViewModel(private val app: Application) : AndroidViewModel(app) {
 
     override fun onCleared() {
         super.onCleared()
+        runCatching { shizukuServiceHelper.unbindUserService() }.onFailure { it.printStackTrace() }
         autoDestroyHapInfoRunnable(this.hapInfo.value!!, true)
     }
 }

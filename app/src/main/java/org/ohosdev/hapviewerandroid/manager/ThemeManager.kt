@@ -4,7 +4,10 @@ import android.content.Context
 import android.util.Log
 import org.ohosdev.hapviewerandroid.R
 import org.ohosdev.hapviewerandroid.app.AppPreference.ThemeType
-import org.ohosdev.hapviewerandroid.app.AppPreference.ThemeType.*
+import org.ohosdev.hapviewerandroid.app.AppPreference.ThemeType.HARMONY
+import org.ohosdev.hapviewerandroid.app.AppPreference.ThemeType.MATERIAL1
+import org.ohosdev.hapviewerandroid.app.AppPreference.ThemeType.MATERIAL2
+import org.ohosdev.hapviewerandroid.app.AppPreference.ThemeType.MATERIAL3
 import org.ohosdev.hapviewerandroid.extensions.thisApp
 
 /**

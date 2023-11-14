@@ -27,7 +27,6 @@ class ShizukuServiceHelper {
                     Log.e(TAG, "onServiceConnected: invalid binder for $componentName received")
                 }
             }
-            Log.e(TAG, "onServiceConnected: ${binder.pingBinder()}", )
             onServiceConnectedListeners.forEach { it.run() }
             onServiceConnectedListeners.clear()
         }
@@ -45,27 +44,33 @@ class ShizukuServiceHelper {
         .debuggable(BuildConfig.DEBUG)
         .version(BuildConfig.VERSION_CODE)
 
-    @Throws(Throwable::class)
-    fun bindUserService(onBound: (() -> Unit)?): Boolean {
+    fun bindUserService(onBound: (() -> Unit)?) {
         if (isServiceBound) {
             onBound?.invoke()
-            return true
+            return
         }
-        val runnable = onBound?.let { Runnable { it.invoke() } }
-        return isSupported() && runCatching {
-            runnable?.let { onServiceConnectedListeners.add(it) }
-            Shizuku.bindUserService(userServiceArgs, userServiceConnection)
-        }.onFailure {
-            runnable?.let { onServiceConnectedListeners.remove(it) }
-            throw it
-        }.isSuccess
+        if (isSupported()) {
+            val runnable = onBound?.let { Runnable { it.invoke() } }
+            runCatching {
+                runnable?.let { onServiceConnectedListeners.add(it) }
+                Shizuku.bindUserService(userServiceArgs, userServiceConnection)
+            }.onFailure {
+                runnable?.let { onServiceConnectedListeners.remove(it) }
+                it.printStackTrace()
+                throw it
+            }
+        } else {
+            throw RuntimeException("Current Shizuku version is not supported: ${Shizuku.getVersion()}")
+        }
     }
 
-    @Throws(Throwable::class)
-    private fun unbindUserService(): Boolean {
-        return !isServiceBound || (isSupported() && runCatching {
+    fun unbindUserService() {
+        if (!isServiceBound) return
+        if (isSupported()) {
             Shizuku.unbindUserService(userServiceArgs, userServiceConnection, true)
-        }.isSuccess)
+        } else {
+            throw RuntimeException("Current Shizuku version is not supported: ${Shizuku.getVersion()}")
+        }
     }
 
     companion object {
