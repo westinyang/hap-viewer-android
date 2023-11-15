@@ -355,8 +355,12 @@ class MainActivity : BaseActivity(), OnDragListener {
                     .setOnRequest {
                         ShizukuUtil.requestPermission(this, REQUEST_CODE_SHIZUKU_INSTALL)
                     }
-                    .setNeutralButton(R.string.guide) { _, _ -> openUrl(ShizukuUtil.URL_GUIDE) }
-                    .show()
+                    .setNeutralButton(R.string.guide, null)
+                    .show().apply {
+                        getButton(AlertDialog.BUTTON_NEUTRAL).setOnClickListener {
+                            openUrl(ShizukuUtil.URL_GUIDE)
+                        }
+                    }
             }
             return
         }
