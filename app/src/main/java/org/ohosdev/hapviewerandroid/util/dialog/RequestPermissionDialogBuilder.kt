@@ -1,4 +1,4 @@
-package org.ohosdev.hapviewerandroid.util
+package org.ohosdev.hapviewerandroid.util.dialog
 
 import android.content.Context
 import androidx.appcompat.app.AlertDialog
@@ -9,10 +9,9 @@ class RequestPermissionDialogBuilder(context: Context) :
     DialogBuilder<RequestPermissionDialogBuilder>(context) {
     private var permissionNames: Array<String> = arrayOf()
     private var functionNames: Array<String> = arrayOf()
-    var onRequest: (() -> Unit)? = null
+    private var onRequest: (() -> Unit)? = null
 
     init {
-        setTitle("Permissions request")
         setPositiveButton(android.R.string.ok) { _, _ ->
             onRequest?.invoke()
         }

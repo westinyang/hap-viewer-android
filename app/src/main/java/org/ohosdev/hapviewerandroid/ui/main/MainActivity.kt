@@ -51,16 +51,12 @@ import org.ohosdev.hapviewerandroid.extensions.newShadowBitmap
 import org.ohosdev.hapviewerandroid.extensions.openUrl
 import org.ohosdev.hapviewerandroid.extensions.setContentAutoLinkMask
 import org.ohosdev.hapviewerandroid.extensions.thisApp
-import org.ohosdev.hapviewerandroid.manager.ThemeManager
 import org.ohosdev.hapviewerandroid.model.HapInfo
 import org.ohosdev.hapviewerandroid.util.HarmonyOSUtil
-import org.ohosdev.hapviewerandroid.util.RequestPermissionDialogBuilder
+import org.ohosdev.hapviewerandroid.util.dialog.RequestPermissionDialogBuilder
 import org.ohosdev.hapviewerandroid.util.ShizukuUtil
-import rikka.insets.WindowInsetsHelper
-import rikka.layoutinflater.view.LayoutInflaterFactory
 
 class MainActivity : BaseActivity(), OnDragListener {
-    private val themeManager: ThemeManager = ThemeManager(this)
 
     private val infoAdapter by lazy { InfoAdapter(this) }
 
@@ -73,33 +69,25 @@ class MainActivity : BaseActivity(), OnDragListener {
     private val selectFileResultLauncher =
         registerForActivityResult<String, Uri>(ActivityResultContracts.GetContent()) { handelUri(it) }
 
-    private val shizukuLifecycleObserver = ShizukuUtil.ShizukuLifecycleObserver()
-
     init {
-        lifecycle.addObserver(shizukuLifecycleObserver)
-        // 调用onRequestPermissionsResult，统一处理
-        shizukuLifecycleObserver.setRequestPermissionResultListener { requestCode, grantResult ->
-            onRequestPermissionsResult(
-                requestCode, arrayOf(ShizukuUtil.PERMISSION), intArrayOf(grantResult)
-            )
+        ShizukuUtil.ShizukuLifecycleObserver().apply {
+            lifecycle.addObserver(this)
+            // 调用onRequestPermissionsResult，统一处理
+            setRequestPermissionResultListener { requestCode, grantResult ->
+                onRequestPermissionsResult(
+                    requestCode, arrayOf(ShizukuUtil.PERMISSION), intArrayOf(grantResult)
+                )
+            }
         }
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        layoutInflater.factory2 = LayoutInflaterFactory(delegate)
-            .addOnViewCreatedListener(WindowInsetsHelper.LISTENER)
         super.onCreate(savedInstanceState)
-        themeManager.applyTheme()
         initViews()
-
         onBackPressedDispatcher.addCallback(this, onExitCallback)
 
-        // 解析传入的 Intent
-        if (savedInstanceState == null) {
-            handelUri(intent.data)
-        }
-
         model.hapInfo.observe(this) { onHapInfoChanged(it) }
+        // isParsing 与 isInstalling 同时影响着菜单的禁用状态，所以要调用 invalidateMenu()
         model.isParsing.observe(this) {
             invalidateMenu()
             binding.progressBar.visibility = if (it) View.VISIBLE else View.GONE
@@ -108,51 +96,64 @@ class MainActivity : BaseActivity(), OnDragListener {
             invalidateMenu()
             binding.backgroundProgressIndicator.visibility = if (it) View.VISIBLE else View.GONE
         }
-        model.snackBarEvent.observe(this) {
-            it.consume {
-                showSnackBar(it.text)
-            }
-        }
+        model.snackBarEvent.observe(this) { it.consume { showSnackBar(it.text) } }
+
+        // 解析传入的 Intent
+        if (savedInstanceState == null) handelUri(intent.data)
     }
 
-    private fun initViews() {
+    private fun initViews() = binding.apply {
         window.statusBarColor = Color.TRANSPARENT
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O_MR1)
             window.navigationBarColor = Color.TRANSPARENT
-        else
-            binding.bottomScrim.background = null
-        setContentView(binding.root)
-        setSupportActionBar(binding.toolbar)
-        binding.detailInfo.recyclerView.apply {
+        else bottomScrim.background = null
+
+        setContentView(root)
+        setSupportActionBar(toolbar)
+
+        detailInfo.recyclerView.apply {
             adapter = infoAdapter
             layoutManager = LinearLayoutManager(this@MainActivity)
             applyDividerIfEnabled()
         }
 
-        // 启用拖放
-        binding.dropMask.root.setOnDragListener(this)
-        binding.selectHapButton.setOnClickListener { onFabClick(it) }
+        dropMask.root.setOnDragListener(this@MainActivity)
+
+        selectHapButton.setOnClickListener {
+            // 申请权限
+            // 安卓10及以上不需要存储权限，可以直接使用
+            if (Build.VERSION.SDK_INT < Build.VERSION_CODES.Q
+                && !isPermissionGranted(Manifest.permission.READ_EXTERNAL_STORAGE)
+            ) {
+                ActivityCompat.requestPermissions(
+                    this@MainActivity, PERMISSIONS_EXTERNAL_STORAGE, REQUEST_CODE_SELECT_FILE
+                )
+                return@setOnClickListener
+            }
+
+            selectHapFile()
+        }
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
         val inflater = menuInflater
         inflater.inflate(R.menu.menu_main, menu)
-        when (thisApp.appPreference.themeType) {
-            MATERIAL1 -> menu.findItem(R.id.action_theme_material1)
-            MATERIAL2 -> menu.findItem(R.id.action_theme_material2)
-            MATERIAL3 -> menu.findItem(R.id.action_theme_material3)
-            HARMONY -> menu.findItem(R.id.action_theme_harmony)
-        }.isChecked = true
+        val themeItemId = when (thisApp.appPreference.themeType) {
+            MATERIAL1 -> R.id.action_theme_material1
+            MATERIAL2 -> R.id.action_theme_material2
+            MATERIAL3 -> R.id.action_theme_material3
+            HARMONY -> R.id.action_theme_harmony
+        }
+        menu.findItem(themeItemId).isChecked = true
         return true
     }
 
     override fun onPrepareOptionsMenu(menu: Menu?): Boolean {
-        menu?.let {
-            it.findItem(R.id.action_install).apply {
+        menu?.apply {
+            findItem(R.id.action_install).apply {
                 isVisible = HarmonyOSUtil.isHarmonyOS
-                isEnabled = model.run {
-                    !hapInfo.value?.init!! && !isParsing.value!! && !isInstalling.value!!
-                }
+                isEnabled =
+                    model.run { !hapInfo.value?.init!! && !isParsing.value!! && !isInstalling.value!! }
             }
         }
         return super.onPrepareOptionsMenu(menu)
@@ -178,9 +179,8 @@ class MainActivity : BaseActivity(), OnDragListener {
         grantResults: IntArray
     ) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
-
-        for (i in permissions.indices) {
-            Log.i(TAG, "申请权限：" + permissions[i] + "，申请结果：" + grantResults[i])
+        permissions.forEachIndexed { i, permission ->
+            Log.i(TAG, "申请权限：" + permission + "，申请结果：" + grantResults[i])
         }
         if (grantResults.all { it == PackageManager.PERMISSION_GRANTED }) {
             when (requestCode) {
@@ -200,7 +200,6 @@ class MainActivity : BaseActivity(), OnDragListener {
 
     override fun onPause() {
         super.onPause()
-
         // 退出时可能会显示Snackbar，以至于下一次弹出多个snackbar
         onExitCallback.closeSnackBar()
     }
@@ -210,7 +209,7 @@ class MainActivity : BaseActivity(), OnDragListener {
         // 华为设备上拖拽阴影在 Material Dialog 有bug
         MaterialAlertDialogBuilder(this)
             .setTitle(R.string.about)
-            .setMessage("") // 在 apply 中设置
+            .setMessage("") // 将在 apply 中设置
             .setPositiveButton(android.R.string.ok, null)
             .setNeutralButton(R.string.legal_more, null)
             .show().apply {
@@ -224,33 +223,19 @@ class MainActivity : BaseActivity(), OnDragListener {
                 getButton(AlertDialog.BUTTON_NEUTRAL).apply {
                     val popupMenu = PopupMenu(this@MainActivity, this)
                     popupMenu.inflate(R.menu.menu_legal)
-                    setOnTouchListener(popupMenu.dragToOpenListener)
-                    setOnClickListener { popupMenu.show() }
                     popupMenu.setOnMenuItemClickListener {
                         val link = when (it.itemId) {
                             R.id.action_privacy_policy -> URL_PRIVACY_POLICY
                             R.id.action_open_source_licenses -> URL_OPEN_SOURCE_LICENSES
-                            else -> throw RuntimeException("Unknown itemId: $it")
+                            else -> throw NoSuchElementException("Unknown itemId: $it")
                         }
                         openUrl(link)
                         true
                     }
+                    setOnTouchListener(popupMenu.dragToOpenListener)
+                    setOnClickListener { popupMenu.show() }
                 }
             }
-    }
-
-    private fun onFabClick(view: View?) {
-        // 申请权限
-        // 安卓10及以上不需要存储权限，可以直接使用
-        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.Q
-            && isPermissionGranted(Manifest.permission.READ_EXTERNAL_STORAGE)
-        ) {
-            ActivityCompat.requestPermissions(
-                this@MainActivity, PERMISSIONS_EXTERNAL_STORAGE, REQUEST_CODE_SELECT_FILE
-            )
-        } else {
-            selectHapFile()
-        }
     }
 
     private fun selectHapFile() {
@@ -262,9 +247,7 @@ class MainActivity : BaseActivity(), OnDragListener {
      * 解析 Uri，如果为空就什么都不做
      * */
     private fun handelUri(uri: Uri?) {
-        if (uri == null)
-            return
-        model.handelUri(uri)
+        uri?.let { model.handelUri(uri) }
     }
 
     private fun changeTheme(themeType: AppPreference.ThemeType) {
@@ -281,13 +264,10 @@ class MainActivity : BaseActivity(), OnDragListener {
      * @return 阴影 BitmapDrawable
      */
     private fun newIconShadowDrawable(src: Bitmap): BitmapDrawable {
+        val iconPadding = resources.getDimensionPixelSize(R.dimen.icon_padding)
+        val iconWidth = resources.getDimensionPixelSize(R.dimen.icon_width)
         return BitmapDrawable(
-            resources, src.newShadowBitmap(
-                this,
-                resources.getDimensionPixelSize(R.dimen.icon_padding),
-                resources.getDimensionPixelSize(R.dimen.icon_width),
-                resources.getDimensionPixelSize(R.dimen.icon_width)
-            )
+            resources, src.newShadowBitmap(this, iconPadding, iconWidth, iconWidth)
         )
     }
 
@@ -298,12 +278,14 @@ class MainActivity : BaseActivity(), OnDragListener {
             }
 
             DragEvent.ACTION_DROP -> {
-                for (index in 0 until event.clipData.itemCount) {
-                    val item = event.clipData.getItemAt(0)
-                    if (item.uri != null) {
-                        requestDragAndDropPermissions(event)
-                        handelUri(item.uri)
-                        break
+                event.clipData.let {
+                    for (index in 0 until it.itemCount) {
+                        val item = it.getItemAt(0)
+                        if (item.uri != null) {
+                            requestDragAndDropPermissions(event)
+                            handelUri(item.uri)
+                            break
+                        }
                     }
                 }
             }
@@ -327,69 +309,40 @@ class MainActivity : BaseActivity(), OnDragListener {
             .apply { show() }
     }
 
-    private fun onHapInfoChanged(hapInfo: HapInfo?) {
-        if (hapInfo != null) {
-            hapInfo.let {
-                // 显示基础信息
-                binding.basicInfo.apply {
-                    appName.text = it.appName
-                    version.text = String.format("%s (%s)", it.versionName, it.versionCode)
-                    setHapIcon(it.icon)
-                }
-            }
-            // 显示应用信息
-            infoAdapter.setInfo(hapInfo)
-        } else {
-            infoAdapter.setInfo(HapInfo(true))
+    private fun onHapInfoChanged(hapInfo: HapInfo = HapInfo.INIT) {
+        hapInfo.let {
+            // 显示基础信息，暂时用不到。
+            /* binding.basicInfo.apply {
+                appName.text = it.appName
+                version.text = String.format("%s (%s)", it.versionName, it.versionCode)
+            } */
+            applyHapIcon(it)
+            infoAdapter.setInfo(it)
         }
     }
 
     /**
      * 设置显示的 HAP 图标
      *
-     * 如果bitmap为空，则显示默认图标。
+     * 如果 `bitmap` 为空，则显示默认图标。
      * */
-    private fun setHapIcon(bitmap: Bitmap?) {
-        binding.basicInfo.apply {
-            if (bitmap != null) {
-                imageView.setImageBitmap(bitmap)
-                imageView.background = newIconShadowDrawable(bitmap)
+    private fun applyHapIcon(hapInfo: HapInfo) {
+        binding.basicInfo.imageView.apply {
+            val iconBitmap = if (hapInfo.icon != null) {
+                setImageBitmap(hapInfo.icon)
+                hapInfo.icon
             } else {
-                R.drawable.ic_default_new.also {
-                    imageView.setImageResource(it)
-                    imageView.background = newIconShadowDrawable(getBitmap(it)!!)
-                }
+                setImageResource(R.drawable.ic_default_new)
+                getBitmap(R.drawable.ic_default_new)!!
             }
+            background = newIconShadowDrawable(iconBitmap)
         }
     }
 
-    private inner class OnExitCallback : OnBackPressedCallback(true) {
-        // 不能共用一个 SnackBar
-        var snackBar: Snackbar? = null
-        override fun handleOnBackPressed() {
-            isEnabled = false
-            snackBar = Snackbar.make(binding.root, R.string.exit_toast, Snackbar.LENGTH_SHORT)
-                .apply {
-                    setAnchorView(R.id.selectHapButton)
-                    addCallback(object : Snackbar.Callback() {
-                        override fun onDismissed(transientBottomBar: Snackbar, event: Int) {
-                            // 如果关闭 SnackBar 的同时对象不一致，说明用户再次点击返回键，此时应保持
-                            // OnExitCallback 不被启用。
-                            if (snackBar == this@apply)
-                                isEnabled = true
-                            else
-                                Log.w(TAG, "onDismissed: SnackBar 已更改但此时没有消失。")
-                        }
-                    })
-                    show()
-                }
-        }
-
-        fun closeSnackBar() {
-            snackBar?.dismiss()
-        }
-    }
-
+    /**
+     * 向用户确认安装 HAP
+     * @param showRequestDialog 如果权限未给予，就显示授权对话框
+     * */
     private fun installHap(hapInfo: HapInfo, showRequestDialog: Boolean = true) {
         if (hapInfo.init) return
         if (!ShizukuUtil.checkPermission().isGranted) {
@@ -400,9 +353,7 @@ class MainActivity : BaseActivity(), OnDragListener {
                     .setOnRequest {
                         ShizukuUtil.requestPermission(this, REQUEST_CODE_SHIZUKU_INSTALL)
                     }
-                    .setNeutralButton(R.string.guide) { _, _ ->
-                        openUrl(ShizukuUtil.URL_GUIDE)
-                    }
+                    .setNeutralButton(R.string.guide) { _, _ -> openUrl(ShizukuUtil.URL_GUIDE) }
                     .show()
             }
             return
@@ -415,6 +366,28 @@ class MainActivity : BaseActivity(), OnDragListener {
             .show()
     }
 
+    private inner class OnExitCallback : OnBackPressedCallback(true) {
+        // 不能共用一个 SnackBar
+        var snackBar: Snackbar? = null
+        override fun handleOnBackPressed() {
+            isEnabled = false
+            snackBar = showSnackBar(R.string.exit_toast).apply {
+                addCallback(object : Snackbar.Callback() {
+                    override fun onDismissed(transientBottomBar: Snackbar, event: Int) {
+                        // 如果关闭 SnackBar 的同时对象不一致，说明用户再次点击返回键，此时应保持
+                        // OnExitCallback 不被启用。
+                        if (snackBar == this@apply) isEnabled = true
+                        else Log.w(TAG, "onDismissed: SnackBar 已更改但此时没有消失。")
+                    }
+                })
+            }
+
+        }
+
+        fun closeSnackBar() {
+            snackBar?.dismiss()
+        }
+    }
 
     companion object {
         private const val TAG = "MainActivity"
