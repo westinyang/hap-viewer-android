@@ -407,7 +407,12 @@ class MainActivity : BaseActivity(), OnDragListener {
             }
             return
         }
-        model.installHapWaitingShizuku(hapInfo)
+        MaterialAlertDialogBuilder(this)
+            .setTitle(R.string.install_hap)
+            .setMessage(R.string.install_hap_message)
+            .setPositiveButton(android.R.string.ok) { _, _ -> model.installHapWaitingShizuku(hapInfo) }
+            .setNegativeButton(android.R.string.cancel, null)
+            .show()
     }
 
 

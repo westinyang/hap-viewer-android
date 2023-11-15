@@ -59,7 +59,7 @@ public class HapInfo {
 
     public String getTechDesc(Context context) {
         if (techList != null && techList.size() > 0) {
-            techDesc = String.join(context.getString(R.string.separator_words), techList);
+            techDesc = String.join(context.getString(R.string.separator), techList);
         } else {
             techDesc = context.getString(R.string.info_tech_unknown);
         }

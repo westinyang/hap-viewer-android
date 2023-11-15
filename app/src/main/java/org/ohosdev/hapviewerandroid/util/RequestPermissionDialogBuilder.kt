@@ -45,8 +45,9 @@ class RequestPermissionDialogBuilder(context: Context) :
     }
 
     override fun create(): AlertDialog {
-        val permissionNamesText = permissionNames.joinToString { it.lowercase() }
-        val functionNamesText = functionNames.joinToString { it.lowercase() }
+        val separator = context.getText(R.string.separator)
+        val permissionNamesText = permissionNames.joinToString()
+        val functionNamesText = functionNames.joinToString(separator = separator)
         setTitle(context.getQuantityString(R.plurals.permission_request, permissionNames.size))
         setMessage(
             context.getQuantityString(
