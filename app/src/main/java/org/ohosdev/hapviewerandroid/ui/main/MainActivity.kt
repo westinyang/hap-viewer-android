@@ -49,12 +49,13 @@ import org.ohosdev.hapviewerandroid.extensions.isGranted
 import org.ohosdev.hapviewerandroid.extensions.isPermissionGranted
 import org.ohosdev.hapviewerandroid.extensions.newShadowBitmap
 import org.ohosdev.hapviewerandroid.extensions.openUrl
+import org.ohosdev.hapviewerandroid.extensions.overrideAnimationDurationIfNotMd3
 import org.ohosdev.hapviewerandroid.extensions.setContentAutoLinkMask
 import org.ohosdev.hapviewerandroid.extensions.thisApp
 import org.ohosdev.hapviewerandroid.model.HapInfo
 import org.ohosdev.hapviewerandroid.util.HarmonyOSUtil
-import org.ohosdev.hapviewerandroid.util.dialog.RequestPermissionDialogBuilder
 import org.ohosdev.hapviewerandroid.util.ShizukuUtil
+import org.ohosdev.hapviewerandroid.util.dialog.RequestPermissionDialogBuilder
 
 class MainActivity : BaseActivity(), OnDragListener {
 
@@ -305,6 +306,7 @@ class MainActivity : BaseActivity(), OnDragListener {
     override fun showSnackBar(text: String): Snackbar {
         // 重写该方法，将 SnackBar 放置到悬浮按钮之上
         return Snackbar.make(binding.root, text, Snackbar.LENGTH_SHORT)
+            .overrideAnimationDurationIfNotMd3()
             .setAnchorView(R.id.selectHapButton)
             .apply { show() }
     }
