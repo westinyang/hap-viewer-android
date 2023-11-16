@@ -37,6 +37,15 @@
         <item name="android:windowExitAnimation">@anim/harmony_menu_exit</item>
     </style>
 
+    <style name="Widget.Harmony.PopupMenu" parent="Widget.MaterialComponents.PopupMenu">
+        <item name="android:popupElevation">50dp</item>
+        <item name="android:popupEnterTransition">@null</item>
+        <item name="android:popupExitTransition">@null</item>
+        <item name="android:popupAnimationStyle">@style/Animation.Harmony.PopupWindow</item>
+        <item name="android:dropDownVerticalOffset">0dp</item>
+        <item name="android:dropDownHorizontalOffset">-12dp</item>
+    </style>
+
     <style name="Widget.Harmony.PopupMenu.Overflow" parent="Widget.MaterialComponents.PopupMenu.Overflow">
         <item name="overlapAnchor">false</item>
         <item name="android:popupElevation">50dp</item>

@@ -42,9 +42,9 @@ public class RTEditorMovementMethod extends ArrowKeyMovementMethod {
 
     private static RTEditorMovementMethod sInstance;
 
-    private static Rect sLineBounds = new Rect();
+    private static final Rect sLineBounds = new Rect();
 
-    public static synchronized  MovementMethod getInstance() {
+    public static synchronized MovementMethod getInstance() {
         if (sInstance == null) {
             sInstance = new RTEditorMovementMethod();
         }
@@ -152,7 +152,7 @@ public class RTEditorMovementMethod extends ArrowKeyMovementMethod {
             if (endChar >= x) {
                 // which "end" is closer to x, the start or the end of the character?
                 int index = lineStart + (x - startChar < endChar - x ? i : i + 1);
-                //Logger.e(Logger.LOG_TAG, "Found character: " + (text.length()>index ? text.charAt(index) : ""));
+                // Logger.e(Logger.LOG_TAG, "Found character: " + (text.length()>index ? text.charAt(index) : ""));
                 return index;
             }
         }

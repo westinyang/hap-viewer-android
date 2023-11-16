@@ -1,11 +1,22 @@
 package org.ohosdev.hapviewerandroid.app
 
+import android.os.Bundle
 import androidx.annotation.StringRes
 import androidx.appcompat.app.AppCompatActivity
 import androidx.coordinatorlayout.widget.CoordinatorLayout
 import com.google.android.material.snackbar.Snackbar
+import org.ohosdev.hapviewerandroid.manager.ThemeManager
+import rikka.insets.WindowInsetsHelper
+import rikka.layoutinflater.view.LayoutInflaterFactory
 
 abstract class BaseActivity : AppCompatActivity() {
+    protected val themeManager: ThemeManager = ThemeManager(this)
+    override fun onCreate(savedInstanceState: Bundle?) {
+        layoutInflater.factory2 = LayoutInflaterFactory(delegate)
+            .addOnViewCreatedListener(WindowInsetsHelper.LISTENER)
+        super.onCreate(savedInstanceState)
+        themeManager.applyTheme()
+    }
 
     abstract val rootView: CoordinatorLayout
 

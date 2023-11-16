@@ -1,22 +1,25 @@
 package org.ohosdev.hapviewerandroid.util;
 
-import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.os.RemoteException;
+import android.util.Log;
 
 import androidx.annotation.NonNull;
 
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 
-import org.ohosdev.hapviewerandroid.extensions.FileExtensionsKt;
+import org.ohosdev.hapviewerandroid.IUserService;
 import org.ohosdev.hapviewerandroid.model.HapInfo;
+import org.ohosdev.hapviewerandroid.util.helper.ShizukuServiceHelper;
 
-import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.Arrays;
 import java.util.Enumeration;
 import java.util.HashSet;
+import java.util.Objects;
 import java.util.Set;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
@@ -31,6 +34,8 @@ import cn.hutool.core.util.ReUtil;
  * @author westinyang
  */
 public class HapUtil {
+
+    private static final String TAG = "HapUtil";
 
     /**
      * 解析hap
@@ -183,19 +188,14 @@ public class HapUtil {
         }
     }
 
-    public static void destroyHapInfo(@NonNull Context context, @NonNull HapInfo hapInfo) {
-        // 删除临时文件
-        if (hapInfo.hapFilePath != null) {
-            File hapFile = new File(hapInfo.hapFilePath);
-            if (FileExtensionsKt.isExternalCache(hapFile, context)) {
-                if (hapFile.isFile() && !hapFile.delete()) {
-                    hapFile.deleteOnExit();
-                }
-            }
+    @NonNull
+    public static ExecuteResult installHap(ShizukuServiceHelper helper, String path) throws RemoteException {
+        if (!helper.isServiceBound()) {
+            throw new RuntimeException("Shizuku not bound.");
         }
-        if (hapInfo.icon != null) {
-            hapInfo.icon.recycle();
-        }
+        IUserService service = Objects.requireNonNull(helper.getService());
+        ExecuteResult result = service.execute(Arrays.asList("bm", "install", "-r", path), null, null);
+        Log.i(TAG, "installHap: " + result);
+        return result;
     }
-
 }

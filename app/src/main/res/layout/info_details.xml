@@ -20,5 +20,5 @@
         android:nestedScrollingEnabled="false"
         android:paddingVertical="?cardPaddingVertical"
         tools:itemCount="5"
-        tools:listitem="@layout/info_item" />
+        tools:listitem="@layout/item_info" />
 </com.google.android.material.card.MaterialCardView>

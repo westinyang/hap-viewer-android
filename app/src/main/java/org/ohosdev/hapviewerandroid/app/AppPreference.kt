@@ -16,7 +16,7 @@ class AppPreference(private val context: Context) {
     var themeType: ThemeType
         get() = sharedPreference.getString(KEY_THEME_TYPE, ThemeType.HARMONY.value)!!.toThemeType()
         set(value) {
-            sharedPreference.edit { this.putString(KEY_THEME_TYPE,value.value) }
+            sharedPreference.edit { this.putString(KEY_THEME_TYPE, value.value) }
         }
 
     enum class ThemeType(val value: String) {

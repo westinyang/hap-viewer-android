@@ -5,9 +5,8 @@
     <string name="about_message">HAP Viewer for Android
 \n\nSupport for parsing OpenHarmony, HarmonyOS API 9+ (Stage model) application installation packages, support for running on Android devices with Android 7+
 \n\nVersion：%1$s
-\nOpen Source：https://gitee.com/ohos-dev/hap-viewer-android
+\nOpen Source：%2$s
 \nLicense：Apache 2.0
-\nOpen Source Software：https://gitee.com/ohos-dev/hap-viewer-android#许可声明
 \nContributors：westinyang、Jesse205
 \nQQ Group：752399947</string>
     <string name="select_file_hap">Select HAP file</string>
@@ -18,13 +17,25 @@
     <string name="parse_error_fail_obtain">File acquisition failure.</string>
     <string name="parse_error_fail">Hap file parsing failed, currently only supports parsing API 9+ (Stage model) application installers.</string>
     <string name="parse_error_type">Wrong file type, please select a hap file.</string>
-    <string name="separator_words">, </string>
+    <string name="separator">, </string>
     <string name="parse_continue_ignoreError">Ignore error, Continue parse</string>
     <string name="menu_theme">Theme</string>
     <string name="material2" translatable="false">Material 2</string>
     <string name="material1" translatable="false">Material 1</string>
     <string name="material3" translatable="false">Material 3</string>
-    <string name="drop_here">drop here</string>
+    <string name="drop_here">Drop here</string>
     <string name="harmony" translatable="false">HarmonyOS</string>
+    <string name="permission_shizuku">Shizuku permission</string>
+    <string name="function_install_hap">Install HAP</string>
+    <string name="guide">Guide</string>
+    <string name="permission_request">Permissions request</string>
+    <string name="install">Install</string>
+    <string name="unknown_error">Unknown error</string>
+    <string name="install_finished">Installation finished</string>
+    <string name="legal_more">Legal info...</string>
+    <string name="privacy_policy">Privacy policy</string>
+    <string name="open_source_licenses">Open source licenses</string>
+    <string name="install_hap">Install HAP</string>
+    <string name="install_hap_message">Installation of HAP requires the support of the operating system and must have the correct signature, so packages you download from unofficial application markets will most likely not install. For unknown reasons, it is not possible to determine whether the installation of the software was successful or not, so the software will always display \"Installation finished\".</string>
 
 </resources>
