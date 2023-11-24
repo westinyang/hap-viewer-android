@@ -21,6 +21,7 @@ import java.util.Enumeration;
 import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
+import java.util.regex.MatchResult;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
 
@@ -70,6 +71,9 @@ public class HapUtil {
 
             // 解析图标
             JSONArray moduleAbilities = module.getJSONObject("module").getJSONArray("abilities");
+            if (moduleAbilities == null) {
+                moduleAbilities = module.getJSONObject("module").getJSONArray("extensionAbilities");
+            }
             JSONObject targetAbility = null;
             try {
                 targetAbility = (JSONObject) moduleAbilities.get(0);
@@ -88,13 +92,29 @@ public class HapUtil {
                 hapInfo.iconPath = iconPath;
                 hapInfo.iconBytes = getEntryToBytes(zipFile, iconPath);
                 hapInfo.icon = getEntryToImage(zipFile, iconPath);
+                // 同时记录下label，用于下面解析名称
+                hapInfo.labelName = targetAbility.getString("label").split(":")[1];
             }
 
             // 解析名称
-            byte[] resourcesIndexBytes = getEntryToBytes(zipFile, "resources.index");
-            String resourcesIndexHex = HexUtil.encodeHexStr(resourcesIndexBytes).toUpperCase();
-            String appNameHex = ReUtil.get("(00.{2}0000000900000003000001.{2}00)(.*?)(00.{2}00)", resourcesIndexHex, 2);
-            hapInfo.appName = HexUtil.decodeHexStr(appNameHex);
+            String appName = "解析失败";
+            try {
+                byte[] resourcesIndexBytes = getEntryToBytes(zipFile, "resources.index");
+                String resourcesIndexHex = HexUtil.encodeHexStr(resourcesIndexBytes).toUpperCase();
+                // label2hex
+                String labelNameHex = HexUtil.encodeHexStr(hapInfo.labelName).toUpperCase();
+                String reg = "00.{2}000000.{2}000000.{2}0000.{2}.{2}00(.*?)00.{2}00" + labelNameHex;
+                // List<String> all =  ReUtil.findAll(reg, resourcesIndexHex, 1);
+                MatchResult mr = ReUtil.lastIndexOf(reg, resourcesIndexHex);
+                String appNameHex = mr.group(1);
+                // 防止非贪婪模式异常导致匹配不准确，按特征正则分割取出最后一段
+                String[] appNameHexArr = appNameHex.split("00.{2}000000.{2}000000.{2}0000.{2}.{2}00");
+                appNameHex = appNameHexArr[appNameHexArr.length - 1];
+                appName = HexUtil.decodeHexStr(appNameHex);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            hapInfo.appName = appName;
 
             // 技术探测，暂时先简单判断时间，后续抽离到配置文件
             Set<String> techList = new HashSet<>();

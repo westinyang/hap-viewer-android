@@ -13,9 +13,9 @@ private const val DEFAULT_ANIMATION_FADE_OUT_DURATION = 75
 @SuppressLint("PrivateResource")
 fun <T : BaseTransientBottomBar<T>> BaseTransientBottomBar<T>.overrideAnimationDurationIfNotMd3() =
     apply {
-        context.theme.obtainStyledAttributes(intArrayOf(R.attr.isMaterial3Theme)).use {
+        context.theme.obtainStyledAttributes(intArrayOf(R.attr.isMaterial3Theme)).also {
             if (it.getBoolean(0, false)) return@apply
-        }
+        }.recycle()
         BaseTransientBottomBar::class.java.apply {
             getDeclaredField("animationSlideDuration").apply {
                 isAccessible = true
