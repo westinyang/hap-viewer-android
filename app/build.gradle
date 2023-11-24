@@ -23,13 +23,12 @@ android {
     buildTypes {
         release {
             minifyEnabled true
-            // shrinkResources true
+            shrinkResources true
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
             signingConfig signingConfigs.debug
         }
         debug {
             minifyEnabled false
-            // shrinkResources true
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
             signingConfig signingConfigs.debug
         }
@@ -49,6 +48,10 @@ android {
         aidl true
     }
 
+    packagingOptions {
+        exclude "/META-INF/*.kotlin_module"
+        exclude "/kotlin/**"
+    }
 }
 
 dependencies {
