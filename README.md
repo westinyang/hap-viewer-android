@@ -30,7 +30,8 @@
 
 ## 视频演示
 
-- https://www.bilibili.com/video/BV1pX4y147V8
+- [“文化入侵”：安卓上的hap查看器 OpenHarmony开源鸿蒙应用解析](https://www.bilibili.com/video/BV1pX4y147V8)
+- [开源鸿蒙hap查看器，新增探测Flutter、Qt技术，安卓版新主题](https://www.bilibili.com/video/BV1cg4y197mc)
 
 ## 许可声明
 
