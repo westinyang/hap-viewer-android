@@ -8,17 +8,21 @@
 
 开源仓库
 
-- [Gitee](https://gitee.com/ohos-dev/hap-viewer-android)
-- [Github](https://github.com/ohos-dev/hap-viewer-android)
+- [Gitee](https://gitee.com/westinyang/hap-viewer-android)
+- [Github](https://github.com/westinyang/hap-viewer-android)
 
 ### 系列项目
 
-- 电脑版（跨平台）：[ohos-dev/hap-viewer](https://gitee.com/ohos-dev/hap-viewer)
-- **手机版（Android）**：[ohos-dev/hap-viewer-android](https://gitee.com/ohos-dev/hap-viewer-android)
+- 电脑版（跨平台）：[westinyang/hap-viewer](https://gitee.com/westinyang/hap-viewer)
+- **手机版（Android）**：[westinyang/hap-viewer-android](https://gitee.com/westinyang/hap-viewer-android)
+
+### 衍生项目
+
+- [hapv-cli](https://gitee.com/ericple/hapv-cli) `命令行版的hap查看器，目前由@ericple维护`
 
 ## 下载安装
 
-- https://gitee.com/ohos-dev/hap-viewer-android/releases
+- https://gitee.com/westinyang/hap-viewer-android/releases
 
 ## 开发环境
 
@@ -35,7 +39,7 @@
 
 ## 许可声明
 
-- 本项目是以Apache2.0许可开源，如果衍生或商用需保留原始版权和许可声明即可
+- 本项目是以Apache2.0许可开源，如需衍生或商用请注明出处
 - 使用的开源软件
   - [Material Components for Android](https://github.com/material-components/material-components-android) `Apache-2.0 license`
   - [Android Jetpack](https://github.com/androidx/androidx) `Apache-2.0 license`
