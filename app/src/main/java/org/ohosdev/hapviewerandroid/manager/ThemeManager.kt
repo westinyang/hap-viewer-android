@@ -1,7 +1,11 @@
 package org.ohosdev.hapviewerandroid.manager
 
+import android.annotation.SuppressLint
+import android.app.Activity
 import android.content.Context
 import android.util.Log
+import androidx.core.view.WindowCompat
+import com.google.android.material.resources.MaterialAttributes.resolveBoolean
 import org.ohosdev.hapviewerandroid.R
 import org.ohosdev.hapviewerandroid.app.AppPreference.ThemeType
 import org.ohosdev.hapviewerandroid.app.AppPreference.ThemeType.HARMONY
@@ -22,6 +26,7 @@ class ThemeManager(val context: Context) {
         applyTheme(preferenceThemeType)
     }
 
+    @SuppressLint("RestrictedApi")
     private fun applyTheme(themeType: ThemeType) {
         this.themeType = themeType
         val themeId: Int = when (themeType) {
@@ -31,6 +36,16 @@ class ThemeManager(val context: Context) {
             HARMONY -> R.style.Theme_HapViewerAndroid_Harmony
         }
         context.setTheme(themeId)
+        if (context is Activity) {
+            context.window.also {
+                WindowCompat.getInsetsController(it, it.decorView).apply {
+                    isAppearanceLightNavigationBars =
+                        resolveBoolean(context, R.attr.windowLightNavigationBar, false)
+                    isAppearanceLightStatusBars =
+                        resolveBoolean(context, R.attr.windowLightStatusBar, false)
+                }
+            }
+        }
     }
 
     fun isThemeChanged(): Boolean {
