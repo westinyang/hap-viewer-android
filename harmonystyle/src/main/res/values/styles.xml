@@ -60,7 +60,7 @@
     <style name="Widget.Harmony.ListView.DropDown" parent="Widget.AppCompat.ListView.DropDown">
         <item name="android:divider">@drawable/harmony_divider</item>
         <item name="android:dividerHeight">0.5dp</item>
-        <item name="android:listSelector">@drawable/harmony_list_choice_background_indicator
+        <item name="android:listSelector">@drawable/harmony_menu_choice_background_indicator
         </item>
     </style>
 

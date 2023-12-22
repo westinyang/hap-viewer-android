@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:end="4dp"
+        android:start="4dp">
+        <selector>
+            <!-- 谷歌兼容的菜单在focused状态有问题，安卓8与按压相同，安卓12需要用笔按压才显示，所以干脆将这个状态统一为按压效果。 -->
+            <item android:state_focused="true">
+                <shape>
+                    <solid android:color="@color/harmony_color_pressed" />
+                    <corners android:radius="12dp" />
+                </shape>
+            </item>
+            <item>
+                <shape>
+                    <solid android:color="@color/harmony_pressed" />
+                    <corners android:radius="12dp" />
+                </shape>
+            </item>
+        </selector>
+    </item>
+</layer-list>
