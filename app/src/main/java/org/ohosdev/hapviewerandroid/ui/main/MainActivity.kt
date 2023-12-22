@@ -105,7 +105,7 @@ class MainActivity : BaseActivity(), OnDragListener {
 
     private fun initViews() = binding.apply {
         window.statusBarColor = Color.TRANSPARENT
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O_MR1)
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O)
             window.navigationBarColor = Color.TRANSPARENT
         else bottomScrim.background = null
 
