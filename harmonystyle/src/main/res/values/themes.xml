@@ -42,7 +42,7 @@
         <!-- Dialog -->
         <item name="android:dialogCornerRadius" tools:targetApi="p">?dialogCornerRadius</item>
         <item name="dialogCornerRadius">24dp</item>
-        <item name="materialAlertDialogTheme">?alertDialogTheme</item>
+        <item name="materialAlertDialogTheme">@null</item>
         <item name="alertDialogTheme">@style/ThemeOverlay.Harmony.Dialog.Alert</item>
         <item name="alertDialogStyle">@style/AlertDialog.Harmony</item>
 

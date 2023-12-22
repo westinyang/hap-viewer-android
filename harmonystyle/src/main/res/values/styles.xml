@@ -88,6 +88,7 @@
     <style name="AlertDialog.Harmony" parent="AlertDialog.AppCompat">
         <item name="android:layout_gravity">bottom|center_horizontal</item>
         <item name="android:layout">@layout/harmony_alert_dialog_material</item>
+        <item name="shapeAppearance">@style/ShapeAppearance.Harmony.AlertDialog</item>
     </style>
 
     <style name="Widget.Harmony.Button.Dialog" parent="Widget.AppCompat.Button">
@@ -115,6 +116,11 @@
 
     <style name="Widget.Harmony.ExtendedFloatingActionButton" parent="Widget.MaterialComponents.ExtendedFloatingActionButton.Icon">
         <item name="android:outlineSpotShadowColor" tools:targetApi="p">?colorPrimary</item>
+    </style>
+
+    <style name="ShapeAppearance.Harmony.AlertDialog" parent="">
+        <item name="cornerFamily">rounded</item>
+        <item name="cornerSize">24dp</item>
     </style>
 
 </resources>
