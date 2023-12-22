@@ -24,6 +24,7 @@
     <style name="ThemeOverlay.Harmony.ActionBar.Surface" parent="ThemeOverlay.MaterialComponents.ActionBar.Surface">
         <item name="colorControlNormal">@color/harmony_on_background</item>
         <item name="actionMenuTextColor">@color/harmony_on_background</item>
+        <item name="android:colorBackground">@null</item>
     </style>
 
     <style name="Widget.Harmony.Toolbar.Surface" parent="Widget.MaterialComponents.Toolbar.Surface">
