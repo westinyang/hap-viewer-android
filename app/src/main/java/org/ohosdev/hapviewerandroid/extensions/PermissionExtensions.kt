@@ -21,7 +21,7 @@ fun Activity.newRequestPermissionDialogBuilder(
         .setPositiveButton(android.R.string.ok) { _, _ ->
             onRequest.invoke()
         }
-        .setNegativeButton(android.R.string.no, null)
+        .setNegativeButton(android.R.string.cancel, null)
 }
 
 fun Activity.newShizukuRequestPermissionDialogBuilder(

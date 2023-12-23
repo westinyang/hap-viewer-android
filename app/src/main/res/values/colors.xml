@@ -6,6 +6,6 @@
     <color name="color_secondary">#FF81bd0a</color>
 
     <color name="system_window_scrim_light_black">#44000000</color>
-    <color name="system_window_scrim">@color/background_emphasis_medium</color>
+    <color name="system_window_scrim">@color/background_emphasis_high_type</color>
     <color name="system_window_scrim_compat">@color/system_window_scrim_light_black</color>
 </resources>

@@ -24,6 +24,7 @@
     <style name="ThemeOverlay.Harmony.ActionBar.Surface" parent="ThemeOverlay.MaterialComponents.ActionBar.Surface">
         <item name="colorControlNormal">@color/harmony_on_background</item>
         <item name="actionMenuTextColor">@color/harmony_on_background</item>
+        <item name="android:colorBackground">@null</item>
     </style>
 
     <style name="Widget.Harmony.Toolbar.Surface" parent="Widget.MaterialComponents.Toolbar.Surface">
@@ -59,7 +60,7 @@
     <style name="Widget.Harmony.ListView.DropDown" parent="Widget.AppCompat.ListView.DropDown">
         <item name="android:divider">@drawable/harmony_divider</item>
         <item name="android:dividerHeight">0.5dp</item>
-        <item name="android:listSelector">@drawable/harmony_list_choice_background_indicator
+        <item name="android:listSelector">@drawable/harmony_menu_choice_background_indicator
         </item>
     </style>
 
@@ -87,6 +88,7 @@
     <style name="AlertDialog.Harmony" parent="AlertDialog.AppCompat">
         <item name="android:layout_gravity">bottom|center_horizontal</item>
         <item name="android:layout">@layout/harmony_alert_dialog_material</item>
+        <item name="shapeAppearance">@style/ShapeAppearance.Harmony.AlertDialog</item>
     </style>
 
     <style name="Widget.Harmony.Button.Dialog" parent="Widget.AppCompat.Button">
@@ -114,6 +116,11 @@
 
     <style name="Widget.Harmony.ExtendedFloatingActionButton" parent="Widget.MaterialComponents.ExtendedFloatingActionButton.Icon">
         <item name="android:outlineSpotShadowColor" tools:targetApi="p">?colorPrimary</item>
+    </style>
+
+    <style name="ShapeAppearance.Harmony.AlertDialog" parent="">
+        <item name="cornerFamily">rounded</item>
+        <item name="cornerSize">24dp</item>
     </style>
 
 </resources>
