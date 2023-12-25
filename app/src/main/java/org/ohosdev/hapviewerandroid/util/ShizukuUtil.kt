@@ -35,6 +35,7 @@ class ShizukuUtil {
             try {
                 Shizuku.requestPermission(requestCode)
             } catch (e: Exception) {
+                e.printStackTrace()
                 activity.onRequestPermissionsResult(
                     requestCode, arrayOf(PERMISSION), intArrayOf(PackageManager.PERMISSION_DENIED)
                 )
