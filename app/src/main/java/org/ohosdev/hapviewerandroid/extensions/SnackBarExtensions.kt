@@ -30,8 +30,8 @@ private inline fun <reified T> Any.setDeclaredField(name: String, value: Any) {
 fun <T : BaseTransientBottomBar<T>> BaseTransientBottomBar<T>.overrideAnimationDurationIfNeeded() =
     apply {
         val isMaterial3Theme: Boolean
-        context.theme.obtainStyledAttributes(intArrayOf(R.attr.isMaterial3Theme)).also {
-            isMaterial3Theme = it.getBoolean(0, false)
+        context.theme.obtainStyledAttributes(intArrayOf(R.attr.isMaterial3Theme)).apply {
+            isMaterial3Theme = getBoolean(0, false)
         }.recycle()
         Log.d("TAG", "overrideAnimationDurationIfNeeded: $isMaterial3Theme")
         if (isMaterial3Theme) return@apply
