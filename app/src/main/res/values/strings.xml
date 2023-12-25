@@ -26,7 +26,6 @@
     <string name="drop_here">Drop here</string>
     <string name="harmony" translatable="false">HarmonyOS</string>
     <string name="permission_shizuku">Shizuku permission</string>
-    <string name="function_install_hap">Install HAP</string>
     <string name="guide">Guide</string>
     <string name="permission_request">Permissions request</string>
     <string name="install">Install</string>
@@ -37,5 +36,8 @@
     <string name="open_source_licenses">Open source licenses</string>
     <string name="install_hap">Install HAP</string>
     <string name="install_hap_message">Installation of HAP requires the support of the operating system and must have the correct signature, so packages you download from unofficial application markets will most likely not install. For unknown reasons, it is not possible to determine whether the installation of the software was successful or not, so the software will always display \"Installation finished\".</string>
-
+    <string name="read_file_directly">Reading files directly</string>
+    <string name="permission_request_message">We need %1$s to ensure that we can %2$s. %3$s</string>
+    <string name="permission_storage">Storage permission</string>
+    <string name="permission_storage_additional">If you do not grant this permission, the file will be copied to the private space before being read.</string>
 </resources>

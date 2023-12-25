@@ -128,10 +128,21 @@ class MainActivity : BaseActivity(), OnDragListener {
             if (Build.VERSION.SDK_INT < Build.VERSION_CODES.Q
                 && !isPermissionGranted(Manifest.permission.READ_EXTERNAL_STORAGE)
             ) {
-
-                ActivityCompat.requestPermissions(
-                    this@MainActivity, PERMISSIONS_EXTERNAL_STORAGE, REQUEST_CODE_SELECT_FILE
-                )
+                RequestPermissionDialogBuilder(this@MainActivity)
+                    .setPermissionNames(arrayOf(R.string.permission_storage))
+                    .setFunctionNames(arrayOf(R.string.read_file_directly))
+                    .setAdditional(R.string.permission_storage_additional)
+                    .setOnAgree {
+                        ActivityCompat.requestPermissions(
+                            this@MainActivity,
+                            PERMISSIONS_EXTERNAL_STORAGE,
+                            REQUEST_CODE_SELECT_FILE
+                        )
+                    }
+                    .setOnDisagree {
+                        selectHapFile()
+                    }
+                    .show()
                 return@setOnClickListener
             }
 
@@ -350,8 +361,8 @@ class MainActivity : BaseActivity(), OnDragListener {
             if (showRequestDialog) {
                 RequestPermissionDialogBuilder(this)
                     .setPermissionNames(arrayOf(R.string.permission_shizuku))
-                    .setFunctionNames(arrayOf(R.string.function_install_hap))
-                    .setOnRequest {
+                    .setFunctionNames(arrayOf(R.string.install_hap))
+                    .setOnAgree {
                         ShizukuUtil.requestPermission(this, REQUEST_CODE_SHIZUKU_INSTALL)
                     }
                     .setNeutralButton(R.string.guide, null)
