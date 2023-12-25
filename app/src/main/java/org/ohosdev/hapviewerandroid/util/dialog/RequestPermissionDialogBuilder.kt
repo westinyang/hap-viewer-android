@@ -10,16 +10,13 @@ class RequestPermissionDialogBuilder(context: Context) :
     private var permissionNames: Array<String> = arrayOf()
     private var functionNames: Array<String> = arrayOf()
     private var onAgree: (() -> Unit)? = null
-    private var onDisagree: (() -> Unit)? = null
     private var additional: String = ""
 
     init {
         setPositiveButton(android.R.string.ok) { _, _ ->
             onAgree?.invoke()
         }
-        setNegativeButton(android.R.string.cancel) { _, _ ->
-            onDisagree?.invoke()
-        }
+        setNegativeButton(android.R.string.cancel, null)
     }
 
     fun setPermissionNames(names: Array<String>) = apply {
@@ -42,9 +39,6 @@ class RequestPermissionDialogBuilder(context: Context) :
         this.onAgree = onAgree
     }
 
-    fun setOnDisagree(onDisagree: () -> Unit) = apply {
-        this.onDisagree = onDisagree
-    }
 
     fun setAdditional(additional: Int) = apply {
         this.additional = context.getString(additional)

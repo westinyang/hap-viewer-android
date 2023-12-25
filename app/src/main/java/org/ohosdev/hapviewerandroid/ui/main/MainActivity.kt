@@ -127,6 +127,7 @@ class MainActivity : BaseActivity(), OnDragListener {
             // 安卓10及以上不需要存储权限，可以直接使用
             if (Build.VERSION.SDK_INT < Build.VERSION_CODES.Q
                 && !isPermissionGranted(Manifest.permission.READ_EXTERNAL_STORAGE)
+                && shouldShowRequestPermissionRationale(Manifest.permission.READ_EXTERNAL_STORAGE)
             ) {
                 RequestPermissionDialogBuilder(this@MainActivity)
                     .setPermissionNames(arrayOf(R.string.permission_storage))
@@ -138,9 +139,6 @@ class MainActivity : BaseActivity(), OnDragListener {
                             PERMISSIONS_EXTERNAL_STORAGE,
                             REQUEST_CODE_SELECT_FILE
                         )
-                    }
-                    .setOnDisagree {
-                        selectHapFile()
                     }
                     .show()
                 return@setOnClickListener
@@ -203,7 +201,10 @@ class MainActivity : BaseActivity(), OnDragListener {
                 REQUEST_CODE_SHIZUKU_INSTALL -> installHap(model.hapInfo.value!!)
             }
         } else {
-            showSnackBar(R.string.permission_grant_fail)
+            when (requestCode) {
+                REQUEST_CODE_SELECT_FILE -> selectHapFile()
+                else -> showSnackBar(R.string.permission_grant_fail)
+            }
         }
     }
 
