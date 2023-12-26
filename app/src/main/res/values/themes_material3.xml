@@ -1,4 +1,4 @@
-<resources>
+<resources xmlns:tools="http://schemas.android.com/tools">
 
     <style name="Platform.V23.Theme.HapViewerAndroid.Material3" parent="Theme.Material3.DynamicColors.DayNight">
         <item name="android:statusBarColor">@color/system_window_scrim</item>
@@ -20,7 +20,57 @@
         <item name="cardPaddingVertical">8dp</item>
         <item name="selectFileIcon">@drawable/ic_file</item>
         <item name="dropFileIcon">@drawable/ic_file_upload</item>
+        <item name="actionBarPopupTheme">@style/ThemeOverlay.HapViewerAndroid.DayNight</item>
     </style>
 
     <style name="Theme.HapViewerAndroid.Material3" parent="Base.Theme.HapViewerAndroid.Material3" />
+
+    <style name="ThemeOverlay.HapViewerAndroid.Light" parent="" tools:ignore="PrivateResource">
+        <item name="android:textColorPrimary">@color/m3_default_color_primary_text</item>
+        <item name="android:textColorPrimaryInverse">@color/m3_dark_default_color_primary_text
+        </item>
+        <item name="android:textColorSecondary">@color/m3_default_color_secondary_text</item>
+        <item name="android:textColorSecondaryInverse">@color/m3_dark_default_color_secondary_text
+        </item>
+        <item name="android:textColorTertiary">@color/m3_default_color_secondary_text</item>
+        <item name="android:textColorTertiaryInverse">@color/m3_dark_default_color_secondary_text
+        </item>
+        <item name="android:textColorPrimaryDisableOnly">@color/m3_primary_text_disable_only</item>
+        <item name="android:textColorPrimaryInverseDisableOnly">
+            @color/m3_dark_primary_text_disable_only
+        </item>
+        <item name="android:textColorHint">@color/m3_hint_foreground</item>
+        <item name="android:textColorHintInverse">@color/m3_dark_hint_foreground</item>
+        <item name="android:textColorHighlight">@color/m3_highlighted_text</item>
+        <item name="android:textColorHighlightInverse">@color/m3_dark_highlighted_text</item>
+        <item name="android:textColorLink">?attr/colorPrimary</item>
+        <item name="android:textColorLinkInverse">?attr/colorPrimaryInverse</item>
+        <item name="android:textColorAlertDialogListItem">@color/m3_default_color_primary_text
+        </item>
+    </style>
+
+    <style name="ThemeOverlay.HapViewerAndroid.Dark" parent="" tools:ignore="PrivateResource">
+        <item name="android:textColorPrimary">@color/m3_dark_default_color_primary_text</item>
+        <item name="android:textColorPrimaryInverse">@color/m3_default_color_primary_text</item>
+        <item name="android:textColorSecondary">@color/m3_dark_default_color_secondary_text</item>
+        <item name="android:textColorSecondaryInverse">@color/m3_default_color_secondary_text</item>
+        <item name="android:textColorTertiary">@color/m3_dark_default_color_secondary_text</item>
+        <item name="android:textColorTertiaryInverse">@color/m3_default_color_secondary_text</item>
+        <item name="android:textColorPrimaryDisableOnly">@color/m3_dark_primary_text_disable_only
+        </item>
+        <item name="android:textColorPrimaryInverseDisableOnly">
+            @color/m3_primary_text_disable_only
+        </item>
+        <item name="android:textColorHint">@color/m3_dark_hint_foreground</item>
+        <item name="android:textColorHintInverse">@color/m3_hint_foreground</item>
+        <item name="android:textColorHighlight">@color/m3_dark_highlighted_text</item>
+        <item name="android:textColorHighlightInverse">@color/m3_highlighted_text</item>
+        <item name="android:textColorLink">?attr/colorPrimary</item>
+        <item name="android:textColorLinkInverse">?attr/colorPrimaryInverse</item>
+        <item name="android:textColorAlertDialogListItem">
+            @color/m3_dark_default_color_primary_text
+        </item>
+    </style>
+
+    <style name="ThemeOverlay.HapViewerAndroid.DayNight" parent="ThemeOverlay.HapViewerAndroid.Light" />
 </resources>
