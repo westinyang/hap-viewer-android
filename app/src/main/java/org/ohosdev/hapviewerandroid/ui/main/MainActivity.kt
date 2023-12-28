@@ -44,17 +44,19 @@ import org.ohosdev.hapviewerandroid.extensions.applyDividerIfEnabled
 import org.ohosdev.hapviewerandroid.extensions.contentMovementMethod
 import org.ohosdev.hapviewerandroid.extensions.contentSelectable
 import org.ohosdev.hapviewerandroid.extensions.getBitmap
+import org.ohosdev.hapviewerandroid.extensions.getFirstUri
 import org.ohosdev.hapviewerandroid.extensions.hasFileMime
 import org.ohosdev.hapviewerandroid.extensions.isGranted
 import org.ohosdev.hapviewerandroid.extensions.isPermissionGranted
 import org.ohosdev.hapviewerandroid.extensions.newShadowBitmap
 import org.ohosdev.hapviewerandroid.extensions.openUrl
-import org.ohosdev.hapviewerandroid.extensions.overrideAnimationDurationIfNotMd3
+import org.ohosdev.hapviewerandroid.extensions.overrideAnimationDurationIfNeeded
 import org.ohosdev.hapviewerandroid.extensions.setContentAutoLinkMask
 import org.ohosdev.hapviewerandroid.extensions.thisApp
 import org.ohosdev.hapviewerandroid.model.HapInfo
 import org.ohosdev.hapviewerandroid.util.HarmonyOSUtil
 import org.ohosdev.hapviewerandroid.util.ShizukuUtil
+import org.ohosdev.hapviewerandroid.util.ShizukuUtil.ShizukuLifecycleObserver
 import org.ohosdev.hapviewerandroid.util.dialog.RequestPermissionDialogBuilder
 
 class MainActivity : BaseActivity(), OnDragListener {
@@ -71,7 +73,7 @@ class MainActivity : BaseActivity(), OnDragListener {
         registerForActivityResult<String, Uri>(ActivityResultContracts.GetContent()) { handelUri(it) }
 
     init {
-        ShizukuUtil.ShizukuLifecycleObserver().apply {
+        ShizukuLifecycleObserver().apply {
             lifecycle.addObserver(this)
             // 调用onRequestPermissionsResult，统一处理
             setRequestPermissionResultListener { requestCode, grantResult ->
@@ -125,10 +127,20 @@ class MainActivity : BaseActivity(), OnDragListener {
             // 安卓10及以上不需要存储权限，可以直接使用
             if (Build.VERSION.SDK_INT < Build.VERSION_CODES.Q
                 && !isPermissionGranted(Manifest.permission.READ_EXTERNAL_STORAGE)
+                && shouldShowRequestPermissionRationale(Manifest.permission.READ_EXTERNAL_STORAGE)
             ) {
-                ActivityCompat.requestPermissions(
-                    this@MainActivity, PERMISSIONS_EXTERNAL_STORAGE, REQUEST_CODE_SELECT_FILE
-                )
+                RequestPermissionDialogBuilder(this@MainActivity)
+                    .setPermissionNames(arrayOf(R.string.permission_storage))
+                    .setFunctionNames(arrayOf(R.string.read_file_directly))
+                    .setAdditional(R.string.permission_storage_additional)
+                    .setOnAgree {
+                        ActivityCompat.requestPermissions(
+                            this@MainActivity,
+                            PERMISSIONS_EXTERNAL_STORAGE,
+                            REQUEST_CODE_SELECT_FILE
+                        )
+                    }
+                    .show()
                 return@setOnClickListener
             }
 
@@ -189,7 +201,10 @@ class MainActivity : BaseActivity(), OnDragListener {
                 REQUEST_CODE_SHIZUKU_INSTALL -> installHap(model.hapInfo.value!!)
             }
         } else {
-            showSnackBar(R.string.permission_grant_fail)
+            when (requestCode) {
+                REQUEST_CODE_SELECT_FILE -> selectHapFile()
+                else -> showSnackBar(R.string.permission_grant_fail)
+            }
         }
     }
 
@@ -278,16 +293,12 @@ class MainActivity : BaseActivity(), OnDragListener {
                 return event.hasFileMime().also { if (it) v.alpha = 1f }
             }
 
-            DragEvent.ACTION_DROP -> {
-                event.clipData.let {
-                    for (index in 0 until it.itemCount) {
-                        val item = it.getItemAt(0)
-                        if (item.uri != null) {
-                            requestDragAndDropPermissions(event)
-                            handelUri(item.uri)
-                            break
-                        }
-                    }
+            DragEvent.ACTION_DROP -> event.clipData.getFirstUri().let {
+                if (it != null) {
+                    requestDragAndDropPermissions(event)
+                    handelUri(it)
+                } else {
+                    return false
                 }
             }
 
@@ -306,7 +317,7 @@ class MainActivity : BaseActivity(), OnDragListener {
     override fun showSnackBar(text: String): Snackbar {
         // 重写该方法，将 SnackBar 放置到悬浮按钮之上
         return Snackbar.make(binding.root, text, Snackbar.LENGTH_SHORT)
-            .overrideAnimationDurationIfNotMd3()
+            .overrideAnimationDurationIfNeeded()
             .setAnchorView(R.id.selectHapButton)
             .apply { show() }
     }
@@ -351,8 +362,8 @@ class MainActivity : BaseActivity(), OnDragListener {
             if (showRequestDialog) {
                 RequestPermissionDialogBuilder(this)
                     .setPermissionNames(arrayOf(R.string.permission_shizuku))
-                    .setFunctionNames(arrayOf(R.string.function_install_hap))
-                    .setOnRequest {
+                    .setFunctionNames(arrayOf(R.string.install_hap))
+                    .setOnAgree {
                         ShizukuUtil.requestPermission(this, REQUEST_CODE_SHIZUKU_INSTALL)
                     }
                     .setNeutralButton(R.string.guide, null)

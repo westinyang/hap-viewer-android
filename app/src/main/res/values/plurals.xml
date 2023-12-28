@@ -4,8 +4,5 @@
         <item quantity="one">Permission request</item>
         <item quantity="other">Permissions request</item>
     </plurals>
-    <plurals name="permission_request_message">
-        <item quantity="one">We need %1$s to make sure %2$s is working properly.</item>
-        <item quantity="other">We need %1$s to make sure %2$s are working properly.</item>
-    </plurals>
+
 </resources>

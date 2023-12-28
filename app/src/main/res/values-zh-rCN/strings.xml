@@ -22,7 +22,8 @@
     <string name="menu_theme">主题</string>
     <string name="drop_here">拖到此处</string>
     <string name="permission_shizuku">Shizuku 权限</string>
-    <string name="function_install_hap">安装 HAP</string>
+    <string name="permission_storage">存储权限</string>
+    <string name="permission_storage_additional">如果您不授予该权限，文件将先复制到私有空间后再读取。</string>
     <string name="guide">指南</string>
     <string name="permission_request">权限请求</string>
     <string name="install">安装</string>
@@ -33,4 +34,6 @@
     <string name="open_source_licenses">开源许可</string>
     <string name="install_hap">安装 HAP</string>
     <string name="install_hap_message">安装 HAP 需要操作系统的支持，且必须拥有正确的签名，所以您从非官方应用市场中下载的软件包很可能无法安装。因未知原因，无法确定软件是否安装成功，因此本软件将始终显示“安装完成”。</string>
+    <string name="read_file_directly">直接读取文件</string>
+    <string name="permission_request_message">应用需要 %1$s 来确保可以 %2$s。%3$s</string>
 </resources>

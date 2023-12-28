@@ -3,7 +3,4 @@
     <plurals name="permission_request">
         <item quantity="other">权限申请</item>
     </plurals>
-    <plurals name="permission_request_message">
-        <item quantity="other">%2$s 需要 %1$s 才能正常工作。</item>
-    </plurals>
 </resources>

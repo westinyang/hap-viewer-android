@@ -1,25 +1,23 @@
 package org.ohosdev.hapviewerandroid.adapter
 
 import android.annotation.SuppressLint
-import android.content.ClipData
-import android.content.ClipboardManager
-import android.content.Context
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import org.ohosdev.hapviewerandroid.R
 import org.ohosdev.hapviewerandroid.app.BaseActivity
+import org.ohosdev.hapviewerandroid.databinding.ItemInfoBinding
+import org.ohosdev.hapviewerandroid.extensions.copyText
 import org.ohosdev.hapviewerandroid.model.HapInfo
 
 class InfoAdapter(val context: BaseActivity) : RecyclerView.Adapter<InfoAdapter.ViewHolder>() {
-    private val layoutInflater: LayoutInflater = LayoutInflater.from(context)
+    private val layoutInflater: LayoutInflater = context.layoutInflater
     private val unknownString: String = context.getString(android.R.string.unknownName)
     private var info = HapInfo()
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
-        return ViewHolder(layoutInflater.inflate(R.layout.item_info, parent, false))
+        return ViewHolder(ItemInfoBinding.inflate(layoutInflater, parent, false))
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
@@ -46,22 +44,12 @@ class InfoAdapter(val context: BaseActivity) : RecyclerView.Adapter<InfoAdapter.
         notifyDataSetChanged()
     }
 
-    inner class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView),
+    inner class ViewHolder(private val binding: ItemInfoBinding) :
+        RecyclerView.ViewHolder(binding.root),
         View.OnClickListener {
-        private val textView: TextView = itemView.findViewById(R.id.textView)
-        private var _name = ""
-        private var _content = ""
-        var name
-            get() = _name
-            set(value) {
-                _name = value
-            }
 
-        var content
-            get() = _content
-            set(value) {
-                _content = value
-            }
+        var name = ""
+        var content = ""
 
         init {
             itemView.setOnClickListener(this)
@@ -69,7 +57,7 @@ class InfoAdapter(val context: BaseActivity) : RecyclerView.Adapter<InfoAdapter.
 
         @SuppressLint("SetTextI18n")
         private fun refresh() {
-            textView.text = "${name}: $content"
+            binding.textView.text = "${name}: $content"
         }
 
         private fun setName(resId: Int) {
@@ -78,9 +66,7 @@ class InfoAdapter(val context: BaseActivity) : RecyclerView.Adapter<InfoAdapter.
 
         private fun copyText() {
             if (content.isEmpty()) return
-            val cm = context.getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
-            cm.setPrimaryClip(ClipData.newPlainText(null, content))
-
+            context.copyText(content)
             val toastText = context.getString(R.string.copied_withName, name)
             context.showSnackBar(toastText)
         }

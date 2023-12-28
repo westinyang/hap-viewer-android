@@ -9,50 +9,54 @@ class RequestPermissionDialogBuilder(context: Context) :
     DialogBuilder<RequestPermissionDialogBuilder>(context) {
     private var permissionNames: Array<String> = arrayOf()
     private var functionNames: Array<String> = arrayOf()
-    private var onRequest: (() -> Unit)? = null
+    private var onAgree: (() -> Unit)? = null
+    private var additional: String = ""
 
     init {
         setPositiveButton(android.R.string.ok) { _, _ ->
-            onRequest?.invoke()
+            onAgree?.invoke()
         }
         setNegativeButton(android.R.string.cancel, null)
     }
 
-    fun setPermissionNames(names: Array<String>): RequestPermissionDialogBuilder {
+    fun setPermissionNames(names: Array<String>) = apply {
         this.permissionNames = names
-        return this
     }
 
-    fun setPermissionNames(names: Array<Int>): RequestPermissionDialogBuilder {
+    fun setPermissionNames(names: Array<Int>) = apply {
         this.permissionNames = Array(names.size) { context.getString(names[it]) }
-        return this
     }
 
-    fun setFunctionNames(names: Array<String>): RequestPermissionDialogBuilder {
+    fun setFunctionNames(names: Array<String>) = apply {
         this.functionNames = names
-        return this
     }
 
-    fun setFunctionNames(names: Array<Int>): RequestPermissionDialogBuilder {
+    fun setFunctionNames(names: Array<Int>) = apply {
         this.functionNames = Array(names.size) { context.getString(names[it]) }
-        return this
     }
 
-    fun setOnRequest(onRequest: () -> Unit): RequestPermissionDialogBuilder {
-        this.onRequest = onRequest
-        return this
+    fun setOnAgree(onAgree: () -> Unit) = apply {
+        this.onAgree = onAgree
     }
+
+
+    fun setAdditional(additional: Int) = apply {
+        this.additional = context.getString(additional)
+    }
+
 
     override fun create(): AlertDialog {
         val separator = context.getText(R.string.separator)
-        val permissionNamesText = permissionNames.joinToString()
+        val permissionNamesText = permissionNames.joinToString(separator = separator)
         val functionNamesText = functionNames.joinToString(separator = separator)
         setTitle(context.getQuantityString(R.plurals.permission_request, permissionNames.size))
         setMessage(
-            context.getQuantityString(
-                R.plurals.permission_request_message, functionNames.size,
-                permissionNamesText, functionNamesText
-            )
+            context.getString(
+                R.string.permission_request_message,
+                permissionNamesText,
+                functionNamesText,
+                additional
+            ).trim()
         )
         return super.create()
     }
