@@ -39,7 +39,7 @@
 
 ## 许可声明
 
-- 本项目是以Apache2.0许可开源，如需衍生或商用请注明出处
+- 本项目是以Apache2.0许可开源，如需二开、衍生或商用请注明原作者（westinyang & Jesse205）和原仓库
 - 使用的开源软件
   - [Material Components for Android](https://github.com/material-components/material-components-android) `Apache-2.0 license`
   - [Android Jetpack](https://github.com/androidx/androidx) `Apache-2.0 license`
