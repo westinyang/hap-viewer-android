@@ -131,6 +131,8 @@ public class HapUtil {
                         techList.add("Flutter");
                     } else if (ReUtil.contains("libs\\/arm.*\\/libQt5Core.so", zipEntry.getName())) {
                         techList.add("Qt");
+                    } else if (ReUtil.contains("libs\\/arm.*\\/libil2cpp.so", zipEntry.getName()) || ReUtil.contains("libs\\/arm.*\\/libtuanjie.so", zipEntry.getName())) {
+                        techList.add("Unity(团结引擎)");
                     }
                 }
             } finally {

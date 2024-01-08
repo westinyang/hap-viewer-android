@@ -26,7 +26,7 @@
 
 ## 开发环境
 
-- Android Studio 2022.1.1
+- Android Studio Giraffe | 2022.3.1 Patch 4
 
 ## 截图预览
 
