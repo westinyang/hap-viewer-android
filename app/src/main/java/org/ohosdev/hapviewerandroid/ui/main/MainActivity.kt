@@ -24,6 +24,7 @@ import androidx.core.app.ActivityCompat
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.snackbar.Snackbar
+import org.ohosdev.hapviewerandroid.BuildConfig
 import org.ohosdev.hapviewerandroid.R
 import org.ohosdev.hapviewerandroid.adapter.InfoAdapter
 import org.ohosdev.hapviewerandroid.app.AppPreference
@@ -183,8 +184,10 @@ class MainActivity : BaseActivity(), OnDragListener {
         grantResults: IntArray
     ) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
-        permissions.forEachIndexed { i, permission ->
-            Log.i(TAG, "申请权限：" + permission + "，申请结果：" + grantResults[i])
+        if (BuildConfig.DEBUG) {
+            permissions.forEachIndexed { i, permission ->
+                Log.i(TAG, "申请权限：" + permission + "，申请结果：" + grantResults[i])
+            }
         }
         if (grantResults.all { it == PackageManager.PERMISSION_GRANTED }) {
             when (requestCode) {
@@ -201,13 +204,13 @@ class MainActivity : BaseActivity(), OnDragListener {
 
     override fun onResume() {
         super.onResume()
-        // Snackbar 可能不会显示，也就不会重新启用，这时候就需要在重新进入应用时启用一下二次返回。
+        // Snack bar 可能不会显示，也就不会重新启用，这时候就需要在重新进入应用时启用一下二次返回。
         onExitCallback.isEnabled = true
     }
 
     override fun onPause() {
         super.onPause()
-        // 退出时可能会显示Snackbar，以至于下一次弹出多个snackbar
+        // 退出时可能会显示Snack bar，以至于下一次弹出多个Snack bar
         onExitCallback.closeSnackBar()
     }
 
@@ -275,13 +278,13 @@ class MainActivity : BaseActivity(), OnDragListener {
         handelUri(intent.data)
     }
 
-    override fun showSnackBar(text: String): Snackbar {
-        // 重写该方法，将 SnackBar 放置到悬浮按钮之上
-        return Snackbar.make(binding.root, text, Snackbar.LENGTH_SHORT)
+    // 重写该方法，将 SnackBar 放置到悬浮按钮之上
+    override fun showSnackBar(text: String) =
+        Snackbar.make(binding.root, text, Snackbar.LENGTH_SHORT)
             .overrideAnimationDurationIfNeeded()
             .setAnchorView(R.id.selectHapButton)
             .apply { show() }
-    }
+
 
     private fun onHapInfoChanged(hapInfo: HapInfo = HapInfo.INIT) {
         hapInfo.let {
