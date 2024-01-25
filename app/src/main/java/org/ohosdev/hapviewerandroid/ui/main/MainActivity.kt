@@ -36,6 +36,7 @@ import org.ohosdev.hapviewerandroid.app.BaseActivity
 import org.ohosdev.hapviewerandroid.app.dialog.AboutDialogBuilder
 import org.ohosdev.hapviewerandroid.databinding.ActivityMainBinding
 import org.ohosdev.hapviewerandroid.extensions.applyDividerIfEnabled
+import org.ohosdev.hapviewerandroid.extensions.fixDialogGravityIfNeeded
 import org.ohosdev.hapviewerandroid.extensions.getBitmap
 import org.ohosdev.hapviewerandroid.extensions.getFirstUri
 import org.ohosdev.hapviewerandroid.extensions.hasFileMime
@@ -215,7 +216,9 @@ class MainActivity : BaseActivity(), OnDragListener {
     }
 
 
-    private fun showAboutDialog() = AboutDialogBuilder(this).show()
+    private fun showAboutDialog() = AboutDialogBuilder(this)
+        .show()
+        .fixDialogGravityIfNeeded()
 
 
     private fun selectHapFile() {
@@ -335,6 +338,7 @@ class MainActivity : BaseActivity(), OnDragListener {
                         getButton(AlertDialog.BUTTON_NEUTRAL).setOnClickListener {
                             openUrl(ShizukuUtil.URL_GUIDE)
                         }
+                        fixDialogGravityIfNeeded()
                     }
             }
             return
@@ -345,6 +349,7 @@ class MainActivity : BaseActivity(), OnDragListener {
             .setPositiveButton(android.R.string.ok) { _, _ -> model.installHapWaitingShizuku(hapInfo) }
             .setNegativeButton(android.R.string.cancel, null)
             .show()
+            .fixDialogGravityIfNeeded()
     }
 
     private inner class OnExitCallback : OnBackPressedCallback(true) {

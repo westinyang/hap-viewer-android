@@ -2,7 +2,9 @@ package org.ohosdev.hapviewerandroid.extensions
 
 import android.app.Dialog
 import android.text.method.MovementMethod
+import android.view.Gravity
 import android.widget.TextView
+import org.ohosdev.hapviewerandroid.harmonystyle.R.attr.windowGravityBottom
 
 val Dialog.messageView: TextView get() = findViewById(android.R.id.message)
 
@@ -24,4 +26,12 @@ fun Dialog.setContentAutoLinkMask(mask: Int) {
         linksClickable = true
         autoLinkMask = mask
     }
+}
+
+fun Dialog.fixDialogGravityIfNeeded() {
+    context.theme.obtainStyledAttributes(intArrayOf(windowGravityBottom)).apply {
+        if (getBoolean(0, false)) {
+            window!!.setGravity(Gravity.BOTTOM)
+        }
+    }.recycle()
 }

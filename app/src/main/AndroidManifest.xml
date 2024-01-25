@@ -25,7 +25,7 @@
         tools:targetApi="tiramisu">
         <activity
             android:name=".ui.main.MainActivity"
-            android:configChanges="orientation|smallestScreenSize|touchscreen|screenSize|screenLayout|keyboard|keyboardHidden"
+            android:configChanges="touchscreen|screenLayout|keyboard|keyboardHidden"
             android:exported="true"
             android:launchMode="singleTask">
             <intent-filter>
