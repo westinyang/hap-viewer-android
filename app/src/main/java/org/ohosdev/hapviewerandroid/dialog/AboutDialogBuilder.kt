@@ -1,7 +1,6 @@
-package org.ohosdev.hapviewerandroid.app.dialog
+package org.ohosdev.hapviewerandroid.dialog
 
 import android.content.Context
-import android.util.Log
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.widget.PopupMenu
 import androidx.core.text.HtmlCompat
@@ -16,13 +15,13 @@ import org.ohosdev.hapviewerandroid.app.URL_PRIVACY_POLICY
 import org.ohosdev.hapviewerandroid.app.URL_REPOSITORY
 import org.ohosdev.hapviewerandroid.extensions.contentMovementMethod
 import org.ohosdev.hapviewerandroid.extensions.contentSelectable
+import org.ohosdev.hapviewerandroid.extensions.fixDialogGravityIfNeeded
 import org.ohosdev.hapviewerandroid.extensions.localisedColon
 import org.ohosdev.hapviewerandroid.extensions.localisedSeparator
 import org.ohosdev.hapviewerandroid.extensions.openUrl
 import org.ohosdev.hapviewerandroid.util.dialog.DialogBuilder
 
 class AboutDialogBuilder(context: Context) : DialogBuilder<AboutDialogBuilder>(context) {
-
     init {
         setTitle(R.string.about)
         val messageHtml = context.run {
@@ -41,28 +40,29 @@ class AboutDialogBuilder(context: Context) : DialogBuilder<AboutDialogBuilder>(c
         setNeutralButton(R.string.legal_more, null)
     }
 
-    override fun show(): AlertDialog = super.show().apply {
-        contentSelectable = true
-        contentMovementMethod = RTEditorMovementMethod.getInstance()
-        getButton(AlertDialog.BUTTON_NEUTRAL).let {
-            PopupMenu(context, it).apply {
-                inflate(R.menu.menu_legal)
-                setOnMenuItemClickListener {
-                    val link = when (it.itemId) {
-                        R.id.action_privacy_policy -> URL_PRIVACY_POLICY
-                        R.id.action_open_source_licenses -> URL_OPEN_SOURCE_LICENSES
-                        else -> throw NoSuchElementException("Unknown itemId: $it")
+    override fun create(): AlertDialog = super.create().apply {
+        fixDialogGravityIfNeeded()
+        setOnShowListener {
+            contentSelectable = true
+            contentMovementMethod = RTEditorMovementMethod.getInstance()
+            getButton(AlertDialog.BUTTON_NEUTRAL).let {
+                PopupMenu(context, it).apply {
+                    inflate(R.menu.menu_legal)
+                    setOnMenuItemClickListener {
+                        val link = when (it.itemId) {
+                            R.id.action_privacy_policy -> URL_PRIVACY_POLICY
+                            R.id.action_open_source_licenses -> URL_OPEN_SOURCE_LICENSES
+                            else -> throw NoSuchElementException("Unknown itemId: $it")
+                        }
+                        context.openUrl(link)
+                        true
                     }
-                    context.openUrl(link)
-                    true
+                    it.setOnTouchListener(dragToOpenListener)
+                    it.setOnClickListener { show() }
                 }
-                it.setOnTouchListener(dragToOpenListener)
-                it.setOnClickListener { show() }
             }
-
         }
     }
-
 
     /**
      * 获取应用信息字符串

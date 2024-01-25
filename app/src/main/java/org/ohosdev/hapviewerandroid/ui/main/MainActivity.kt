@@ -33,7 +33,6 @@ import org.ohosdev.hapviewerandroid.app.AppPreference.ThemeType.MATERIAL1
 import org.ohosdev.hapviewerandroid.app.AppPreference.ThemeType.MATERIAL2
 import org.ohosdev.hapviewerandroid.app.AppPreference.ThemeType.MATERIAL3
 import org.ohosdev.hapviewerandroid.app.BaseActivity
-import org.ohosdev.hapviewerandroid.app.dialog.AboutDialogBuilder
 import org.ohosdev.hapviewerandroid.databinding.ActivityMainBinding
 import org.ohosdev.hapviewerandroid.extensions.applyDividerIfEnabled
 import org.ohosdev.hapviewerandroid.extensions.fixDialogGravityIfNeeded
@@ -46,6 +45,7 @@ import org.ohosdev.hapviewerandroid.extensions.newShadowBitmap
 import org.ohosdev.hapviewerandroid.extensions.openUrl
 import org.ohosdev.hapviewerandroid.extensions.overrideAnimationDurationIfNeeded
 import org.ohosdev.hapviewerandroid.extensions.thisApp
+import org.ohosdev.hapviewerandroid.fragment.dialog.AboutDialogFragment
 import org.ohosdev.hapviewerandroid.model.HapInfo
 import org.ohosdev.hapviewerandroid.util.HarmonyOSUtil
 import org.ohosdev.hapviewerandroid.util.ShizukuUtil
@@ -216,9 +216,8 @@ class MainActivity : BaseActivity(), OnDragListener {
     }
 
 
-    private fun showAboutDialog() = AboutDialogBuilder(this)
-        .show()
-        .fixDialogGravityIfNeeded()
+    private fun showAboutDialog() =
+        AboutDialogFragment().show(supportFragmentManager, AboutDialogFragment.TAG)
 
 
     private fun selectHapFile() {
