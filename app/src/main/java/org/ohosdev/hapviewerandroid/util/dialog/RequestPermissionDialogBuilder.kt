@@ -4,6 +4,7 @@ import android.content.Context
 import androidx.appcompat.app.AlertDialog
 import org.ohosdev.hapviewerandroid.R
 import org.ohosdev.hapviewerandroid.extensions.getQuantityString
+import org.ohosdev.hapviewerandroid.extensions.localisedSeparator
 
 class RequestPermissionDialogBuilder(context: Context) :
     DialogBuilder<RequestPermissionDialogBuilder>(context) {
@@ -46,7 +47,7 @@ class RequestPermissionDialogBuilder(context: Context) :
 
 
     override fun create(): AlertDialog {
-        val separator = context.getText(R.string.separator)
+        val separator = context.localisedSeparator
         val permissionNamesText = permissionNames.joinToString(separator = separator)
         val functionNamesText = functionNames.joinToString(separator = separator)
         setTitle(context.getQuantityString(R.plurals.permission_request, permissionNames.size))

@@ -9,8 +9,11 @@ import android.widget.AdapterView
 import android.widget.ListAdapter
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 
+/**
+ * 快速复写对话框，避免重写非常多方法。
+ */
 @Suppress("UNCHECKED_CAST")
-open class DialogBuilder<T : MaterialAlertDialogBuilder> : MaterialAlertDialogBuilder {
+open class DialogBuilder<T : DialogBuilder<T>> : MaterialAlertDialogBuilder {
     constructor(context: Context) : super(context)
     constructor(context: Context, overrideThemeResId: Int) : super(context, overrideThemeResId)
 

@@ -1,14 +1,16 @@
 <resources>
     <string name="app_name">HAP查看器</string>
+    <string name="app_name_full">HAP查看器 for Android</string>
+    <string name="app_description">支持解析 OpenHarmony(开源鸿蒙)、HarmonyOS(鸿蒙) API 9+(Stage模型) 的应用安装包，支持在 Android 7+ 的安卓设备上运行。</string>
     <string name="menu_about">关于</string>
+
+    <!-- 关于里面的文字和其他有一些不同，所以要单独拿出来 -->
     <string name="about">关于</string>
-    <string name="about_message">HAP查看器 for Android
-\n\n支持解析 OpenHarmony(开源鸿蒙)、HarmonyOS(鸿蒙) API 9+(Stage模型) 的应用安装包，支持在 Android 7+ 的安卓设备上运行
-\n\n应用版本：%1$s
-\n开源仓库：%2$s
-\n开源许可：Apache 2.0
-\n开源贡献：westinyang、Jesse205
-\n企鹅群组：752399947</string>
+    <string name="about_version">应用版本</string>
+    <string name="about_source">开源仓库</string>
+    <string name="about_license">开源许可</string>
+    <string name="about_contributors">开源贡献</string>
+
     <string name="select_file_hap">选择 HAP 文件</string>
     <string name="permission_grant_fail">权限申请失败</string>
     <string name="exit_toast">再按一次返回键退出</string>
@@ -29,11 +31,13 @@
     <string name="install">安装</string>
     <string name="unknown_error">未知错误</string>
     <string name="install_finished">安装完成</string>
-    <string name="legal_more">法律信息...</string>
+    <string name="legal_more">法律信息…</string>
     <string name="privacy_policy">隐私政策</string>
     <string name="open_source_licenses">开源许可</string>
     <string name="install_hap">安装 HAP</string>
     <string name="install_hap_message">安装 HAP 需要操作系统的支持，且必须拥有正确的签名，所以您从非官方应用市场中下载的软件包很可能无法安装。因未知原因，无法确定软件是否安装成功，因此本软件将始终显示“安装完成”。</string>
     <string name="read_file_directly">直接读取文件</string>
     <string name="permission_request_message">应用需要 %1$s 来确保可以 %2$s。%3$s</string>
+    <string name="colon">：</string>
+
 </resources>

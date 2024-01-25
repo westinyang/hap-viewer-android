@@ -13,6 +13,7 @@ import androidx.annotation.PluralsRes
 import androidx.browser.customtabs.CustomTabsIntent
 import androidx.core.content.ContextCompat
 import androidx.core.content.getSystemService
+import org.ohosdev.hapviewerandroid.R
 import org.ohosdev.hapviewerandroid.app.HapViewerApp
 
 val Context.thisApp get() = applicationContext as HapViewerApp
@@ -51,3 +52,13 @@ fun Context.copyText(text: CharSequence) {
     val manager = getSystemService<ClipboardManager>()!!
     manager.setPrimaryClip(ClipData.newPlainText(null, text))
 }
+
+/**
+ * 本地化的分隔符，中文为”，“，英文为“, ”
+ * */
+val Context.localisedSeparator get() = getString(R.string.separator)
+
+/**
+ * 本地化的冒号，中文为”：“，英文为“: ”
+ * */
+val Context.localisedColon get() = getString(R.string.colon)

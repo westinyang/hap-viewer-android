@@ -9,7 +9,6 @@ import android.graphics.drawable.BitmapDrawable
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
-import android.text.util.Linkify
 import android.util.Log
 import android.view.DragEvent
 import android.view.Menu
@@ -20,14 +19,11 @@ import androidx.activity.OnBackPressedCallback
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
 import androidx.appcompat.app.AlertDialog
-import androidx.appcompat.widget.PopupMenu
 import androidx.coordinatorlayout.widget.CoordinatorLayout
 import androidx.core.app.ActivityCompat
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.snackbar.Snackbar
-import com.onegravity.rteditor.RTEditorMovementMethod
-import org.ohosdev.hapviewerandroid.BuildConfig
 import org.ohosdev.hapviewerandroid.R
 import org.ohosdev.hapviewerandroid.adapter.InfoAdapter
 import org.ohosdev.hapviewerandroid.app.AppPreference
@@ -36,13 +32,9 @@ import org.ohosdev.hapviewerandroid.app.AppPreference.ThemeType.MATERIAL1
 import org.ohosdev.hapviewerandroid.app.AppPreference.ThemeType.MATERIAL2
 import org.ohosdev.hapviewerandroid.app.AppPreference.ThemeType.MATERIAL3
 import org.ohosdev.hapviewerandroid.app.BaseActivity
-import org.ohosdev.hapviewerandroid.app.URL_OPEN_SOURCE_LICENSES
-import org.ohosdev.hapviewerandroid.app.URL_PRIVACY_POLICY
-import org.ohosdev.hapviewerandroid.app.URL_REPOSITORY
+import org.ohosdev.hapviewerandroid.app.dialog.AboutDialogBuilder
 import org.ohosdev.hapviewerandroid.databinding.ActivityMainBinding
 import org.ohosdev.hapviewerandroid.extensions.applyDividerIfEnabled
-import org.ohosdev.hapviewerandroid.extensions.contentMovementMethod
-import org.ohosdev.hapviewerandroid.extensions.contentSelectable
 import org.ohosdev.hapviewerandroid.extensions.getBitmap
 import org.ohosdev.hapviewerandroid.extensions.getFirstUri
 import org.ohosdev.hapviewerandroid.extensions.hasFileMime
@@ -51,7 +43,6 @@ import org.ohosdev.hapviewerandroid.extensions.isPermissionGranted
 import org.ohosdev.hapviewerandroid.extensions.newShadowBitmap
 import org.ohosdev.hapviewerandroid.extensions.openUrl
 import org.ohosdev.hapviewerandroid.extensions.overrideAnimationDurationIfNeeded
-import org.ohosdev.hapviewerandroid.extensions.setContentAutoLinkMask
 import org.ohosdev.hapviewerandroid.extensions.thisApp
 import org.ohosdev.hapviewerandroid.model.HapInfo
 import org.ohosdev.hapviewerandroid.util.HarmonyOSUtil
@@ -221,38 +212,8 @@ class MainActivity : BaseActivity(), OnDragListener {
     }
 
 
-    private fun showAboutDialog() {
-        // 华为设备上拖拽阴影在 Material Dialog 有bug
-        MaterialAlertDialogBuilder(this)
-            .setTitle(R.string.about)
-            .setMessage("") // 将在 apply 中设置
-            .setPositiveButton(android.R.string.ok, null)
-            .setNeutralButton(R.string.legal_more, null)
-            .show().apply {
-                contentSelectable = true
-                setContentAutoLinkMask(Linkify.WEB_URLS)
-                setMessage(
-                    getString(R.string.about_message, BuildConfig.VERSION_NAME, URL_REPOSITORY)
-                )
-                setContentAutoLinkMask(0)
-                contentMovementMethod = RTEditorMovementMethod.getInstance()
-                getButton(AlertDialog.BUTTON_NEUTRAL).apply {
-                    val popupMenu = PopupMenu(this@MainActivity, this)
-                    popupMenu.inflate(R.menu.menu_legal)
-                    popupMenu.setOnMenuItemClickListener {
-                        val link = when (it.itemId) {
-                            R.id.action_privacy_policy -> URL_PRIVACY_POLICY
-                            R.id.action_open_source_licenses -> URL_OPEN_SOURCE_LICENSES
-                            else -> throw NoSuchElementException("Unknown itemId: $it")
-                        }
-                        openUrl(link)
-                        true
-                    }
-                    setOnTouchListener(popupMenu.dragToOpenListener)
-                    setOnClickListener { popupMenu.show() }
-                }
-            }
-    }
+    private fun showAboutDialog() = AboutDialogBuilder(this).show()
+
 
     private fun selectHapFile() {
         // Hap 文件 mime 类型未知，使用 */* 更保险
