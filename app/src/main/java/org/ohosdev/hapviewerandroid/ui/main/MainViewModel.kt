@@ -15,6 +15,7 @@ import org.ohosdev.hapviewerandroid.extensions.deleteIfCache
 import org.ohosdev.hapviewerandroid.extensions.destroy
 import org.ohosdev.hapviewerandroid.extensions.getFileName
 import org.ohosdev.hapviewerandroid.extensions.getOrCopyFile
+import org.ohosdev.hapviewerandroid.extensions.installToSelf
 import org.ohosdev.hapviewerandroid.model.HapInfo
 import org.ohosdev.hapviewerandroid.util.HapUtil
 import org.ohosdev.hapviewerandroid.util.event.SnackBarEvent
@@ -105,9 +106,7 @@ class MainViewModel(private val app: Application) : AndroidViewModel(app) {
         viewModelScope.launch {
             withContext(Dispatchers.Default) {
                 runCatching {
-                    HapUtil.installHap(
-                        shizukuServiceHelper, this@MainViewModel.hapInfo.value!!.hapFilePath
-                    )
+                    this@MainViewModel.hapInfo.value!!.installToSelf(shizukuServiceHelper)
                     // 不知为何无法显示结果
                     showSnackBar(R.string.install_finished)
                 }.onFailure {

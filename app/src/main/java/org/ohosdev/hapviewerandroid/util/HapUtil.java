@@ -2,24 +2,18 @@ package org.ohosdev.hapviewerandroid.util;
 
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.os.RemoteException;
-import android.util.Log;
-
-import androidx.annotation.NonNull;
 
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 
-import org.ohosdev.hapviewerandroid.IUserService;
 import org.ohosdev.hapviewerandroid.model.HapInfo;
-import org.ohosdev.hapviewerandroid.util.helper.ShizukuServiceHelper;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.Arrays;
+import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.HashSet;
-import java.util.Objects;
+import java.util.LinkedHashMap;
 import java.util.Set;
 import java.util.regex.MatchResult;
 import java.util.zip.ZipEntry;
@@ -54,9 +48,10 @@ public class HapUtil {
             JSONObject module = getEntryToJsonObject(zipFile, "module.json");
             // 读取pack.info
             // JSONObject pack = getEntryJsonObject(zipFile, "pack.info");
+            JSONObject appObj = module.getJSONObject("app");
+            JSONObject moduleObj = module.getJSONObject("module");
 
             // app.
-            JSONObject appObj = module.getJSONObject("app");
             hapInfo.packageName = appObj.getString("bundleName");
             hapInfo.versionName = appObj.getString("versionName");
             hapInfo.versionCode = appObj.getString("versionCode");
@@ -66,8 +61,16 @@ public class HapUtil {
             hapInfo.apiReleaseType = appObj.getString("apiReleaseType");
 
             // module.
-            JSONObject moduleObj = module.getJSONObject("module");
             hapInfo.mainElement = moduleObj.getString("mainElement");
+            // 解析权限
+            hapInfo.requestPermissions = moduleObj.getJSONArray("requestPermissions");
+            if (hapInfo.requestPermissions != null && !hapInfo.requestPermissions.isEmpty()) {
+                hapInfo.requestPermissionNames = new ArrayList<>();
+                for (Object item : hapInfo.requestPermissions) {
+                    JSONObject itemObj = (JSONObject) item;
+                    hapInfo.requestPermissionNames.add(itemObj.getString("name"));
+                }
+            }
 
             // 解析图标
             JSONArray moduleAbilities = module.getJSONObject("module").getJSONArray("abilities");
@@ -139,6 +142,22 @@ public class HapUtil {
                 zipFile.close();
             }
             hapInfo.techList = techList;
+
+            // 更多信息
+            hapInfo.moreInfo = new LinkedHashMap<>();
+            hapInfo.moreInfo.put("appName", hapInfo.appName);
+            hapInfo.moreInfo.put("bundleName", hapInfo.packageName);
+            hapInfo.moreInfo.put("iconPath", hapInfo.iconPath);
+            hapInfo.moreInfo.put("vendor", appObj.getString("vendor"));
+            hapInfo.moreInfo.put("versionName", hapInfo.versionName);
+            hapInfo.moreInfo.put("versionCode", hapInfo.versionCode);
+            hapInfo.moreInfo.put("targetAPIVersion", hapInfo.targetAPIVersion);
+            hapInfo.moreInfo.put("minAPIVersion", appObj.getString("minAPIVersion"));
+            hapInfo.moreInfo.put("apiReleaseType", hapInfo.apiReleaseType);
+            hapInfo.moreInfo.put("mainElement", hapInfo.mainElement);
+            hapInfo.moreInfo.put("deviceTypes", moduleObj.getJSONArray("deviceTypes"));
+            hapInfo.moreInfo.put("virtualMachine", moduleObj.getString("virtualMachine"));
+            hapInfo.moreInfo.put("techList", hapInfo.techList);
         } catch (Exception e) {
             e.printStackTrace();
             throw new RuntimeException("HAP file parse failed");
@@ -208,16 +227,5 @@ public class HapUtil {
         } finally {
             IoUtil.close(is);
         }
-    }
-
-    @NonNull
-    public static ExecuteResult installHap(ShizukuServiceHelper helper, String path) throws RemoteException {
-        if (!helper.isServiceBound()) {
-            throw new RuntimeException("Shizuku not bound.");
-        }
-        IUserService service = Objects.requireNonNull(helper.getService());
-        ExecuteResult result = service.execute(Arrays.asList("bm", "install", "-r", path), null, null);
-        Log.i(TAG, "installHap: " + result);
-        return result;
     }
 }
