@@ -89,6 +89,10 @@
         <item name="android:layout_gravity">bottom|center_horizontal</item>
         <item name="android:layout">@layout/harmony_alert_dialog_material</item>
         <item name="shapeAppearance">@style/ShapeAppearance.Harmony.AlertDialog</item>
+        <item name="backgroundInsetStart">16dp</item>
+        <item name="backgroundInsetTop">0dp</item>
+        <item name="backgroundInsetEnd">0dp</item>
+        <item name="backgroundInsetBottom">16dp</item>
     </style>
 
     <style name="Widget.Harmony.Button.Dialog" parent="Widget.AppCompat.Button">
@@ -108,6 +112,8 @@
         <item name="buttonBarNegativeButtonStyle">?buttonBarButtonStyle</item>
         <item name="buttonBarPositiveButtonStyle">?buttonBarButtonStyle</item>
         <item name="android:windowAnimationStyle">@style/Animation.Harmony.AlertDialog</item>
+
+        <item name="windowGravityBottom">@bool/dialogGravityBottom</item>
     </style>
 
     <style name="Widget.Harmony.CompoundButton.RadioButton" parent="Widget.Emui.HwRadioButton">
