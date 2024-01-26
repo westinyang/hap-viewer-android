@@ -1,6 +1,7 @@
 package org.ohosdev.hapviewerandroid.ui.main
 
 import android.Manifest
+import android.annotation.SuppressLint
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.graphics.Bitmap
@@ -289,6 +290,7 @@ class MainActivity : BaseActivity(), OnDragListener {
     }
 
     // 重写该方法，将 SnackBar 放置到悬浮按钮之上
+    @SuppressLint("ShowToast")
     override fun showSnackBar(text: String) =
         Snackbar.make(binding.root, text, Snackbar.LENGTH_SHORT)
             .overrideAnimationDurationIfNeeded()
