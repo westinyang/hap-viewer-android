@@ -35,6 +35,7 @@ import org.ohosdev.hapviewerandroid.app.AppPreference.ThemeType.MATERIAL3
 import org.ohosdev.hapviewerandroid.app.BaseActivity
 import org.ohosdev.hapviewerandroid.databinding.ActivityMainBinding
 import org.ohosdev.hapviewerandroid.extensions.applyDividerIfEnabled
+import org.ohosdev.hapviewerandroid.extensions.copyText
 import org.ohosdev.hapviewerandroid.extensions.fixDialogGravityIfNeeded
 import org.ohosdev.hapviewerandroid.extensions.getBitmap
 import org.ohosdev.hapviewerandroid.extensions.getFirstUri
@@ -53,15 +54,13 @@ import org.ohosdev.hapviewerandroid.util.ShizukuUtil.ShizukuLifecycleObserver
 import org.ohosdev.hapviewerandroid.util.dialog.RequestPermissionDialogBuilder
 
 class MainActivity : BaseActivity(), OnDragListener {
-
-    private val infoAdapter by lazy { InfoAdapter(this) }
-
     private val binding by lazy { ActivityMainBinding.inflate(layoutInflater) }
     override val rootView: CoordinatorLayout get() = binding.root
 
-    private val onExitCallback by lazy { OnExitCallback() }
     private val model: MainViewModel by viewModels()
+    private val onExitCallback by lazy { OnExitCallback() }
 
+    private val infoAdapter by lazy { InfoAdapter(this, this::onInfoItemClick) }
     private val selectFileResultLauncher =
         registerForActivityResult<String, Uri>(ActivityResultContracts.GetContent()) { handelUri(it) }
 
@@ -278,6 +277,15 @@ class MainActivity : BaseActivity(), OnDragListener {
     override fun onNewIntent(intent: Intent) {
         super.onNewIntent(intent)
         handelUri(intent.data)
+    }
+
+    private fun onInfoItemClick(holder: InfoAdapter.ViewHolder) {
+        holder.apply {
+            if (content.isEmpty()) return
+            copyText(content)
+            val toastText = getString(R.string.copied_withName, name)
+            showSnackBar(toastText)
+        }
     }
 
     // 重写该方法，将 SnackBar 放置到悬浮按钮之上

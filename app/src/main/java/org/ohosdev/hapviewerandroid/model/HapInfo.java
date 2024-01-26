@@ -3,6 +3,8 @@ package org.ohosdev.hapviewerandroid.model;
 import android.content.Context;
 import android.graphics.Bitmap;
 
+import androidx.annotation.Nullable;
+
 import com.alibaba.fastjson.JSONArray;
 
 import org.ohosdev.hapviewerandroid.R;
@@ -47,7 +49,6 @@ public class HapInfo {
     /* 额外 */
     public String hapFilePath;
     public Set<String> techList;
-    private String techDesc;
 
     public HapInfo() {
     }
@@ -56,25 +57,4 @@ public class HapInfo {
         this.init = init;
     }
 
-    public String getTechDesc() {
-        if (techList != null && techList.size() > 0) {
-            techDesc = String.join("、", techList);
-        } else {
-            techDesc = "原生开发或未知开发技术";
-        }
-        return techDesc;
-    }
-
-    public void setTechDesc(String techDesc) {
-        this.techDesc = techDesc;
-    }
-
-    public String getTechDesc(Context context) {
-        if (techList != null && techList.size() > 0) {
-            techDesc = String.join(context.getString(R.string.separator), techList);
-        } else {
-            techDesc = context.getString(R.string.info_tech_unknown);
-        }
-        return techDesc;
-    }
 }

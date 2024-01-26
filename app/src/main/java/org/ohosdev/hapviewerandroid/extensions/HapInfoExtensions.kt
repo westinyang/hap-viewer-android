@@ -3,11 +3,11 @@ package org.ohosdev.hapviewerandroid.extensions
 import android.content.Context
 import android.os.RemoteException
 import android.util.Log
+import org.ohosdev.hapviewerandroid.R
 import org.ohosdev.hapviewerandroid.model.HapInfo
 import org.ohosdev.hapviewerandroid.util.ExecuteResult
 import org.ohosdev.hapviewerandroid.util.helper.ShizukuServiceHelper
 import java.io.File
-import java.util.Arrays
 
 private const val TAG = "HapInfoExtensions"
 
@@ -18,8 +18,7 @@ private const val TAG = "HapInfoExtensions"
  * */
 fun HapInfo.destroy(context: Context) {
     icon?.recycle()
-    if (hapFilePath != null)
-        File(hapFilePath).deleteIfCache(context)
+    if (hapFilePath != null) File(hapFilePath).deleteIfCache(context)
 }
 
 @Throws(RemoteException::class)
@@ -31,4 +30,10 @@ fun HapInfo.installToSelf(helper: ShizukuServiceHelper): ExecuteResult {
         helper.service!!.execute(listOf("bm", "install", "-r", this.hapFilePath), null, null)
     Log.i(TAG, "installing hap: $result")
     return result
+}
+
+fun HapInfo.getTechDesc(context: Context): String? {
+    // techList可能为空，所以应该加?。
+    return if (techList?.isNotEmpty() == true) techList?.joinToString(context.getString(R.string.separator))
+    else null
 }
