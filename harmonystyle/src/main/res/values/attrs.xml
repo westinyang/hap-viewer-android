@@ -5,4 +5,12 @@
     <attr name="enableDivider" format="boolean" />
     <attr name="cardPaddingVertical" format="dimension" />
     <attr name="windowGravityBottom" format="boolean" />
+
+    <declare-styleable name="ShadowDrawable">
+        <attr name="shadowColor" format="color" />
+        <attr name="shadowRadius" format="dimension" />
+        <attr name="shadowX" format="dimension" />
+        <attr name="shadowY" format="dimension" />
+        <attr name="android:radius" format="dimension" />
+    </declare-styleable>
 </resources>
