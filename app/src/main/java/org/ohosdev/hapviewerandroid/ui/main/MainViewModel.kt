@@ -2,6 +2,7 @@ package org.ohosdev.hapviewerandroid.ui.main
 
 import android.app.Application
 import android.net.Uri
+import android.os.RemoteException
 import androidx.annotation.StringRes
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.MutableLiveData
@@ -56,28 +57,24 @@ class MainViewModel(private val app: Application) : AndroidViewModel(app) {
         }
     }
 
-    private suspend fun parseHap(file: File) {
-        withContext(Dispatchers.Main) {
-            isParsing.value = true
-        }
+    private suspend fun parseHap(file: File) = withContext(Dispatchers.Main) {
+        isParsing.value = true
+
         withContext(Dispatchers.Default) {
-            val destroyRunnable = autoDestroyHapInfoRunnable()
+            val destroyLastHapInfo = autoDestroyHapInfoRunnable()
             runCatching {
-                withContext(Dispatchers.Main) {
-                    this@MainViewModel.hapInfo.value = HapUtil.parse(file.absolutePath)
-                }
+                updateHapInfo(HapUtil.parse(file.absolutePath))
             }.onFailure {
                 it.printStackTrace()
                 showSnackBar(R.string.parse_error_fail)
                 file.deleteIfCache(app)
             }.onSuccess {
-                destroyRunnable.run()
+                destroyLastHapInfo()
             }
         }
-        withContext(Dispatchers.Main) {
-            isParsing.value = false
-        }
+        isParsing.value = false
     }
+
 
     fun showSnackBar(@StringRes resId: Int) {
         snackBarEvent.postValue(SnackBarEvent(app, resId))
@@ -101,32 +98,42 @@ class MainViewModel(private val app: Application) : AndroidViewModel(app) {
         }
     }
 
-    private fun installHap(hapInfo: HapInfo) {
+    /**
+     * 在UI线程内更新hapInfo
+     * */
+    private suspend fun updateHapInfo(newHapInfo: HapInfo) = withContext(Dispatchers.Main) {
+        hapInfo.value = newHapInfo
+    }
+
+    @Throws(RemoteException::class)
+    private fun installHap(hapInfo: HapInfo = this@MainViewModel.hapInfo.value!!) {
         isInstalling.value = true
-        viewModelScope.launch {
-            withContext(Dispatchers.Default) {
-                runCatching {
-                    this@MainViewModel.hapInfo.value!!.installToSelf(shizukuServiceHelper)
-                    // 不知为何无法显示结果
-                    showSnackBar(R.string.install_finished)
-                }.onFailure {
-                    it.printStackTrace()
-                    showSnackBar(it.message ?: app.getString(R.string.unknown_error))
-                }
-                autoDestroyHapInfoRunnable(hapInfo).run()
+        viewModelScope.launch(Dispatchers.Default) {
+            runCatching {
+                hapInfo.installToSelf(shizukuServiceHelper)
+                // 不知为何无法显示结果
+                showSnackBar(R.string.install_finished)
+            }.onFailure {
+                it.printStackTrace()
+                showSnackBar(it.message ?: app.getString(R.string.unknown_error))
             }
-            isInstalling.value = false
+            autoDestroyHapInfoRunnable(hapInfo)()
         }
+        isInstalling.value = false
     }
 
     /**
      * 仅当没有任何工作，且hap已变更时销毁
+     *
+     * 请确保在任何操作之后都调用该方法
+     *
+     * @param ignoreCurrentHapInfo 无论是否当前hapInfo一致，都允许销毁
      * */
     private fun autoDestroyHapInfoRunnable(
         hapInfo: HapInfo = this.hapInfo.value!!,
         ignoreCurrentHapInfo: Boolean = false
-    ): Runnable {
-        return Runnable {
+    ): () -> Unit {
+        return fun() {
             if ((this.hapInfo.value != hapInfo || ignoreCurrentHapInfo)
                 && !isInstalling.value!!
                 && !hapInfo.init
@@ -137,6 +144,6 @@ class MainViewModel(private val app: Application) : AndroidViewModel(app) {
     override fun onCleared() {
         super.onCleared()
         runCatching { shizukuServiceHelper.unbindUserService() }.onFailure { it.printStackTrace() }
-        autoDestroyHapInfoRunnable(this.hapInfo.value!!, true)
+        autoDestroyHapInfoRunnable(this.hapInfo.value!!, true)()
     }
 }

@@ -134,6 +134,7 @@ class MainActivity : BaseActivity(), OnDragListener {
                         )
                     }
                     .show()
+                    .fixDialogGravityIfNeeded()
                 return@setOnClickListener
             }
 
@@ -197,6 +198,7 @@ class MainActivity : BaseActivity(), OnDragListener {
             }
         } else {
             when (requestCode) {
+                // 可以在不获得权限的情况下选择文件
                 REQUEST_CODE_SELECT_FILE -> selectHapFile()
                 else -> showSnackBar(R.string.permission_grant_fail)
             }
@@ -229,7 +231,9 @@ class MainActivity : BaseActivity(), OnDragListener {
      * 解析 Uri，如果为空就什么都不做
      * */
     private fun handelUri(uri: Uri?) {
-        uri?.let { model.handelUri(uri) }
+        if (uri != null) {
+            model.handelUri(uri)
+        }
     }
 
     private fun changeTheme(themeType: AppPreference.ThemeType) {
@@ -379,9 +383,7 @@ class MainActivity : BaseActivity(), OnDragListener {
 
         }
 
-        fun closeSnackBar() {
-            snackBar?.dismiss()
-        }
+        fun closeSnackBar() = snackBar?.dismiss()
     }
 
     companion object {
