@@ -22,6 +22,9 @@
 
         <item name="homeInfoItemStyle">@style/HomeInfoItem.Material</item>
         <item name="homeInfoItemSpacerStyle">@style/HomeInfoItem.Spacer.Material</item>
+        <item name="textAppearanceTitleMedium">
+            @style/TextAppearance.HapViewerAndroid.Material3.TitleMedium
+        </item>
         <item name="paddingBottomWithFabSize">72dp</item>
         <item name="cardMargin">16dp</item>
         <item name="cardPaddingVertical">8dp</item>

@@ -1,4 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources>
+<resources xmlns:tools="http://schemas.android.com/tools">
 
+    <style name="TextAppearance.HapViewerAndroid.Material3.TitleMedium" parent="TextAppearance.Material3.TitleMedium" tools:ignore="PrivateResource">
+        <item name="fontFamily">@string/m3_ref_typeface_plain_regular</item>
+        <item name="android:fontFamily">@string/m3_ref_typeface_plain_regular</item>
+        <item name="android:textStyle">normal</item>
+    </style>
 </resources>
