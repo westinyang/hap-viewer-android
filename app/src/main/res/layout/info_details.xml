@@ -18,7 +18,7 @@
         android:layout_height="wrap_content"
         android:clipToPadding="false"
         android:nestedScrollingEnabled="false"
-        android:paddingVertical="?cardPaddingVertical"
+        android:paddingVertical="?attr/listPaddingVertical"
         tools:itemCount="5"
         tools:listitem="@layout/item_info" />
 </com.google.android.material.card.MaterialCardView>

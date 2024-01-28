@@ -14,19 +14,19 @@
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:clipChildren="false">
 
         <ImageView
             android:id="@+id/imageView"
             android:layout_width="@dimen/icon_width"
             android:layout_height="@dimen/icon_width"
-            android:layout_margin="12dp"
+            android:layout_margin="?itemMargin"
             android:contentDescription="@string/info_icon"
-            android:padding="@dimen/icon_padding"
             android:src="@drawable/ic_default_new"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toTopOf="parent"/>
 
         <TextView
             android:id="@+id/app_name"

@@ -3,7 +3,6 @@
     <attr name="windowLightStatusBar" format="boolean" />
     <attr name="windowLightNavigationBar" format="boolean" />
     <attr name="paddingBottomWithFabSize" format="dimension" />
-    <attr name="cardPaddingVertical" format="dimension" />
     <attr name="selectFileIcon" format="reference" />
     <attr name="dropFileIcon" format="reference" />
     <attr name="enableDivider" format="boolean" />
@@ -11,4 +10,6 @@
     <attr name="homeInfoItemSpacerStyle" format="reference" />
     <attr name="homeAppIconStyle" format="reference" />
     <attr name="cardMargin" format="dimension" />
+    <attr name="listPaddingVertical" format="dimension" />
+    <attr name="itemMargin" format="dimension" />
 </resources>

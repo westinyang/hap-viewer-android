@@ -27,7 +27,8 @@
         </item>
         <item name="paddingBottomWithFabSize">72dp</item>
         <item name="cardMargin">16dp</item>
-        <item name="cardPaddingVertical">8dp</item>
+        <item name="listPaddingVertical">8dp</item>
+        <item name="itemMargin">16dp</item>
     </style>
 
     <style name="Theme.HapViewerAndroid.Material3" parent="Base.Theme.HapViewerAndroid.Material3" />

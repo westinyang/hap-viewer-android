@@ -3,7 +3,7 @@
     <attr name="windowLightStatusBar" format="boolean" />
     <attr name="windowLightNavigationBar" format="boolean" />
     <attr name="enableDivider" format="boolean" />
-    <attr name="cardPaddingVertical" format="dimension" />
+    <attr name="listPaddingVertical" format="dimension" />
     <attr name="windowGravityBottom" format="boolean" />
 
     <declare-styleable name="ShadowDrawable">

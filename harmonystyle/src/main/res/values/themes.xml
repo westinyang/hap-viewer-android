@@ -77,7 +77,7 @@
 
         <item name="liftOnScroll">false</item>
         <item name="android:outlineSpotShadowColor" tools:targetApi="p">#00001E</item>
-        <item name="cardPaddingVertical">4dp</item>
+        <item name="listPaddingVertical">4dp</item>
     </style>
 
     <style name="Theme.Harmony" parent="Base.Theme.Harmony" />

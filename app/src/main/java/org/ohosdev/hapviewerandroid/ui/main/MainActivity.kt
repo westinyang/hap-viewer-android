@@ -53,6 +53,7 @@ import org.ohosdev.hapviewerandroid.util.HarmonyOSUtil
 import org.ohosdev.hapviewerandroid.util.ShizukuUtil
 import org.ohosdev.hapviewerandroid.util.ShizukuUtil.ShizukuLifecycleObserver
 import org.ohosdev.hapviewerandroid.util.dialog.RequestPermissionDialogBuilder
+import org.ohosdev.hapviewerandroid.view.drawable.ShadowBitmapDrawable
 
 class MainActivity : BaseActivity(), OnDragListener {
     private val binding by lazy { ActivityMainBinding.inflate(layoutInflater) }
@@ -100,12 +101,15 @@ class MainActivity : BaseActivity(), OnDragListener {
 
     private fun initViews() = binding.apply {
         window.statusBarColor = Color.TRANSPARENT
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O)
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             window.navigationBarColor = Color.TRANSPARENT
-        else bottomScrim.background = null
+        } else {
+            bottomScrim.background = null
+        }
 
         setContentView(root)
         setSupportActionBar(toolbar)
+        basicInfo.imageView.background = ShadowBitmapDrawable()
 
         detailInfo.recyclerView.apply {
             adapter = infoAdapter
@@ -243,20 +247,6 @@ class MainActivity : BaseActivity(), OnDragListener {
         }
     }
 
-    /**
-     * 创建图标的带有边距的背景阴影
-     *
-     * @param src 原始 Bitmap
-     * @return 阴影 BitmapDrawable
-     */
-    private fun newIconShadowDrawable(src: Bitmap): BitmapDrawable {
-        val iconPadding = resources.getDimensionPixelSize(R.dimen.icon_padding)
-        val iconWidth = resources.getDimensionPixelSize(R.dimen.icon_width)
-        return BitmapDrawable(
-            resources, src.newShadowBitmap(this, iconPadding, iconWidth, iconWidth)
-        )
-    }
-
     override fun onDrag(v: View, event: DragEvent): Boolean {
         when (event.action) {
             DragEvent.ACTION_DRAG_STARTED -> {
@@ -328,7 +318,12 @@ class MainActivity : BaseActivity(), OnDragListener {
                 setImageResource(R.drawable.ic_default_new)
                 getBitmap(R.drawable.ic_default_new)!!
             }
-            background = newIconShadowDrawable(iconBitmap)
+            background.apply {
+                if (this is ShadowBitmapDrawable) {
+                    setShadowBitmap(iconBitmap, resources.getDimension(R.dimen.icon_shadow_radius))
+                }
+            }
+            // background = newIconShadowDrawable(iconBitmap)
         }
     }
 
