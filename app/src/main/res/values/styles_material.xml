@@ -23,4 +23,14 @@
         <item name="titleTextColor">@color/material_on_surface_emphasis_high_type</item>
         <item name="subtitleTextColor">@color/material_on_surface_emphasis_medium</item>
     </style>
+
+    <style name="HomeInfoItem.Material" parent="">
+        <item name="android:padding">16dp</item>
+        <item name="android:minHeight">48dp</item>
+        <item name="android:orientation">vertical</item>
+    </style>
+
+    <style name="HomeInfoItem.Spacer.Material" parent="">
+        <item name="android:visibility">gone</item>
+    </style>
 </resources>

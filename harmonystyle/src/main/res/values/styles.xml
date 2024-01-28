@@ -58,7 +58,7 @@
     </style>
 
     <style name="Widget.Harmony.ListView.DropDown" parent="Widget.AppCompat.ListView.DropDown">
-        <item name="android:divider">@drawable/harmony_divider</item>
+        <item name="android:divider">@drawable/harmony_divider_menu</item>
         <item name="android:dividerHeight">0.5dp</item>
         <item name="android:listSelector">@drawable/harmony_menu_choice_background_indicator
         </item>
@@ -75,8 +75,8 @@
     <style name="Widget.Harmony.MaterialDivider" parent="Widget.MaterialComponents.MaterialDivider">
         <item name="dividerColor">@color/harmony_color_divider</item>
         <item name="dividerThickness">0.5dp</item>
-        <item name="dividerInsetStart">16dp</item>
-        <item name="dividerInsetEnd">16dp</item>
+        <item name="dividerInsetStart">?listPreferredItemPaddingStart</item>
+        <item name="dividerInsetEnd">?listPreferredItemPaddingEnd</item>
     </style>
 
     <!-- Dialog -->

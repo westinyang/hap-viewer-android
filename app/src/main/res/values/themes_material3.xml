@@ -16,11 +16,14 @@
         <item name="colorAccent">?colorPrimary</item>
         <item name="materialCardViewStyle">?materialCardViewElevatedStyle</item>
         <item name="liftOnScroll">true</item>
-        <item name="paddingBottomFabSize">72dp</item>
+        <item name="paddingBottomWithFabSize">72dp</item>
         <item name="cardPaddingVertical">8dp</item>
         <item name="selectFileIcon">@drawable/ic_file</item>
         <item name="dropFileIcon">@drawable/ic_file_upload</item>
         <item name="actionBarPopupTheme">@style/ThemeOverlay.HapViewerAndroid.DayNight</item>
+
+        <item name="homeInfoItemStyle">@style/HomeInfoItem.Material</item>
+        <item name="homeInfoItemSpacerStyle">@style/HomeInfoItem.Spacer.Material</item>
     </style>
 
     <style name="Theme.HapViewerAndroid.Material3" parent="Base.Theme.HapViewerAndroid.Material3" />

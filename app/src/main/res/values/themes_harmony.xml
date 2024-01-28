@@ -1,13 +1,16 @@
-<resources xmlns:tools="http://schemas.android.com/tools">
+<resources>
 
     <style name="Base.Theme.HapViewerAndroid.Harmony" parent="Theme.Harmony">
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>
 
         <item name="liftOnScroll">false</item>
-        <item name="paddingBottomFabSize">64dp</item>
+        <item name="paddingBottomWithFabSize">64dp</item>
         <item name="selectFileIcon">@drawable/harmony_ic_public_file_filled</item>
         <item name="dropFileIcon">@drawable/harmony_ic_public_upload_filled</item>
+
+        <item name="homeInfoItemStyle">@style/HomeInfoItem.Harmony</item>
+        <item name="homeInfoItemSpacerStyle">@style/HomeInfoItem.Spacer.Harmony</item>
     </style>
 
     <style name="Theme.HapViewerAndroid.Harmony" parent="Base.Theme.HapViewerAndroid.Harmony" />

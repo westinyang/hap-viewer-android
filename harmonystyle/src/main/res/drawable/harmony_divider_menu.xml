@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layer-list xmlns:android="http://schemas.android.com/apk/res/android">
     <item
-        android:start="?listPreferredItemPaddingStart"
-        android:end="?listPreferredItemPaddingEnd"
+        android:start="16dp"
+        android:end="16dp"
         android:height="0.5dp"
         android:gravity="center">
         <color android:color="@color/harmony_color_divider" />

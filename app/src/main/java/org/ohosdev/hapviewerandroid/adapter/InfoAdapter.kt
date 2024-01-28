@@ -63,9 +63,9 @@ class InfoAdapter(
             binding.root.setOnClickListener { onItemClick(this) }
         }
 
-        @SuppressLint("SetTextI18n")
         private fun refresh() {
-            binding.textView.text = "${name}: $content"
+            binding.titleText.text = name
+            binding.summaryText.text = content
         }
 
         private fun setName(resId: Int) {
