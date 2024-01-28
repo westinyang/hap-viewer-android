@@ -10,4 +10,5 @@
     <attr name="homeInfoItemStyle" format="reference" />
     <attr name="homeInfoItemSpacerStyle" format="reference" />
     <attr name="homeAppIconStyle" format="reference" />
+    <attr name="cardMargin" format="dimension" />
 </resources>

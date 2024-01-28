@@ -113,7 +113,7 @@
         <item name="buttonBarPositiveButtonStyle">?buttonBarButtonStyle</item>
         <item name="android:windowAnimationStyle">@style/Animation.Harmony.AlertDialog</item>
 
-        <item name="windowGravityBottom">@bool/dialogGravityBottom</item>
+        <item name="windowGravityBottom">@bool/harmony_dialogGravityBottom</item>
     </style>
 
     <style name="Widget.Harmony.CompoundButton.RadioButton" parent="Widget.Emui.HwRadioButton">

@@ -1,4 +1,4 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <bool name="dialogGravityBottom">false</bool>
+    <bool name="harmony_dialogGravityBottom">false</bool>
 </resources>

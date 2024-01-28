@@ -9,6 +9,7 @@
         <item name="windowLightStatusBar">?isLightTheme</item>
         <item name="windowLightNavigationBar">?isLightTheme</item>
 
+        <item name="android:dialogCornerRadius" tools:targetApi="p">?dialogCornerRadius</item>
         <item name="android:listChoiceBackgroundIndicator">?listChoiceBackgroundIndicator</item>
         <item name="android:actionBarItemBackground">?actionBarItemBackground</item>
         <item name="android:listPreferredItemPaddingStart">?listPreferredItemPaddingStart</item>
@@ -39,6 +40,7 @@
         <item name="toolbarSurfaceStyle">@style/Widget.Harmony.Toolbar.Surface</item>
         <item name="toolbarStyle">?toolbarSurfaceStyle</item>
         <item name="actionOverflowButtonStyle">@style/Widget.Harmony.ActionButton.Overflow</item>
+
         <!-- Menu -->
         <item name="popupMenuBackground">@drawable/harmony_popupmenu_background</item>
         <item name="popupMenuStyle">@style/Widget.Harmony.PopupMenu</item>
@@ -47,7 +49,6 @@
         <item name="android:dropDownListViewStyle">@style/Widget.Harmony.ListView.DropDown</item>
 
         <!-- Dialog -->
-        <item name="android:dialogCornerRadius" tools:targetApi="p">?dialogCornerRadius</item>
         <item name="dialogCornerRadius">24dp</item>
         <item name="materialAlertDialogTheme">@null</item>
         <item name="alertDialogTheme">@style/ThemeOverlay.Harmony.Dialog.Alert</item>
