@@ -86,7 +86,7 @@ class MainViewModel(private val app: Application) : AndroidViewModel(app) {
         isInstalling.value = true
         runCatching {
             shizukuServiceHelper.bindUserService {
-                installHap(hapInfo)
+                viewModelScope.launch { installHap(hapInfo) }
             }
         }.onFailure {
             it.printStackTrace()
@@ -104,10 +104,12 @@ class MainViewModel(private val app: Application) : AndroidViewModel(app) {
     }
 
     @Throws(RemoteException::class)
-    private fun installHap(hapInfo: HapInfo = this@MainViewModel.hapInfo.value!!) {
+    private suspend fun installHap(
+        hapInfo: HapInfo = this@MainViewModel.hapInfo.value!!
+    ) = withContext(Dispatchers.Main) {
         isInstalling.value = true
         hapInfo.installing = true
-        viewModelScope.launch(Dispatchers.Default) {
+        withContext(Dispatchers.Default) {
             hapInfo.installToSelf(shizukuServiceHelper).also {
                 // 不知为何无法显示结果
                 if (it.isSuccess) {
