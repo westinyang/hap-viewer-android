@@ -39,6 +39,7 @@ import org.ohosdev.hapviewerandroid.extensions.fixDialogGravityIfNeeded
 import org.ohosdev.hapviewerandroid.extensions.getBitmap
 import org.ohosdev.hapviewerandroid.extensions.getFirstUri
 import org.ohosdev.hapviewerandroid.extensions.hasFileMime
+import org.ohosdev.hapviewerandroid.extensions.init
 import org.ohosdev.hapviewerandroid.extensions.isGranted
 import org.ohosdev.hapviewerandroid.extensions.isPermissionGranted
 import org.ohosdev.hapviewerandroid.extensions.openUrl

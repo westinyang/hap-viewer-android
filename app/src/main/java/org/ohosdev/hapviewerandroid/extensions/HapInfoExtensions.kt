@@ -11,6 +11,16 @@ import java.io.File
 
 private const val TAG = "HapInfoExtensions"
 
+val HapInfo.init get() = fileStateFlags and HapInfo.FLAG_FILE_STATE_INIT != 0
+var HapInfo.installing
+    get() = fileStateFlags and HapInfo.FLAG_FILE_STATE_INSTALLING != 0
+    set(value) {
+        fileStateFlags = if (value)
+            fileStateFlags or HapInfo.FLAG_FILE_STATE_INSTALLING
+        else
+            fileStateFlags and HapInfo.FLAG_FILE_STATE_INSTALLING.inv()
+    }
+
 /**
  * 销毁 HapInfo，**删除文件**，回收图片。
  *
@@ -26,9 +36,17 @@ fun HapInfo.installToSelf(helper: ShizukuServiceHelper): ExecuteResult {
     if (!helper.isServiceBound) {
         throw RuntimeException("Shizuku not bound.")
     }
-    val result =
-        helper.service!!.execute(listOf("bm", "install", "-r", this.hapFilePath), null, null)
-    Log.i(TAG, "installing hap: $result")
+    installing = true
+    val result = runCatching {
+        return@runCatching helper.service!!.execute(
+            listOf("bm", "install", "-r", this.hapFilePath), null, null
+        ).also {
+            Log.i(TAG, "installed hap: $it")
+        }
+    }.getOrElse {
+        ExecuteResult(1, it.localizedMessage, null)
+    }
+    installing = false
     return result
 }
 

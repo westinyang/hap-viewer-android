@@ -16,7 +16,9 @@ import org.ohosdev.hapviewerandroid.extensions.deleteIfCache
 import org.ohosdev.hapviewerandroid.extensions.destroy
 import org.ohosdev.hapviewerandroid.extensions.getFileName
 import org.ohosdev.hapviewerandroid.extensions.getOrCopyFile
+import org.ohosdev.hapviewerandroid.extensions.init
 import org.ohosdev.hapviewerandroid.extensions.installToSelf
+import org.ohosdev.hapviewerandroid.extensions.installing
 import org.ohosdev.hapviewerandroid.model.HapInfo
 import org.ohosdev.hapviewerandroid.util.HapUtil
 import org.ohosdev.hapviewerandroid.util.event.SnackBarEvent
@@ -26,9 +28,7 @@ import java.io.File
 // https://developer.android.google.cn/topic/libraries/architecture/viewmodel?hl=zh-cn
 class MainViewModel(private val app: Application) : AndroidViewModel(app) {
 
-    val hapInfo: MutableLiveData<HapInfo> by lazy {
-        MutableLiveData(HapInfo.INIT)
-    }
+    val hapInfo: MutableLiveData<HapInfo> = MutableLiveData(HapInfo.INIT)
     val isParsing = MutableLiveData(false)
     val isInstalling = MutableLiveData(false)
     val snackBarEvent = MutableLiveData<SnackBarEvent>()
@@ -36,30 +36,27 @@ class MainViewModel(private val app: Application) : AndroidViewModel(app) {
 
     private val shizukuServiceHelper = ShizukuServiceHelper()
 
+    fun handelUri(uri: Uri) = viewModelScope.launch {
+        isParsing.value = true
+        withContext(Dispatchers.IO) {
+            // TODO: 文件名校验
+            val uuid = UUID.randomUUID().toString(true)
+            val fileName = uri.getFileName(app)
+            val name = "${uuid}_$fileName"
 
-    fun handelUri(uri: Uri) {
-        viewModelScope.launch {
-            isParsing.value = true
-            withContext(Dispatchers.IO) {
-                // TODO: 文件名校验
-                val uuid = UUID.randomUUID().toString(true)
-                val fileName = uri.getFileName(app)
-                val name = "${uuid}_$fileName"
-
-                val file = uri.getOrCopyFile(app, name)
-                if (file == null) {
-                    showSnackBar(R.string.parse_error_fail_obtain)
-                    return@withContext
-                }
-                parseHap(file)
+            val file = uri.getOrCopyFile(app, name)
+            if (file == null) {
+                showSnackBar(R.string.parse_error_fail_obtain)
+                return@withContext
             }
-            isParsing.value = false
+            parseHap(file)
         }
+        isParsing.value = false
     }
+
 
     private suspend fun parseHap(file: File) = withContext(Dispatchers.Main) {
         isParsing.value = true
-
         withContext(Dispatchers.Default) {
             val destroyLastHapInfo = autoDestroyHapInfoRunnable()
             runCatching {
@@ -95,6 +92,7 @@ class MainViewModel(private val app: Application) : AndroidViewModel(app) {
             it.printStackTrace()
             showSnackBar(it.message ?: app.getString(R.string.unknown_error))
             isInstalling.value = false
+            hapInfo.installing = false
         }
     }
 
@@ -108,18 +106,20 @@ class MainViewModel(private val app: Application) : AndroidViewModel(app) {
     @Throws(RemoteException::class)
     private fun installHap(hapInfo: HapInfo = this@MainViewModel.hapInfo.value!!) {
         isInstalling.value = true
+        hapInfo.installing = true
         viewModelScope.launch(Dispatchers.Default) {
-            runCatching {
-                hapInfo.installToSelf(shizukuServiceHelper)
+            hapInfo.installToSelf(shizukuServiceHelper).also {
                 // 不知为何无法显示结果
-                showSnackBar(R.string.install_finished)
-            }.onFailure {
-                it.printStackTrace()
-                showSnackBar(it.message ?: app.getString(R.string.unknown_error))
+                if (it.isSuccess) {
+                    showSnackBar(R.string.install_finished)
+                } else {
+                    showSnackBar(it.error ?: app.getString(R.string.unknown_error))
+                }
             }
             autoDestroyHapInfoRunnable(hapInfo)()
         }
         isInstalling.value = false
+        hapInfo.installing = false
     }
 
     /**
@@ -135,9 +135,11 @@ class MainViewModel(private val app: Application) : AndroidViewModel(app) {
     ): () -> Unit {
         return fun() {
             if ((this.hapInfo.value != hapInfo || ignoreCurrentHapInfo)
-                && !isInstalling.value!!
+                && !hapInfo.installing
                 && !hapInfo.init
-            ) hapInfo.destroy(app)
+            ) {
+                hapInfo.destroy(app)
+            }
         }
     }
 

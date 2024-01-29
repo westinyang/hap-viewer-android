@@ -1,13 +1,8 @@
 package org.ohosdev.hapviewerandroid.model;
 
-import android.content.Context;
 import android.graphics.Bitmap;
 
-import androidx.annotation.Nullable;
-
 import com.alibaba.fastjson.JSONArray;
-
-import org.ohosdev.hapviewerandroid.R;
 
 import java.util.List;
 import java.util.Map;
@@ -21,7 +16,10 @@ import java.util.Set;
  */
 public class HapInfo {
     public static final HapInfo INIT = new HapInfo(true);
-    public boolean init = false;
+    public static final int FLAG_FILE_STATE_INSTALLING = 1;
+    public static final int FLAG_FILE_STATE_INIT = 1 << 1;
+
+    public int fileStateFlags = 0;
 
     /* app. */
     public Bitmap icon;
@@ -54,7 +52,9 @@ public class HapInfo {
     }
 
     public HapInfo(boolean init) {
-        this.init = init;
+        if (init) {
+            fileStateFlags |= FLAG_FILE_STATE_INIT;
+        }
     }
 
 }

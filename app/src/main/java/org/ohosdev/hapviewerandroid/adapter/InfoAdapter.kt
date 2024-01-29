@@ -9,6 +9,7 @@ import org.ohosdev.hapviewerandroid.R
 import org.ohosdev.hapviewerandroid.app.BaseActivity
 import org.ohosdev.hapviewerandroid.databinding.ItemInfoBinding
 import org.ohosdev.hapviewerandroid.extensions.getTechDesc
+import org.ohosdev.hapviewerandroid.extensions.init
 import org.ohosdev.hapviewerandroid.model.HapInfo
 
 
