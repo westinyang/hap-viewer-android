@@ -13,10 +13,12 @@ import android.graphics.Rect
 import android.graphics.RectF
 import android.graphics.drawable.Drawable
 import android.util.AttributeSet
+import androidx.annotation.Keep
 import androidx.core.content.res.TypedArrayUtils.obtainAttributes
 import org.ohosdev.hapviewerandroid.harmonystyle.R
 import org.xmlpull.v1.XmlPullParser
 
+@Keep
 class ShadowDrawable : Drawable() {
 
     private val paint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
@@ -26,6 +28,7 @@ class ShadowDrawable : Drawable() {
 
     private var radius = 0f
     private var shadowRadius = 10f
+    private val doubleShadowRadiusInt get() = (shadowRadius * 2).toInt()
     private var shadowColor = Color.BLACK
 
     /**
@@ -35,7 +38,6 @@ class ShadowDrawable : Drawable() {
      * - 1：纵向偏移量
      * */
     private var shadowOffset = arrayOf(0f, 0f)
-    private val doubleShadowRadiusInt get() = (shadowRadius * 2).toInt()
 
     // 低版本安卓绘制阴影不能开启硬件加速
     private val noHardwareBitmap by lazy {
@@ -50,10 +52,13 @@ class ShadowDrawable : Drawable() {
     private var noHardwareCanvas = Canvas()
 
     override fun draw(canvas: Canvas) {
+        // 清空画布
         canvas.drawColor(Color.TRANSPARENT, PorterDuff.Mode.CLEAR)
         noHardwareCanvas.drawColor(Color.TRANSPARENT, PorterDuff.Mode.CLEAR)
 
+        // 设置阴影
         paint.setShadowLayer(shadowRadius, 0f, 0f, shadowColor)
+        // 绘图并从没有硬件加速的`noHardwareCanvas`复制到`canvas`
         noHardwareCanvas.drawRoundRect(
             RectF(
                 shadowRadius,
@@ -72,8 +77,10 @@ class ShadowDrawable : Drawable() {
 
     override fun onBoundsChange(bounds: Rect) {
         super.onBoundsChange(bounds)
-        noHardwareBitmap.width = bounds.width() + doubleShadowRadiusInt
-        noHardwareBitmap.height = bounds.height() + doubleShadowRadiusInt
+        noHardwareBitmap.apply {
+            width = bounds.width() + doubleShadowRadiusInt
+            height = bounds.height() + doubleShadowRadiusInt
+        }
     }
 
     override fun setAlpha(alpha: Int) {

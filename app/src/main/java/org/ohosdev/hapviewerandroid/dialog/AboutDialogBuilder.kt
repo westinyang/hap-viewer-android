@@ -25,7 +25,7 @@ class AboutDialogBuilder(context: Context) : DialogBuilder<AboutDialogBuilder>(c
     init {
         setTitle(R.string.about)
         val messageHtml = context.run {
-            resources.openRawResource(R.raw.about).use { String(it.readBytes()) }
+            resources.openRawResource(R.raw.about).use { it.readBytes().decodeToString() }
                 .replace(REGEX_KEY) {
                     when (it.groupValues[1]) {
                         KEY_NAME -> getString(R.string.app_name_full)

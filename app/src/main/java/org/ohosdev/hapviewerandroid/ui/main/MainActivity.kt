@@ -4,9 +4,7 @@ import android.Manifest
 import android.annotation.SuppressLint
 import android.content.Intent
 import android.content.pm.PackageManager
-import android.graphics.Bitmap
 import android.graphics.Color
-import android.graphics.drawable.BitmapDrawable
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
@@ -43,7 +41,6 @@ import org.ohosdev.hapviewerandroid.extensions.getFirstUri
 import org.ohosdev.hapviewerandroid.extensions.hasFileMime
 import org.ohosdev.hapviewerandroid.extensions.isGranted
 import org.ohosdev.hapviewerandroid.extensions.isPermissionGranted
-import org.ohosdev.hapviewerandroid.extensions.newShadowBitmap
 import org.ohosdev.hapviewerandroid.extensions.openUrl
 import org.ohosdev.hapviewerandroid.extensions.overrideAnimationDurationIfNeeded
 import org.ohosdev.hapviewerandroid.extensions.thisApp
@@ -58,13 +55,12 @@ import org.ohosdev.hapviewerandroid.view.drawable.ShadowBitmapDrawable
 class MainActivity : BaseActivity(), OnDragListener {
     private val binding by lazy { ActivityMainBinding.inflate(layoutInflater) }
     override val rootView: CoordinatorLayout get() = binding.root
-
     private val model: MainViewModel by viewModels()
-    private val onExitCallback by lazy { OnExitCallback() }
 
     private val infoAdapter by lazy { InfoAdapter(this, this::onInfoItemClick) }
     private val selectFileResultLauncher =
         registerForActivityResult<String, Uri>(ActivityResultContracts.GetContent()) { handelUri(it) }
+    private val onExitCallback by lazy { OnExitCallback() }
 
     init {
         ShizukuLifecycleObserver().apply {
@@ -83,7 +79,7 @@ class MainActivity : BaseActivity(), OnDragListener {
         initViews()
         onBackPressedDispatcher.addCallback(this, onExitCallback)
 
-        model.hapInfo.observe(this) { onHapInfoChanged(it) }
+        model.hapInfo.observe(this, this::onHapInfoChanged)
         // isParsing 与 isInstalling 同时影响着菜单的禁用状态，所以要调用 invalidateMenu()
         model.isParsing.observe(this) {
             invalidateMenu()
@@ -100,6 +96,7 @@ class MainActivity : BaseActivity(), OnDragListener {
     }
 
     private fun initViews() = binding.apply {
+        // 在适当的安卓版本设置状态栏、导航栏透明
         window.statusBarColor = Color.TRANSPARENT
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             window.navigationBarColor = Color.TRANSPARENT
@@ -192,7 +189,7 @@ class MainActivity : BaseActivity(), OnDragListener {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
         if (BuildConfig.DEBUG) {
             permissions.forEachIndexed { i, permission ->
-                Log.i(TAG, "申请权限：" + permission + "，申请结果：" + grantResults[i])
+                Log.i(TAG, "申请权限：$permission，申请结果：${grantResults[i]}")
             }
         }
         if (grantResults.all { it == PackageManager.PERMISSION_GRANTED }) {

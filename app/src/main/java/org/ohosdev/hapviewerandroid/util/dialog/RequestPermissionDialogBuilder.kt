@@ -1,6 +1,7 @@
 package org.ohosdev.hapviewerandroid.util.dialog
 
 import android.content.Context
+import androidx.annotation.StringRes
 import androidx.appcompat.app.AlertDialog
 import org.ohosdev.hapviewerandroid.R
 import org.ohosdev.hapviewerandroid.extensions.getQuantityString
@@ -41,7 +42,7 @@ class RequestPermissionDialogBuilder(context: Context) :
     }
 
 
-    fun setAdditional(additional: Int) = apply {
+    fun setAdditional(@StringRes additional: Int) = apply {
         this.additional = context.getString(additional)
     }
 
