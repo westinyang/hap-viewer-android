@@ -7,8 +7,6 @@
     android:background="?selectableItemBackground"
     android:focusable="auto"
     android:gravity="center_vertical"
-    android:paddingStart="?listPreferredItemPaddingStart"
-    android:paddingEnd="?listPreferredItemPaddingEnd"
     tools:showIn="@layout/activity_main">
     <!-- 鸿蒙风格横向排列，质感风格纵向排列 -->
 
