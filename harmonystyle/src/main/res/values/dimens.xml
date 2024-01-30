@@ -6,4 +6,8 @@
     <dimen name="harmony_dimen_defaultPaddingStart">12dp</dimen>
     <dimen name="harmony_dimen_defaultPaddingEnd">12dp</dimen>
     <dimen name="harmony_space_elements_card">12dp</dimen>
+
+    <!-- 阴影 -->
+    <!-- https://developer.harmonyos.com/cn/docs/design/des-guides/shadow-0000001156978415#section12211451185010 -->
+    <dimen name="harmony_elevation_s3_radius">50dp</dimen>
 </resources>

@@ -7,7 +7,7 @@
             android:radius="@dimen/harmony_corner_radius_menu"
             app:alpha="0.15"
             app:shadowColor="#2600001E"
-            app:shadowRadius="50dp"
+            app:shadowRadius="@dimen/harmony_elevation_s3_radius"
             app:shadowY="10dp" />
     </item>
     <item>

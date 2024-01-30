@@ -39,7 +39,7 @@
     </style>
 
     <style name="Widget.Harmony.PopupMenu" parent="Widget.MaterialComponents.PopupMenu">
-        <item name="android:popupElevation">50dp</item>
+        <item name="android:popupElevation">@dimen/harmony_elevation_s3_radius</item>
         <item name="android:popupEnterTransition">@null</item>
         <item name="android:popupExitTransition">@null</item>
         <item name="android:popupAnimationStyle">@style/Animation.Harmony.PopupWindow</item>
@@ -49,7 +49,7 @@
 
     <style name="Widget.Harmony.PopupMenu.Overflow" parent="Widget.MaterialComponents.PopupMenu.Overflow">
         <item name="overlapAnchor">false</item>
-        <item name="android:popupElevation">50dp</item>
+        <item name="android:popupElevation">@dimen/harmony_elevation_s3_radius</item>
         <item name="android:popupEnterTransition">@null</item>
         <item name="android:popupExitTransition">@null</item>
         <item name="android:popupAnimationStyle">@style/Animation.Harmony.PopupWindow</item>
@@ -62,6 +62,13 @@
         <item name="android:dividerHeight">0.5dp</item>
         <item name="android:listSelector">@drawable/harmony_menu_choice_background_indicator
         </item>
+    </style>
+
+    <style name="Widget.Harmony.PopupMenu.ContextMenu" parent="Widget.MaterialComponents.PopupMenu.ContextMenu">
+        <item name="android:popupElevation">@dimen/harmony_elevation_s3_radius</item>
+        <item name="android:popupEnterTransition">@null</item>
+        <item name="android:popupExitTransition">@null</item>
+        <item name="android:popupAnimationStyle">@style/Animation.Harmony.PopupWindow</item>
     </style>
 
     <!-- Card -->

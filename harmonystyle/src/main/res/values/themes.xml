@@ -47,6 +47,7 @@
         <item name="actionOverflowMenuStyle">@style/Widget.Harmony.PopupMenu.Overflow</item>
         <item name="actionBarPopupTheme">@style/ThemeOverlay.Harmony.ActionBar.PopupMenu</item>
         <item name="android:dropDownListViewStyle">@style/Widget.Harmony.ListView.DropDown</item>
+        <item name="android:contextPopupMenuStyle">@style/Widget.Harmony.PopupMenu.ContextMenu</item>
 
         <!-- Dialog -->
         <item name="dialogCornerRadius">24dp</item>
