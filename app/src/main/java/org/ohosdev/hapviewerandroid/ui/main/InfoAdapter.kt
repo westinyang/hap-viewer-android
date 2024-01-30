@@ -1,8 +1,6 @@
-package org.ohosdev.hapviewerandroid.adapter
+package org.ohosdev.hapviewerandroid.ui.main
 
 import android.annotation.SuppressLint
-import android.util.Log
-import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import org.ohosdev.hapviewerandroid.R
@@ -15,10 +13,11 @@ import org.ohosdev.hapviewerandroid.model.HapInfo
 
 class InfoAdapter(
     val context: BaseActivity,
-    private val onItemClick: (holder: InfoAdapter.ViewHolder) -> Unit
+    private val onItemClick: (holder: ViewHolder) -> Unit
 ) : RecyclerView.Adapter<InfoAdapter.ViewHolder>() {
-    private val layoutInflater: LayoutInflater = context.layoutInflater
-    private val unknownString: String = context.getString(android.R.string.unknownName)
+    private val layoutInflater = context.layoutInflater
+    private val unknownString = context.getString(android.R.string.unknownName)
+    private val unknownTechString = context.getString(R.string.info_tech_unknown)
     private var info = HapInfo()
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
@@ -37,7 +36,7 @@ class InfoAdapter(
 
             5 -> holder.bind(
                 R.string.info_tech,
-                info.getTechDesc(context) ?: context.getString(R.string.info_tech_unknown)
+                info.getTechDesc(context) ?: unknownTechString
             )
         }
     }
@@ -54,19 +53,23 @@ class InfoAdapter(
 
     inner class ViewHolder(
         private val binding: ItemInfoBinding,
-        onItemClick: (holder: InfoAdapter.ViewHolder) -> Unit
+        onItemClick: (holder: ViewHolder) -> Unit
     ) : RecyclerView.ViewHolder(binding.root) {
 
         var name = ""
-        var content = ""
+        var content: String? = ""
 
         init {
-            binding.root.setOnClickListener { onItemClick(this) }
+            binding.root.apply {
+                setOnClickListener { onItemClick(this@ViewHolder) }
+            }
         }
 
-        private fun refresh() {
-            binding.titleText.text = name
-            binding.summaryText.text = content
+        private fun refresh() = binding.run {
+            titleText.text = name
+            summaryText.text = content ?: unknownString
+            root.isClickable = content != null
+            root.isLongClickable = content != null
         }
 
         private fun setName(resId: Int) {
@@ -75,7 +78,7 @@ class InfoAdapter(
 
         fun bind(nameId: Int, content: String?) {
             setName(nameId)
-            this.content = if (info.init || content == null) unknownString else content
+            this.content = if (info.init) null else content
             refresh()
         }
     }

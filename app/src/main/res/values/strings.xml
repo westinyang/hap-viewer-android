@@ -1,4 +1,4 @@
-<resources>
+<resources xmlns:tools="http://schemas.android.com/tools">
     <string name="app_name">HAP Viewer</string>
     <string name="app_name_full">HAP Viewer for Android</string>
     <string name="app_description">Support for parsing OpenHarmony, HarmonyOS API 9+ (Stage model) application installation packages, support for running on Android devices with Android 7+.</string>
@@ -14,6 +14,7 @@
     <string name="select_file_hap">Select HAP file</string>
     <string name="permission_grant_fail">Permission request failed.</string>
     <string name="exit_toast">Press the back button again to exit.</string>
+    <string name="copy" tools:ignore="PrivateResource">Copy</string>
     <string name="copied">Copied.</string>
     <string name="copied_withName">Copied %s.</string>
     <string name="parse_error_fail_obtain">File acquisition failure.</string>

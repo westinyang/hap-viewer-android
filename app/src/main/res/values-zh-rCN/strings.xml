@@ -1,4 +1,4 @@
-<resources>
+<resources xmlns:tools="http://schemas.android.com/tools">
     <string name="app_name">HAP查看器</string>
     <string name="app_name_full">HAP查看器 for Android</string>
     <string name="app_description">支持解析 OpenHarmony(开源鸿蒙)、HarmonyOS(鸿蒙) API 9+(Stage模型) 的应用安装包，支持在 Android 7+ 的安卓设备上运行。</string>
@@ -14,6 +14,7 @@
     <string name="select_file_hap">选择 HAP 文件</string>
     <string name="permission_grant_fail">权限申请失败</string>
     <string name="exit_toast">再按一次返回键退出</string>
+    <string name="copy" tools:ignore="PrivateResource">复制</string>
     <string name="copied">已复制</string>
     <string name="copied_withName">已复制 %s</string>
     <string name="parse_error_fail_obtain">文件获取失败</string>

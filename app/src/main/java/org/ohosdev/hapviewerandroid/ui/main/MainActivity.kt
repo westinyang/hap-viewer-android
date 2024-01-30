@@ -25,7 +25,6 @@ import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.snackbar.Snackbar
 import org.ohosdev.hapviewerandroid.BuildConfig
 import org.ohosdev.hapviewerandroid.R
-import org.ohosdev.hapviewerandroid.adapter.InfoAdapter
 import org.ohosdev.hapviewerandroid.app.AppPreference
 import org.ohosdev.hapviewerandroid.app.AppPreference.ThemeType.HARMONY
 import org.ohosdev.hapviewerandroid.app.AppPreference.ThemeType.MATERIAL1
@@ -51,6 +50,7 @@ import org.ohosdev.hapviewerandroid.util.HarmonyOSUtil
 import org.ohosdev.hapviewerandroid.util.ShizukuUtil
 import org.ohosdev.hapviewerandroid.util.ShizukuUtil.ShizukuLifecycleObserver
 import org.ohosdev.hapviewerandroid.util.dialog.RequestPermissionDialogBuilder
+import org.ohosdev.hapviewerandroid.view.AdvancedRecyclerView.RecyclerViewContextMenuInfo
 import org.ohosdev.hapviewerandroid.view.drawable.ShadowBitmapDrawable
 
 class MainActivity : BaseActivity(), OnDragListener {
@@ -142,6 +142,52 @@ class MainActivity : BaseActivity(), OnDragListener {
 
             selectHapFile()
         }
+        registerForContextMenu(detailInfo.recyclerView)
+
+        detailInfo.recyclerView.setOnCreateContextMenuListener { menu, v, menuInfo ->
+            @Suppress("UNCHECKED_CAST")
+            menuInfo as RecyclerViewContextMenuInfo<InfoAdapter.ViewHolder>
+            menu.setHeaderTitle(menuInfo.viewHolder.name)
+            menuInflater.inflate(R.menu.menu_main_info, menu)
+        }
+
+    }
+
+    @Suppress("UNCHECKED_CAST")
+    override fun onContextItemSelected(item: MenuItem): Boolean {
+        when (val menuInfo = item.menuInfo) {
+            is RecyclerViewContextMenuInfo<*> -> {
+                when (val viewHolder = menuInfo.viewHolder) {
+                    is InfoAdapter.ViewHolder -> {
+                        onInfoContextItemSelected(
+                            item,
+                            viewHolder
+                        )
+                    }
+                }
+            }
+
+            else -> return super.onContextItemSelected(item)
+        }
+        return true
+    }
+
+    private fun onInfoContextItemSelected(
+        item: MenuItem,
+        viewHolder: InfoAdapter.ViewHolder
+    ): Boolean {
+        when (item.itemId) {
+            R.id.action_copy -> {
+                viewHolder.content.also {
+                    if (it.isNullOrEmpty()) return false
+                    copyText(it)
+                }
+                showSnackBar(getString(R.string.copied_withName, viewHolder.name))
+            }
+
+            else -> return false
+        }
+        return true
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
@@ -273,12 +319,7 @@ class MainActivity : BaseActivity(), OnDragListener {
     }
 
     private fun onInfoItemClick(holder: InfoAdapter.ViewHolder) {
-        holder.apply {
-            if (content.isEmpty()) return
-            copyText(content)
-            val toastText = getString(R.string.copied_withName, name)
-            showSnackBar(toastText)
-        }
+        // TODO
     }
 
     // 重写该方法，将 SnackBar 放置到悬浮按钮之上

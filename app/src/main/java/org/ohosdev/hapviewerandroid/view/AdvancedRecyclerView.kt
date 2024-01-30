@@ -7,7 +7,7 @@ import android.view.View
 import androidx.recyclerview.widget.RecyclerView
 
 class AdvancedRecyclerView : RecyclerView {
-    private var contextMenuInfo: RecyclerViewContextMenuInfo<ViewHolder>? = null
+    private var contextMenuInfo: RecyclerViewContextMenuInfo<*>? = null
 
     constructor(context: Context) : super(context)
     constructor(context: Context, attrs: AttributeSet?) : super(context, attrs)
