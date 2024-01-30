@@ -136,4 +136,8 @@
         <item name="cornerSize">24dp</item>
     </style>
 
+    <style name="TextAppearance.Harmony.Widget.PopupMenu.Header" parent="TextAppearance.AppCompat.Widget.PopupMenu.Header">
+        <item name="android:textColor">?colorPrimary</item>
+    </style>
+
 </resources>
