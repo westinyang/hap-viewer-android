@@ -33,11 +33,13 @@
         <item name="appBarLayoutStyle">@style/Widget.MaterialComponents.AppBarLayout.Surface</item>
         <item name="toolbarSurfaceStyle">@style/Widget.HapViewerAndroid.Toolbar.Surface</item>
         <item name="toolbarStyle">?toolbarSurfaceStyle</item>
+        <item name="checkboxStyle">@style/Widget.HapViewerAndroid.CompoundButton.CheckBox</item>
+        <item name="radioButtonStyle">@style/Widget.HapViewerAndroid.CompoundButton.RadioButton</item>
 
-        <item name="liftOnScroll">true</item>
         <item name="selectFileIcon">@drawable/ic_file</item>
         <item name="dropFileIcon">@drawable/ic_file_upload</item>
 
+        <item name="liftOnScroll">true</item>
         <item name="homeInfoItemStyle">@style/HomeInfoItem.Material</item>
         <item name="homeInfoItemSpacerStyle">@style/HomeInfoItem.Spacer.Material</item>
         <item name="paddingBottomWithFabSize">64dp</item>

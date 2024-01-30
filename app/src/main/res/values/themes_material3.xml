@@ -16,17 +16,23 @@
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>
         <item name="colorAccent">?colorPrimary</item>
-        <item name="materialCardViewStyle">?materialCardViewElevatedStyle</item>
-        <item name="liftOnScroll">true</item>
-        <item name="selectFileIcon">@drawable/ic_file</item>
-        <item name="dropFileIcon">@drawable/ic_file_upload</item>
-        <item name="actionBarPopupTheme">@style/ThemeOverlay.HapViewerAndroid.DayNight</item>
 
-        <item name="homeInfoItemStyle">@style/HomeInfoItem.Material</item>
-        <item name="homeInfoItemSpacerStyle">@style/HomeInfoItem.Spacer.Material</item>
+        <item name="materialCardViewStyle">?materialCardViewElevatedStyle</item>
+        <item name="actionBarPopupTheme">@style/ThemeOverlay.HapViewerAndroid.DayNight</item>
+        <item name="checkboxStyle">@style/Widget.HapViewerAndroid.CompoundButton.CheckBox</item>
+        <item name="radioButtonStyle">@style/Widget.HapViewerAndroid.CompoundButton.RadioButton
+        </item>
+
         <item name="textAppearanceTitleMedium">
             @style/TextAppearance.HapViewerAndroid.Material3.TitleMedium
         </item>
+
+        <item name="selectFileIcon">@drawable/ic_file</item>
+        <item name="dropFileIcon">@drawable/ic_file_upload</item>
+
+        <item name="liftOnScroll">true</item>
+        <item name="homeInfoItemStyle">@style/HomeInfoItem.Material</item>
+        <item name="homeInfoItemSpacerStyle">@style/HomeInfoItem.Spacer.Material</item>
         <item name="paddingBottomWithFabSize">72dp</item>
         <item name="cardMargin">16dp</item>
         <item name="listPaddingVertical">8dp</item>

@@ -15,6 +15,7 @@
     <style name="Base.Theme.HapViewerAndroid" parent="Platform.Theme.HapViewerAndroid">
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>
+
         <item name="colorPrimary">@color/color_primary</item>
         <item name="colorOnPrimary">@android:color/white</item>
         <item name="colorSecondary">@color/color_secondary</item>
@@ -25,11 +26,10 @@
         </item>
         <item name="materialCardViewStyle">?materialCardViewElevatedStyle</item>
 
-        <item name="liftOnScroll">false</item>
-
         <item name="selectFileIcon">@drawable/ic_file</item>
         <item name="dropFileIcon">@drawable/ic_file_upload</item>
 
+        <item name="liftOnScroll">false</item>
         <item name="homeInfoItemStyle">@style/HomeInfoItem.Material</item>
         <item name="homeInfoItemSpacerStyle">@style/HomeInfoItem.Spacer.Material</item>
         <item name="paddingBottomWithFabSize">64dp</item>

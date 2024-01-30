@@ -1,5 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources xmlns:tools="http://schemas.android.com/tools" tools:ignore="PrivateResource">
+    <!-- 修正CheckBox和RadioButton的大小 -->
+    <style name="Widget.HapViewerAndroid.CompoundButton.CheckBox" parent="Widget.MaterialComponents.CompoundButton.CheckBox">
+        <item name="android:minWidth">0dp</item>
+        <item name="android:minHeight">0dp</item>
+    </style>
+    <style name="Widget.HapViewerAndroid.CompoundButton.RadioButton" parent="Widget.MaterialComponents.CompoundButton.RadioButton">
+        <item name="android:minWidth">0dp</item>
+        <item name="android:minHeight">0dp</item>
+    </style>
 
     <!-- CardView -->
     <style name="Widget.HapViewerAndroid.CardView.Elevated" parent="Widget.MaterialComponents.CardView">
