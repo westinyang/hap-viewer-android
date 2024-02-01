@@ -8,8 +8,9 @@
         <item name="dropFileIcon">@drawable/harmony_ic_public_upload_filled</item>
 
         <item name="liftOnScroll">false</item>
-        <item name="homeInfoItemStyle">@style/HomeInfoItem.Harmony</item>
-        <item name="homeInfoItemSpacerStyle">@style/HomeInfoItem.Spacer.Harmony</item>
+        <item name="listItemGroupStyle">@style/Widget.ListItemGroup.Harmony</item>
+        <item name="listItemStyle">@style/Widget.ListItem.Layout.Harmony</item>
+        <item name="listItemSpacerStyle">@style/Widget.ListItem.Layout.Spacer.Harmony</item>
         <item name="cardMargin">@dimen/harmony_space_elements_card</item>
         <item name="paddingBottomWithFabSize">64dp</item>
         <item name="itemMargin">12dp</item>

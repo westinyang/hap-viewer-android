@@ -9,6 +9,7 @@ import android.net.Uri
 import android.os.Build
 import android.os.Bundle
 import android.util.Log
+import android.view.ContextMenu
 import android.view.DragEvent
 import android.view.Menu
 import android.view.MenuItem
@@ -20,7 +21,6 @@ import androidx.activity.viewModels
 import androidx.appcompat.app.AlertDialog
 import androidx.coordinatorlayout.widget.CoordinatorLayout
 import androidx.core.app.ActivityCompat
-import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.snackbar.Snackbar
 import org.ohosdev.hapviewerandroid.BuildConfig
@@ -32,11 +32,11 @@ import org.ohosdev.hapviewerandroid.app.AppPreference.ThemeType.MATERIAL2
 import org.ohosdev.hapviewerandroid.app.AppPreference.ThemeType.MATERIAL3
 import org.ohosdev.hapviewerandroid.app.BaseActivity
 import org.ohosdev.hapviewerandroid.databinding.ActivityMainBinding
-import org.ohosdev.hapviewerandroid.extensions.applyDividerIfEnabled
 import org.ohosdev.hapviewerandroid.extensions.copyText
 import org.ohosdev.hapviewerandroid.extensions.fixDialogGravityIfNeeded
 import org.ohosdev.hapviewerandroid.extensions.getBitmap
 import org.ohosdev.hapviewerandroid.extensions.getFirstUri
+import org.ohosdev.hapviewerandroid.extensions.getTechDesc
 import org.ohosdev.hapviewerandroid.extensions.hasFileMime
 import org.ohosdev.hapviewerandroid.extensions.init
 import org.ohosdev.hapviewerandroid.extensions.isGranted
@@ -50,15 +50,22 @@ import org.ohosdev.hapviewerandroid.util.HarmonyOSUtil
 import org.ohosdev.hapviewerandroid.util.ShizukuUtil
 import org.ohosdev.hapviewerandroid.util.ShizukuUtil.ShizukuLifecycleObserver
 import org.ohosdev.hapviewerandroid.util.dialog.RequestPermissionDialogBuilder
-import org.ohosdev.hapviewerandroid.view.AdvancedRecyclerView.RecyclerViewContextMenuInfo
 import org.ohosdev.hapviewerandroid.view.drawable.ShadowBitmapDrawable
+import org.ohosdev.hapviewerandroid.view.list.ListItem
+import org.ohosdev.hapviewerandroid.view.list.ListItemGroup
 
 class MainActivity : BaseActivity(), OnDragListener {
     private val binding by lazy { ActivityMainBinding.inflate(layoutInflater) }
     override val rootView: CoordinatorLayout get() = binding.root
     private val model: MainViewModel by viewModels()
+    private var hapInfo
+        get() = model.hapInfo.value!!
+        set(value) {
+            model.hapInfo.value = value
+        }
 
-    private val infoAdapter by lazy { InfoAdapter(this, this::onInfoItemClick) }
+
+    // private val infoAdapter by lazy { InfoAdapter(this, this::onInfoItemClick) }
     private val selectFileResultLauncher =
         registerForActivityResult<String, Uri>(ActivityResultContracts.GetContent()) { handelUri(it) }
     private val onExitCallback by lazy { OnExitCallback() }
@@ -109,12 +116,6 @@ class MainActivity : BaseActivity(), OnDragListener {
         setSupportActionBar(toolbar)
         basicInfo.imageView.background = ShadowBitmapDrawable()
 
-        detailInfo.recyclerView.apply {
-            adapter = infoAdapter
-            layoutManager = LinearLayoutManager(this@MainActivity)
-            applyDividerIfEnabled()
-        }
-
         dropMask.root.setOnDragListener(this@MainActivity)
 
         selectHapButton.setOnClickListener {
@@ -142,53 +143,51 @@ class MainActivity : BaseActivity(), OnDragListener {
 
             selectHapFile()
         }
-        registerForContextMenu(detailInfo.recyclerView)
-
-        detailInfo.recyclerView.setOnCreateContextMenuListener { menu, v, menuInfo ->
-            @Suppress("UNCHECKED_CAST")
-            menuInfo as RecyclerViewContextMenuInfo<InfoAdapter.ViewHolder>
-            menu.setHeaderTitle(menuInfo.viewHolder.name)
-            menuInflater.inflate(R.menu.menu_main_info, menu)
-        }
-
+        registerForContextMenu(detailInfo.infoItemGroup)
     }
 
-    @Suppress("UNCHECKED_CAST")
-    override fun onContextItemSelected(item: MenuItem): Boolean {
-        when (val menuInfo = item.menuInfo) {
-            is RecyclerViewContextMenuInfo<*> -> {
-                when (val viewHolder = menuInfo.viewHolder) {
-                    is InfoAdapter.ViewHolder -> {
-                        onInfoContextItemSelected(
-                            item,
-                            viewHolder
-                        )
-                    }
-                }
+    override fun onCreateContextMenu(
+        menu: ContextMenu,
+        v: View?,
+        menuInfo: ContextMenu.ContextMenuInfo?
+    ) {
+        when (menuInfo) {
+            is ListItemGroup.ListItemGroupContextMenuInfo -> {
+                menu.setHeaderTitle(menuInfo.title)
+                menuInflater.inflate(R.menu.menu_main_info, menu)
             }
 
-            else -> return super.onContextItemSelected(item)
+            else -> super.onCreateContextMenu(menu, v, menuInfo)
         }
-        return true
+    }
+
+    override fun onContextItemSelected(item: MenuItem): Boolean {
+        when (val menuInfo = item.menuInfo) {
+            is ListItemGroup.ListItemGroupContextMenuInfo -> {
+                return onInfoContextItemSelected(item, menuInfo)
+            }
+        }
+        return super.onContextItemSelected(item)
     }
 
     private fun onInfoContextItemSelected(
         item: MenuItem,
-        viewHolder: InfoAdapter.ViewHolder
+        menuInfo: ListItemGroup.ListItemGroupContextMenuInfo
     ): Boolean {
         when (item.itemId) {
             R.id.action_copy -> {
-                viewHolder.content.also {
+                menuInfo.valueText.also {
                     if (it.isNullOrEmpty()) return false
                     copyText(it)
                 }
-                showSnackBar(getString(R.string.copied_withName, viewHolder.name))
+                showSnackBar(getString(R.string.copied_withName, menuInfo.title))
             }
 
             else -> return false
         }
         return true
     }
+
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
         val inflater = menuInflater
@@ -222,7 +221,7 @@ class MainActivity : BaseActivity(), OnDragListener {
             R.id.action_theme_material2 -> changeTheme(MATERIAL2)
             R.id.action_theme_material3 -> changeTheme(MATERIAL3)
             R.id.action_theme_harmony -> changeTheme(HARMONY)
-            R.id.action_install -> model.hapInfo.value?.let { installHap(it) }
+            R.id.action_install -> installHap(hapInfo)
             else -> return false
         }
         return true
@@ -242,7 +241,7 @@ class MainActivity : BaseActivity(), OnDragListener {
         if (grantResults.all { it == PackageManager.PERMISSION_GRANTED }) {
             when (requestCode) {
                 REQUEST_CODE_SELECT_FILE -> selectHapFile()
-                REQUEST_CODE_SHIZUKU_INSTALL -> installHap(model.hapInfo.value!!)
+                REQUEST_CODE_SHIZUKU_INSTALL -> installHap(hapInfo)
             }
         } else {
             when (requestCode) {
@@ -318,10 +317,6 @@ class MainActivity : BaseActivity(), OnDragListener {
         handelUri(intent.data)
     }
 
-    private fun onInfoItemClick(holder: InfoAdapter.ViewHolder) {
-        // TODO
-    }
-
     // 重写该方法，将 SnackBar 放置到悬浮按钮之上
     @SuppressLint("ShowToast")
     override fun showSnackBar(text: String) =
@@ -332,6 +327,8 @@ class MainActivity : BaseActivity(), OnDragListener {
 
 
     private fun onHapInfoChanged(hapInfo: HapInfo = HapInfo.INIT) {
+        val unknownString = getString(android.R.string.unknownName)
+        val unknownTechString = getString(R.string.info_tech_unknown)
         hapInfo.let {
             // 显示基础信息，暂时用不到。
             /* binding.basicInfo.apply {
@@ -339,8 +336,21 @@ class MainActivity : BaseActivity(), OnDragListener {
                 version.text = String.format("%s (%s)", it.versionName, it.versionCode)
             } */
             applyHapIcon(it)
-            infoAdapter.setInfo(it)
+            fun ListItem.setHapInfoValue(value: String?) {
+                val enabled = !it.init && value != null
+                valueText = if (enabled) value else unknownString
+                isEnabled = enabled
+            }
+            binding.detailInfo.apply {
+                appNameItem.setHapInfoValue(it.appName)
+                packageNameItem.setHapInfoValue(it.packageName)
+                versionNameItem.setHapInfoValue(it.versionName)
+                versionCodeItem.setHapInfoValue(it.versionCode)
+                targetItem.setHapInfoValue("API ${it.targetAPIVersion} (${it.apiReleaseType})")
+                techItem.setHapInfoValue(it.getTechDesc(this@MainActivity) ?: unknownTechString)
+            }
         }
+
     }
 
     /**
@@ -362,7 +372,6 @@ class MainActivity : BaseActivity(), OnDragListener {
                     setShadowBitmap(iconBitmap, resources.getDimension(R.dimen.icon_shadow_radius))
                 }
             }
-            // background = newIconShadowDrawable(iconBitmap)
         }
     }
 
@@ -399,6 +408,9 @@ class MainActivity : BaseActivity(), OnDragListener {
             .fixDialogGravityIfNeeded()
     }
 
+    /**
+     * 按两次返回键退出
+     * */
     private inner class OnExitCallback : OnBackPressedCallback(true) {
         // 不能共用一个 SnackBar
         var snackBar: Snackbar? = null

@@ -40,8 +40,9 @@
         <item name="dropFileIcon">@drawable/ic_file_upload</item>
 
         <item name="liftOnScroll">true</item>
-        <item name="homeInfoItemStyle">@style/HomeInfoItem.Material</item>
-        <item name="homeInfoItemSpacerStyle">@style/HomeInfoItem.Spacer.Material</item>
+        <item name="listItemGroupStyle">@style/Widget.ListItemGroup.Material</item>
+        <item name="listItemStyle">@style/Widget.ListItem.Layout.Material</item>
+        <item name="listItemSpacerStyle">@style/Widget.ListItem.Layout.Spacer.Material</item>
         <item name="paddingBottomWithFabSize">64dp</item>
         <item name="cardMargin">16dp</item>
         <item name="listPaddingVertical">8dp</item>

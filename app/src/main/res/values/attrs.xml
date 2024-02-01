@@ -12,4 +12,13 @@
     <attr name="cardMargin" format="dimension" />
     <attr name="listPaddingVertical" format="dimension" />
     <attr name="itemMargin" format="dimension" />
+
+    <attr name="listItemGroupStyle" format="reference" />
+    <attr name="listItemStyle" format="reference" />
+    <attr name="listItemSpacerStyle" format="reference" />
+
+    <declare-styleable name="ListItem">
+        <attr name="android:title" format="string" />
+        <attr name="android:value" format="string" />
+    </declare-styleable>
 </resources>
