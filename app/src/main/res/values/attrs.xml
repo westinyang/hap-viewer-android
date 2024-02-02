@@ -1,18 +1,25 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <!-- Booleans -->
     <attr name="windowLightStatusBar" format="boolean" />
     <attr name="windowLightNavigationBar" format="boolean" />
-    <attr name="paddingBottomWithFabSize" format="dimension" />
-    <attr name="selectFileIcon" format="reference" />
-    <attr name="dropFileIcon" format="reference" />
     <attr name="enableDivider" format="boolean" />
-    <attr name="homeInfoItemStyle" format="reference" />
-    <attr name="homeInfoItemSpacerStyle" format="reference" />
-    <attr name="homeAppIconStyle" format="reference" />
+
+    <attr name="codeColorNumber" format="color" />
+    <attr name="codeColorString" format="color" />
+    <attr name="codeColorKeyword" format="color" />
+
+    <!-- Paddings & Margins -->
+    <attr name="paddingBottomWithFabSize" format="dimension" />
     <attr name="cardMargin" format="dimension" />
     <attr name="listPaddingVertical" format="dimension" />
     <attr name="itemMargin" format="dimension" />
 
+    <!-- Icons -->
+    <attr name="selectFileIcon" format="reference" />
+    <attr name="dropFileIcon" format="reference" />
+
+    <!-- Styles -->
     <attr name="listItemGroupStyle" format="reference" />
     <attr name="listItemStyle" format="reference" />
     <attr name="listItemLayoutStyle" format="reference" />

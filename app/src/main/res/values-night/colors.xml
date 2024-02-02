@@ -1,4 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <color name="system_window_scrim_compat">@color/system_window_scrim</color>
+
+    <color name="material_code_color_string">#66BB6A</color>
+    <color name="material_code_color_number">#42A5F5</color>
+    <color name="material_code_color_keyword">#7E57C2</color>
+
+    <color name="harmony_code_color_string">#5BA854</color>
+    <color name="harmony_code_color_number">#4796C4</color>
+    <color name="harmony_code_color_keyword">#8C55C2</color>
 </resources>

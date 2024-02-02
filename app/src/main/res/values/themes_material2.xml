@@ -21,6 +21,10 @@
         <item name="colorSecondary">@color/color_secondary</item>
         <item name="colorOnSecondary">@android:color/white</item>
 
+        <item name="codeColorString">@color/material_code_color_string</item>
+        <item name="codeColorNumber">@color/material_code_color_number</item>
+        <item name="codeColorKeyword">@color/material_code_color_keyword</item>
+
         <item name="materialCardViewOutlinedStyle">
             @style/Widget.HapViewerAndroid.CardView.Outlined
         </item>
@@ -34,7 +38,8 @@
         <item name="toolbarSurfaceStyle">@style/Widget.HapViewerAndroid.Toolbar.Surface</item>
         <item name="toolbarStyle">?toolbarSurfaceStyle</item>
         <item name="checkboxStyle">@style/Widget.HapViewerAndroid.CompoundButton.CheckBox</item>
-        <item name="radioButtonStyle">@style/Widget.HapViewerAndroid.CompoundButton.RadioButton</item>
+        <item name="radioButtonStyle">@style/Widget.HapViewerAndroid.CompoundButton.RadioButton
+        </item>
 
         <item name="selectFileIcon">@drawable/ic_file</item>
         <item name="dropFileIcon">@drawable/ic_file_upload</item>

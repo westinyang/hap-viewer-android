@@ -21,6 +21,10 @@
         <item name="colorSecondary">@color/color_secondary</item>
         <item name="colorOnSecondary">@android:color/white</item>
 
+        <item name="codeColorString">@color/material_code_color_string</item>
+        <item name="codeColorNumber">@color/material_code_color_number</item>
+        <item name="codeColorKeyword">@color/material_code_color_keyword</item>
+
         <item name="materialCardViewElevatedStyle">
             @style/Widget.HapViewerAndroid.CardView.Elevated
         </item>

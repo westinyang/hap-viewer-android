@@ -15,7 +15,12 @@
     <style name="Base.Theme.HapViewerAndroid.Material3" parent="Platform.Theme.HapViewerAndroid.Material3">
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>
+
         <item name="colorAccent">?colorPrimary</item>
+
+        <item name="codeColorString">@color/material_code_color_string</item>
+        <item name="codeColorNumber">@color/material_code_color_number</item>
+        <item name="codeColorKeyword">@color/material_code_color_keyword</item>
 
         <item name="materialCardViewStyle">?materialCardViewElevatedStyle</item>
         <item name="actionBarPopupTheme">@style/ThemeOverlay.HapViewerAndroid.DayNight</item>
@@ -23,6 +28,7 @@
         <item name="radioButtonStyle">@style/Widget.HapViewerAndroid.CompoundButton.RadioButton
         </item>
 
+        <!-- 恢复正常的列表标题大小 -->
         <item name="textAppearanceTitleMedium">
             @style/TextAppearance.HapViewerAndroid.Material3.TitleMedium
         </item>
