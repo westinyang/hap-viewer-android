@@ -21,9 +21,7 @@ import androidx.activity.viewModels
 import androidx.appcompat.app.AlertDialog
 import androidx.coordinatorlayout.widget.CoordinatorLayout
 import androidx.core.app.ActivityCompat
-import androidx.core.text.HtmlCompat
 import cn.hutool.json.JSONUtil
-import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.snackbar.Snackbar
 import org.ohosdev.hapviewerandroid.BuildConfig
 import org.ohosdev.hapviewerandroid.R
@@ -34,7 +32,6 @@ import org.ohosdev.hapviewerandroid.app.AppPreference.ThemeType.MATERIAL2
 import org.ohosdev.hapviewerandroid.app.AppPreference.ThemeType.MATERIAL3
 import org.ohosdev.hapviewerandroid.app.BaseActivity
 import org.ohosdev.hapviewerandroid.databinding.ActivityMainBinding
-import org.ohosdev.hapviewerandroid.extensions.contentSelectable
 import org.ohosdev.hapviewerandroid.extensions.copyText
 import org.ohosdev.hapviewerandroid.extensions.fixDialogGravityIfNeeded
 import org.ohosdev.hapviewerandroid.extensions.getBitmap
@@ -48,12 +45,13 @@ import org.ohosdev.hapviewerandroid.extensions.openUrl
 import org.ohosdev.hapviewerandroid.extensions.overrideAnimationDurationIfNeeded
 import org.ohosdev.hapviewerandroid.extensions.thisApp
 import org.ohosdev.hapviewerandroid.fragment.dialog.AboutDialogFragment
+import org.ohosdev.hapviewerandroid.fragment.dialog.MoreInfoDialogFragment
+import org.ohosdev.hapviewerandroid.fragment.dialog.SimpleDialogFragment
 import org.ohosdev.hapviewerandroid.model.HapInfo
 import org.ohosdev.hapviewerandroid.util.HarmonyOSUtil
 import org.ohosdev.hapviewerandroid.util.ShizukuUtil
 import org.ohosdev.hapviewerandroid.util.ShizukuUtil.ShizukuLifecycleObserver
 import org.ohosdev.hapviewerandroid.util.dialog.RequestPermissionDialogBuilder
-import org.ohosdev.hapviewerandroid.util.highlight.JSONHighlighter
 import org.ohosdev.hapviewerandroid.view.drawable.ShadowBitmapDrawable
 import org.ohosdev.hapviewerandroid.view.list.ListItem
 import org.ohosdev.hapviewerandroid.view.list.ListItemGroup
@@ -105,6 +103,11 @@ class MainActivity : BaseActivity(), OnDragListener {
 
         // 解析传入的 Intent
         if (savedInstanceState == null) handelUri(intent.data)
+
+        supportFragmentManager.setFragmentResultListener(REQUEST_KEY_INSTALL_HAP, this) { _, _ ->
+            model.installHapWaitingShizuku(hapInfo)
+        }
+
     }
 
     private fun initViews() = binding.apply {
@@ -281,42 +284,9 @@ class MainActivity : BaseActivity(), OnDragListener {
     @SuppressLint("ResourceType")
     @OptIn(ExperimentalStdlibApi::class)
     private fun showMoreInfoDialog() {
-        val stringColor: String
-        val numberColor: String
-        val keywordColor: String
-        obtainStyledAttributes(
-            intArrayOf(
-                R.attr.codeColorString,
-                R.attr.codeColorNumber,
-                R.attr.codeColorKeyword
-            )
-        ).also {
-            val noAlphaBlack = 0xff000000.toInt()
-            fun getCodeColor(index: Int) =
-                it.getColor(index, Color.RED).run { "#${(this - noAlphaBlack).toHexString()}" }
-            stringColor = getCodeColor(0)
-            numberColor = getCodeColor(1)
-            keywordColor = getCodeColor(2)
-        }.recycle()
-
-        val htmlSpanned = HtmlCompat.fromHtml(
-            JSONHighlighter.highlight(
-                JSONUtil.toJsonPrettyStr(hapInfo.moreInfo),
-                stringColor = stringColor,
-                numberColor = numberColor,
-                keywordColor = keywordColor
-            ),
-            HtmlCompat.FROM_HTML_MODE_LEGACY
-        )
-        MaterialAlertDialogBuilder(this)
-            .setTitle(R.string.more_info)
-            .setMessage(htmlSpanned)
-            .setPositiveButton(android.R.string.ok, null)
-            .show().apply {
-                contentSelectable = true
-                fixDialogGravityIfNeeded()
-            }
-
+        MoreInfoDialogFragment()
+            .setInfoJson(JSONUtil.toJsonPrettyStr(hapInfo.moreInfo))
+            .show(supportFragmentManager, MoreInfoDialogFragment.TAG)
     }
 
 
@@ -450,13 +420,12 @@ class MainActivity : BaseActivity(), OnDragListener {
             }
             return
         }
-        MaterialAlertDialogBuilder(this)
+        SimpleDialogFragment()
             .setTitle(R.string.install_hap)
             .setMessage(R.string.install_hap_message)
-            .setPositiveButton(android.R.string.ok) { _, _ -> model.installHapWaitingShizuku(hapInfo) }
+            .setPositiveButton(android.R.string.ok, "install_hap")
             .setNegativeButton(android.R.string.cancel, null)
-            .show()
-            .fixDialogGravityIfNeeded()
+            .show(supportFragmentManager, REQUEST_KEY_INSTALL_HAP)
     }
 
     /**
@@ -498,5 +467,7 @@ class MainActivity : BaseActivity(), OnDragListener {
          * */
         private const val REQUEST_CODE_SELECT_FILE = 1
         private const val REQUEST_CODE_SHIZUKU_INSTALL = 2
+
+        private const val REQUEST_KEY_INSTALL_HAP = "install_hap"
     }
 }
