@@ -44,4 +44,5 @@
     <string name="permission_storage">Storage permission</string>
     <string name="permission_storage_additional">If you do not grant this permission, the file will be copied to the private space before being read.</string>
     <string name="colon">": "</string>
+    <string name="more_info">More informations</string>
 </resources>

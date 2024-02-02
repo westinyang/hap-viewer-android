@@ -44,6 +44,7 @@
         <item name="android:focusable">auto</item>
         <item name="android:clickable">true</item>
         <item name="android:longClickable">true</item>
+        <item name="android:contextClickable">true</item>
     </style>
 
     <style name="Widget.ListItem.Layout.Material" parent="">

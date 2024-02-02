@@ -1,10 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    style="?attr/listItemStyle"
+    style="?attr/listItemLayoutStyle"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:focusable="auto"
     android:gravity="center_vertical">
     <!-- 鸿蒙风格横向排列，质感风格纵向排列 -->
 
@@ -13,6 +12,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textAppearance="?textAppearanceListItem"
+        android:textColor="@color/text_primary_selector"
         tools:text="@string/info_appName" />
 
     <android.widget.Space
@@ -28,6 +28,6 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textAppearance="?textAppearanceListItemSecondary"
-        android:textColor="?android:textColorSecondary"
+        android:textColor="@color/text_secondary_selector"
         tools:text="@android:string/unknownName" />
 </LinearLayout>

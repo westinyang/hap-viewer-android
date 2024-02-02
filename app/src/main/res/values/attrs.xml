@@ -15,10 +15,12 @@
 
     <attr name="listItemGroupStyle" format="reference" />
     <attr name="listItemStyle" format="reference" />
+    <attr name="listItemLayoutStyle" format="reference" />
     <attr name="listItemSpacerStyle" format="reference" />
 
     <declare-styleable name="ListItem">
         <attr name="android:title" format="string" />
         <attr name="android:value" format="string" />
+        <attr name="android:enabled" format="string" />
     </declare-styleable>
 </resources>

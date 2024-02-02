@@ -31,7 +31,7 @@ class ListItem : FrameLayout {
         }
 
     constructor(context: Context) : this(context, null)
-    constructor(context: Context, attrs: AttributeSet?) : this(context, attrs, 0)
+    constructor(context: Context, attrs: AttributeSet?) : this(context, attrs, R.attr.listItemStyle)
     constructor(context: Context, attrs: AttributeSet?, defStyleAttr: Int) : this(
         context, attrs, defStyleAttr, R.style.Widget_ListItem_Material
     )
@@ -42,8 +42,15 @@ class ListItem : FrameLayout {
         context.obtainStyledAttributes(attrs, R.styleable.ListItem, defStyleAttr, 0).also {
             title = it.getString(R.styleable.ListItem_android_title)
             valueText = it.getString(R.styleable.ListItem_android_value)
+            isEnabled = it.getBoolean(R.styleable.ListItem_android_enabled, true)
         }.recycle()
     }
 
+    override fun setEnabled(enabled: Boolean) {
+        super.setEnabled(enabled)
+        binding.titleText.isEnabled = enabled
+        binding.valueText.isEnabled = enabled
+        binding.root.isEnabled = enabled
+    }
 
 }

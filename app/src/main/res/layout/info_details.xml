@@ -55,5 +55,12 @@
             android:layout_height="wrap_content"
             android:title="@string/info_tech" />
 
+        <org.ohosdev.hapviewerandroid.view.list.ListItem
+            android:id="@+id/more_info_item"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:enabled="false"
+            android:title="@string/more_info" />
+
     </org.ohosdev.hapviewerandroid.view.list.ListItemGroup>
 </com.google.android.material.card.MaterialCardView>

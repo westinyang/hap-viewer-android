@@ -41,7 +41,8 @@
 
         <item name="liftOnScroll">true</item>
         <item name="listItemGroupStyle">@style/Widget.ListItemGroup.Material</item>
-        <item name="listItemStyle">@style/Widget.ListItem.Layout.Material</item>
+        <item name="listItemStyle">@style/Widget.ListItem.Material</item>
+        <item name="listItemLayoutStyle">@style/Widget.ListItem.Layout.Material</item>
         <item name="listItemSpacerStyle">@style/Widget.ListItem.Layout.Spacer.Material</item>
         <item name="paddingBottomWithFabSize">64dp</item>
         <item name="cardMargin">16dp</item>

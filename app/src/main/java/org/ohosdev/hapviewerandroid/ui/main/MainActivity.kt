@@ -21,6 +21,7 @@ import androidx.activity.viewModels
 import androidx.appcompat.app.AlertDialog
 import androidx.coordinatorlayout.widget.CoordinatorLayout
 import androidx.core.app.ActivityCompat
+import cn.hutool.json.JSONUtil
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.snackbar.Snackbar
 import org.ohosdev.hapviewerandroid.BuildConfig
@@ -32,6 +33,7 @@ import org.ohosdev.hapviewerandroid.app.AppPreference.ThemeType.MATERIAL2
 import org.ohosdev.hapviewerandroid.app.AppPreference.ThemeType.MATERIAL3
 import org.ohosdev.hapviewerandroid.app.BaseActivity
 import org.ohosdev.hapviewerandroid.databinding.ActivityMainBinding
+import org.ohosdev.hapviewerandroid.extensions.contentSelectable
 import org.ohosdev.hapviewerandroid.extensions.copyText
 import org.ohosdev.hapviewerandroid.extensions.fixDialogGravityIfNeeded
 import org.ohosdev.hapviewerandroid.extensions.getBitmap
@@ -114,6 +116,7 @@ class MainActivity : BaseActivity(), OnDragListener {
 
         setContentView(root)
         setSupportActionBar(toolbar)
+
         basicInfo.imageView.background = ShadowBitmapDrawable()
 
         dropMask.root.setOnDragListener(this@MainActivity)
@@ -144,6 +147,8 @@ class MainActivity : BaseActivity(), OnDragListener {
             selectHapFile()
         }
         registerForContextMenu(detailInfo.infoItemGroup)
+
+        detailInfo.moreInfoItem.setOnClickListener { showMoreInfoDialog() }
     }
 
     override fun onCreateContextMenu(
@@ -154,7 +159,9 @@ class MainActivity : BaseActivity(), OnDragListener {
         when (menuInfo) {
             is ListItemGroup.ListItemGroupContextMenuInfo -> {
                 menu.setHeaderTitle(menuInfo.title)
-                menuInflater.inflate(R.menu.menu_main_info, menu)
+                if (!hapInfo.init && !menuInfo.valueText.isNullOrEmpty()) {
+                    menuInflater.inflate(R.menu.menu_main_info, menu)
+                }
             }
 
             else -> super.onCreateContextMenu(menu, v, menuInfo)
@@ -162,6 +169,7 @@ class MainActivity : BaseActivity(), OnDragListener {
     }
 
     override fun onContextItemSelected(item: MenuItem): Boolean {
+        // 将各自的事件传出去
         when (val menuInfo = item.menuInfo) {
             is ListItemGroup.ListItemGroupContextMenuInfo -> {
                 return onInfoContextItemSelected(item, menuInfo)
@@ -268,6 +276,18 @@ class MainActivity : BaseActivity(), OnDragListener {
     private fun showAboutDialog() =
         AboutDialogFragment().show(supportFragmentManager, AboutDialogFragment.TAG)
 
+    private fun showMoreInfoDialog() {
+        MaterialAlertDialogBuilder(this)
+            .setTitle(R.string.more_info)
+            .setMessage(JSONUtil.toJsonPrettyStr(hapInfo.moreInfo))
+            .setPositiveButton(android.R.string.ok, null)
+            .show().apply {
+                contentSelectable = true
+                fixDialogGravityIfNeeded()
+            }
+
+    }
+
 
     private fun selectHapFile() {
         // Hap 文件 mime 类型未知，使用 */* 更保险
@@ -339,7 +359,6 @@ class MainActivity : BaseActivity(), OnDragListener {
             fun ListItem.setHapInfoValue(value: String?) {
                 val enabled = !it.init && value != null
                 valueText = if (enabled) value else unknownString
-                isEnabled = enabled
             }
             binding.detailInfo.apply {
                 appNameItem.setHapInfoValue(it.appName)
@@ -348,6 +367,7 @@ class MainActivity : BaseActivity(), OnDragListener {
                 versionCodeItem.setHapInfoValue(it.versionCode)
                 targetItem.setHapInfoValue("API ${it.targetAPIVersion} (${it.apiReleaseType})")
                 techItem.setHapInfoValue(it.getTechDesc(this@MainActivity) ?: unknownTechString)
+                moreInfoItem.isEnabled = !it.init && it.moreInfo != null
             }
         }
 
