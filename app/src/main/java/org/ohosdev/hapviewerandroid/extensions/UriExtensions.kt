@@ -4,7 +4,6 @@ import android.Manifest
 import android.content.ContentResolver
 import android.content.ContentUris
 import android.content.Context
-import android.database.Cursor
 import android.net.Uri
 import android.os.Environment
 import android.provider.DocumentsContract
@@ -35,22 +34,18 @@ fun Uri.getDataColumn(
     selection: String?,
     selectionArgs: Array<String>?
 ): String? {
-    context.also {
-        var cursor: Cursor? = null
-        val column = "_data"
-        val projection = arrayOf(column)
-        try {
-            cursor = it.contentResolver.query(
-                this, projection, selection, selectionArgs, null
-            )
-            if (cursor?.moveToFirst() == true) {
-                val columnIndex = cursor.getColumnIndex(column)
-                return cursor.getString(columnIndex)
-            }
-        } finally {
-            cursor?.close()
+    val column = "_data"
+    val projection = arrayOf(column)
+
+    val cursor = context.contentResolver.query(this, projection, selection, selectionArgs, null)
+        ?: return null
+    cursor.use {
+        if (it.moveToFirst() == true) {
+            val columnIndex = it.getColumnIndex(column)
+            return it.getString(columnIndex)
         }
     }
+
     return null
 }
 
