@@ -45,11 +45,15 @@ class SimpleDialogFragment : DialogFragment() {
 
 
         }.create().apply {
-            setOnShowListener {
-                arguments?.also {
-                    contentSelectable = it.getBoolean("selectable", false)
-                }
-                fixDialogGravityIfNeeded()
+            fixDialogGravityIfNeeded()
+        }
+    }
+
+    override fun onStart() {
+        super.onStart()
+        dialog?.apply {
+            arguments?.also {
+                contentSelectable = it.getBoolean("selectable", false)
             }
         }
     }

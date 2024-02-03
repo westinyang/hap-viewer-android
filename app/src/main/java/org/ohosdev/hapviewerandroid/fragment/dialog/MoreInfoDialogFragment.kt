@@ -54,11 +54,15 @@ class MoreInfoDialogFragment : DialogFragment() {
             .setMessage(htmlSpanned)
             .setPositiveButton(android.R.string.ok, null)
             .create().apply {
-                setOnShowListener {
-                    contentSelectable = true
-                    fixDialogGravityIfNeeded()
-                }
+                fixDialogGravityIfNeeded()
             }
+    }
+
+    override fun onStart() {
+        super.onStart()
+        dialog?.apply {
+            contentSelectable = true
+        }
     }
 
     fun setInfoJson(info: CharSequence) = apply {
