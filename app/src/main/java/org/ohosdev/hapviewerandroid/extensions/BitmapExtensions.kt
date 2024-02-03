@@ -60,17 +60,6 @@ fun Bitmap.newShadowBitmap(
         scaledWidth = (height.toFloat() / srcHeight * srcWidth + 0.5f).toInt()
     }
 
-    /* val innerWidth: Int
-    val innerHeight: Int
-    // 计算新的宽高，使图片四周留出2*shadowRadius边距
-    if (srcWidth > srcHeight) {
-        innerWidth = (width - shadowRadius * 2).toInt()
-        innerHeight = (innerWidth.toFloat() / srcWidth * srcHeight).roundToInt()
-    } else {
-        innerHeight = (height - shadowRadius * 2).toInt()
-        innerWidth = (innerHeight.toFloat() / srcHeight * srcWidth).roundToInt()
-    } */
-
     val newBitmap = Bitmap.createBitmap(
         (width + shadowRadius * 2 + 0.5f).toInt(),
         (height + shadowRadius * 2 + 0.5f).toInt(),

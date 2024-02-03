@@ -50,8 +50,8 @@ fun HapInfo.installToSelf(helper: ShizukuServiceHelper): ExecuteResult {
     return result
 }
 
-fun HapInfo.getTechDesc(context: Context): String? {
-    // techList可能为空，所以应该加?。
-    return if (techList?.isNotEmpty() == true) techList?.joinToString(context.getString(R.string.separator))
-    else null
+fun HapInfo.getTechDesc(context: Context) = techList.let {
+    // techList可能为空
+    if (!it.isNullOrEmpty()) it.joinToString(context.getString(R.string.separator)) else null
 }
+

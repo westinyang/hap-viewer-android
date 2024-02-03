@@ -278,11 +278,10 @@ class MainActivity : BaseActivity(), OnDragListener {
     }
 
 
-    private fun showAboutDialog() =
+    private fun showAboutDialog() {
         AboutDialogFragment().show(supportFragmentManager, AboutDialogFragment.TAG)
+    }
 
-    @SuppressLint("ResourceType")
-    @OptIn(ExperimentalStdlibApi::class)
     private fun showMoreInfoDialog() {
         MoreInfoDialogFragment()
             .setInfoJson(JSONUtil.toJsonPrettyStr(hapInfo.moreInfo))
