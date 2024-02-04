@@ -1,14 +1,15 @@
-package org.ohosdev.hapviewerandroid.util.dialog
+package org.ohosdev.hapviewerandroid.ui.common.dialog
 
 import android.content.Context
 import androidx.annotation.StringRes
 import androidx.appcompat.app.AlertDialog
 import org.ohosdev.hapviewerandroid.R
+import org.ohosdev.hapviewerandroid.extensions.fixDialogGravityIfNeeded
 import org.ohosdev.hapviewerandroid.extensions.getQuantityString
 import org.ohosdev.hapviewerandroid.extensions.localisedSeparator
 
-class RequestPermissionDialogBuilder(context: Context) :
-    DialogBuilder<RequestPermissionDialogBuilder>(context) {
+class RequestPermissionDialogBuilder<T : RequestPermissionDialogBuilder<T>>(context: Context) :
+    AlertDialogBuilder<T>(context) {
     private var permissionNames: Array<String> = arrayOf()
     private var functionNames: Array<String> = arrayOf()
     private var onAgree: (() -> Unit)? = null

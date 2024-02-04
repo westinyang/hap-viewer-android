@@ -1,15 +1,14 @@
-package org.ohosdev.hapviewerandroid.fragment.dialog
+package org.ohosdev.hapviewerandroid.ui.main
 
 import android.app.Dialog
 import android.graphics.Color
 import android.os.Bundle
 import androidx.core.text.HtmlCompat
 import androidx.fragment.app.DialogFragment
-import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import org.ohosdev.hapviewerandroid.R
 import org.ohosdev.hapviewerandroid.extensions.contentSelectable
 import org.ohosdev.hapviewerandroid.extensions.ensureArguments
-import org.ohosdev.hapviewerandroid.extensions.fixDialogGravityIfNeeded
+import org.ohosdev.hapviewerandroid.ui.common.dialog.AlertDialogBuilder
 import org.ohosdev.hapviewerandroid.util.highlight.JSONHighlighter
 
 class MoreInfoDialogFragment : DialogFragment() {
@@ -49,13 +48,11 @@ class MoreInfoDialogFragment : DialogFragment() {
 
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
-        return MaterialAlertDialogBuilder(requireContext())
+        return AlertDialogBuilder(requireContext())
             .setTitle(R.string.more_info)
             .setMessage(htmlSpanned)
             .setPositiveButton(android.R.string.ok, null)
-            .create().apply {
-                fixDialogGravityIfNeeded()
-            }
+            .create()
     }
 
     override fun onStart() {

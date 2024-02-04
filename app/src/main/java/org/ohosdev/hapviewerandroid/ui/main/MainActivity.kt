@@ -30,10 +30,9 @@ import org.ohosdev.hapviewerandroid.app.AppPreference.ThemeType.HARMONY
 import org.ohosdev.hapviewerandroid.app.AppPreference.ThemeType.MATERIAL1
 import org.ohosdev.hapviewerandroid.app.AppPreference.ThemeType.MATERIAL2
 import org.ohosdev.hapviewerandroid.app.AppPreference.ThemeType.MATERIAL3
-import org.ohosdev.hapviewerandroid.app.BaseActivity
+import org.ohosdev.hapviewerandroid.ui.common.BaseActivity
 import org.ohosdev.hapviewerandroid.databinding.ActivityMainBinding
 import org.ohosdev.hapviewerandroid.extensions.copyText
-import org.ohosdev.hapviewerandroid.extensions.fixDialogGravityIfNeeded
 import org.ohosdev.hapviewerandroid.extensions.getBitmap
 import org.ohosdev.hapviewerandroid.extensions.getFirstUri
 import org.ohosdev.hapviewerandroid.extensions.getTechDesc
@@ -44,14 +43,13 @@ import org.ohosdev.hapviewerandroid.extensions.isPermissionGranted
 import org.ohosdev.hapviewerandroid.extensions.openUrl
 import org.ohosdev.hapviewerandroid.extensions.overrideAnimationDurationIfNeeded
 import org.ohosdev.hapviewerandroid.extensions.thisApp
-import org.ohosdev.hapviewerandroid.fragment.dialog.AboutDialogFragment
-import org.ohosdev.hapviewerandroid.fragment.dialog.MoreInfoDialogFragment
-import org.ohosdev.hapviewerandroid.fragment.dialog.SimpleDialogFragment
+import org.ohosdev.hapviewerandroid.ui.about.AboutDialogFragment
+import org.ohosdev.hapviewerandroid.ui.common.dialog.SimpleDialogFragment
 import org.ohosdev.hapviewerandroid.model.HapInfo
 import org.ohosdev.hapviewerandroid.util.HarmonyOSUtil
 import org.ohosdev.hapviewerandroid.util.ShizukuUtil
 import org.ohosdev.hapviewerandroid.util.ShizukuUtil.ShizukuLifecycleObserver
-import org.ohosdev.hapviewerandroid.util.dialog.RequestPermissionDialogBuilder
+import org.ohosdev.hapviewerandroid.ui.common.dialog.RequestPermissionDialogBuilder
 import org.ohosdev.hapviewerandroid.view.drawable.ShadowBitmapDrawable
 import org.ohosdev.hapviewerandroid.view.list.ListItem
 import org.ohosdev.hapviewerandroid.view.list.ListItemGroup
@@ -145,7 +143,6 @@ class MainActivity : BaseActivity(), OnDragListener {
                         )
                     }
                     .show()
-                    .fixDialogGravityIfNeeded()
                 return@setOnClickListener
             }
 
@@ -414,7 +411,6 @@ class MainActivity : BaseActivity(), OnDragListener {
                         getButton(AlertDialog.BUTTON_NEUTRAL).setOnClickListener {
                             openUrl(ShizukuUtil.URL_GUIDE)
                         }
-                        fixDialogGravityIfNeeded()
                     }
             }
             return

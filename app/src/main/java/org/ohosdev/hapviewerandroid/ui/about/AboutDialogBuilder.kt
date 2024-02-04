@@ -1,4 +1,4 @@
-package org.ohosdev.hapviewerandroid.dialog
+package org.ohosdev.hapviewerandroid.ui.about
 
 import android.content.Context
 import androidx.appcompat.app.AlertDialog
@@ -15,13 +15,12 @@ import org.ohosdev.hapviewerandroid.app.URL_PRIVACY_POLICY
 import org.ohosdev.hapviewerandroid.app.URL_REPOSITORY
 import org.ohosdev.hapviewerandroid.extensions.contentMovementMethod
 import org.ohosdev.hapviewerandroid.extensions.contentSelectable
-import org.ohosdev.hapviewerandroid.extensions.fixDialogGravityIfNeeded
 import org.ohosdev.hapviewerandroid.extensions.localisedColon
 import org.ohosdev.hapviewerandroid.extensions.localisedSeparator
 import org.ohosdev.hapviewerandroid.extensions.openUrl
-import org.ohosdev.hapviewerandroid.util.dialog.DialogBuilder
+import org.ohosdev.hapviewerandroid.ui.common.dialog.AlertDialogBuilder
 
-class AboutDialogBuilder(context: Context) : DialogBuilder<AboutDialogBuilder>(context) {
+class AboutDialogBuilder(context: Context) : AlertDialogBuilder<AboutDialogBuilder>(context) {
     init {
         setTitle(R.string.about)
         val messageHtml = context.run {
@@ -41,7 +40,6 @@ class AboutDialogBuilder(context: Context) : DialogBuilder<AboutDialogBuilder>(c
     }
 
     override fun create(): AlertDialog = super.create().apply {
-        fixDialogGravityIfNeeded()
         setOnShowListener {
             contentSelectable = true
             contentMovementMethod = RTEditorMovementMethod.getInstance()

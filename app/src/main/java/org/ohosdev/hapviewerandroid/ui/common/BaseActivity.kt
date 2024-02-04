@@ -1,4 +1,4 @@
-package org.ohosdev.hapviewerandroid.app
+package org.ohosdev.hapviewerandroid.ui.common
 
 import android.os.Bundle
 import androidx.annotation.StringRes

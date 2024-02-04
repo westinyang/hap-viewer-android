@@ -1,4 +1,4 @@
-package org.ohosdev.hapviewerandroid.util.dialog
+package org.ohosdev.hapviewerandroid.ui.common.dialog
 
 import android.content.Context
 import android.content.DialogInterface
@@ -10,10 +10,11 @@ import android.widget.ListAdapter
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 
 /**
- * 快速复写对话框，避免重写非常多方法。
+ * 快速复写Material对话框，避免重写非常多方法。
  */
 @Suppress("UNCHECKED_CAST")
-open class DialogBuilder<T : DialogBuilder<T>> : MaterialAlertDialogBuilder {
+abstract class MaterialAlertDialogBuilderBridge<T : MaterialAlertDialogBuilderBridge<T>> :
+    MaterialAlertDialogBuilder {
     constructor(context: Context) : super(context)
     constructor(context: Context, overrideThemeResId: Int) : super(context, overrideThemeResId)
 
