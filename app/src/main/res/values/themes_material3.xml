@@ -18,9 +18,9 @@
 
         <item name="colorAccent">?colorPrimary</item>
 
-        <item name="codeColorString">@color/material_code_color_string</item>
-        <item name="codeColorNumber">@color/material_code_color_number</item>
-        <item name="codeColorKeyword">@color/material_code_color_keyword</item>
+        <item name="codeColorString">@color/material3_code_color_string</item>
+        <item name="codeColorNumber">@color/material3_code_color_number</item>
+        <item name="codeColorKeyword">@color/material3_code_color_keyword</item>
 
         <item name="materialCardViewFilledStyle">@style/Widget.HapViewerAndroid.Material3.CardView.Elevated</item>
         <item name="materialCardViewStyle">?materialCardViewFilledStyle</item>

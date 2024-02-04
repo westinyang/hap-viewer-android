@@ -6,6 +6,10 @@
     <color name="material_code_color_number">#42A5F5</color>
     <color name="material_code_color_keyword">#7E57C2</color>
 
+    <color name="material3_code_color_string">#a1d39a</color>
+    <color name="material3_code_color_number">#a3c9fe</color>
+    <color name="material3_code_color_keyword">#d1bcfd</color>
+
     <color name="harmony_code_color_string">#5BA854</color>
     <color name="harmony_code_color_number">#4796C4</color>
     <color name="harmony_code_color_keyword">#8C55C2</color>
