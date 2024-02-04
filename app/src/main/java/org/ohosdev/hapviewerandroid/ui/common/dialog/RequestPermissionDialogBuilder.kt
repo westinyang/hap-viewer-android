@@ -4,7 +4,6 @@ import android.content.Context
 import androidx.annotation.StringRes
 import androidx.appcompat.app.AlertDialog
 import org.ohosdev.hapviewerandroid.R
-import org.ohosdev.hapviewerandroid.extensions.fixDialogGravityIfNeeded
 import org.ohosdev.hapviewerandroid.extensions.getQuantityString
 import org.ohosdev.hapviewerandroid.extensions.localisedSeparator
 
@@ -26,7 +25,7 @@ class RequestPermissionDialogBuilder<T : RequestPermissionDialogBuilder<T>>(cont
         this.permissionNames = names
     }
 
-    fun setPermissionNames(names: Array<Int>) = apply {
+    fun setPermissionNames(names: IntArray) = apply {
         this.permissionNames = Array(names.size) { context.getString(names[it]) }
     }
 
@@ -34,7 +33,7 @@ class RequestPermissionDialogBuilder<T : RequestPermissionDialogBuilder<T>>(cont
         this.functionNames = names
     }
 
-    fun setFunctionNames(names: Array<Int>) = apply {
+    fun setFunctionNames(names: IntArray) = apply {
         this.functionNames = Array(names.size) { context.getString(names[it]) }
     }
 

@@ -18,7 +18,6 @@ import android.view.View.OnDragListener
 import androidx.activity.OnBackPressedCallback
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
-import androidx.appcompat.app.AlertDialog
 import androidx.coordinatorlayout.widget.CoordinatorLayout
 import androidx.core.app.ActivityCompat
 import cn.hutool.json.JSONUtil
@@ -30,7 +29,6 @@ import org.ohosdev.hapviewerandroid.app.AppPreference.ThemeType.HARMONY
 import org.ohosdev.hapviewerandroid.app.AppPreference.ThemeType.MATERIAL1
 import org.ohosdev.hapviewerandroid.app.AppPreference.ThemeType.MATERIAL2
 import org.ohosdev.hapviewerandroid.app.AppPreference.ThemeType.MATERIAL3
-import org.ohosdev.hapviewerandroid.ui.common.BaseActivity
 import org.ohosdev.hapviewerandroid.databinding.ActivityMainBinding
 import org.ohosdev.hapviewerandroid.extensions.copyText
 import org.ohosdev.hapviewerandroid.extensions.getBitmap
@@ -40,16 +38,17 @@ import org.ohosdev.hapviewerandroid.extensions.hasFileMime
 import org.ohosdev.hapviewerandroid.extensions.init
 import org.ohosdev.hapviewerandroid.extensions.isGranted
 import org.ohosdev.hapviewerandroid.extensions.isPermissionGranted
-import org.ohosdev.hapviewerandroid.extensions.openUrl
 import org.ohosdev.hapviewerandroid.extensions.overrideAnimationDurationIfNeeded
+import org.ohosdev.hapviewerandroid.extensions.setFragmentResultListener
 import org.ohosdev.hapviewerandroid.extensions.thisApp
-import org.ohosdev.hapviewerandroid.ui.about.AboutDialogFragment
-import org.ohosdev.hapviewerandroid.ui.common.dialog.SimpleDialogFragment
 import org.ohosdev.hapviewerandroid.model.HapInfo
+import org.ohosdev.hapviewerandroid.ui.about.AboutDialogFragment
+import org.ohosdev.hapviewerandroid.ui.common.BaseActivity
+import org.ohosdev.hapviewerandroid.ui.common.dialog.AlertDialogFragment
+import org.ohosdev.hapviewerandroid.ui.common.dialog.RequestPermissionDialogFragment
 import org.ohosdev.hapviewerandroid.util.HarmonyOSUtil
 import org.ohosdev.hapviewerandroid.util.ShizukuUtil
 import org.ohosdev.hapviewerandroid.util.ShizukuUtil.ShizukuLifecycleObserver
-import org.ohosdev.hapviewerandroid.ui.common.dialog.RequestPermissionDialogBuilder
 import org.ohosdev.hapviewerandroid.view.drawable.ShadowBitmapDrawable
 import org.ohosdev.hapviewerandroid.view.list.ListItem
 import org.ohosdev.hapviewerandroid.view.list.ListItemGroup
@@ -102,10 +101,19 @@ class MainActivity : BaseActivity(), OnDragListener {
         // 解析传入的 Intent
         if (savedInstanceState == null) handelUri(intent.data)
 
-        supportFragmentManager.setFragmentResultListener(REQUEST_KEY_INSTALL_HAP, this) { _, _ ->
+        setFragmentResultListener(REQUEST_KEY_INSTALL_HAP) {
             model.installHapWaitingShizuku(hapInfo)
         }
-
+        setFragmentResultListener(REQUEST_KEY_REQUEST_SHIZUKU) {
+            ShizukuUtil.requestPermission(this, REQUEST_CODE_SHIZUKU_INSTALL)
+        }
+        setFragmentResultListener(REQUEST_KEY_REQUEST_STORAGE) {
+            ActivityCompat.requestPermissions(
+                this,
+                PERMISSIONS_EXTERNAL_STORAGE,
+                REQUEST_CODE_SELECT_FILE
+            )
+        }
     }
 
     private fun initViews() = binding.apply {
@@ -131,18 +139,12 @@ class MainActivity : BaseActivity(), OnDragListener {
                 && !isPermissionGranted(Manifest.permission.READ_EXTERNAL_STORAGE)
                 && shouldShowRequestPermissionRationale(Manifest.permission.READ_EXTERNAL_STORAGE)
             ) {
-                RequestPermissionDialogBuilder(this@MainActivity)
-                    .setPermissionNames(arrayOf(R.string.permission_storage))
-                    .setFunctionNames(arrayOf(R.string.read_file_directly))
+                RequestPermissionDialogFragment()
+                    .setPermissionNames(intArrayOf(R.string.permission_storage))
+                    .setFunctionNames(intArrayOf(R.string.read_file_directly))
                     .setAdditional(R.string.permission_storage_additional)
-                    .setOnAgree {
-                        ActivityCompat.requestPermissions(
-                            this@MainActivity,
-                            PERMISSIONS_EXTERNAL_STORAGE,
-                            REQUEST_CODE_SELECT_FILE
-                        )
-                    }
-                    .show()
+                    .setOnAgreeKey(REQUEST_KEY_REQUEST_STORAGE)
+                    .show(supportFragmentManager, TAG_DIALOG_REQUEST_STORAGE)
                 return@setOnClickListener
             }
 
@@ -400,27 +402,21 @@ class MainActivity : BaseActivity(), OnDragListener {
         if (hapInfo.init) return
         if (!ShizukuUtil.checkPermission().isGranted) {
             if (showRequestDialog) {
-                RequestPermissionDialogBuilder(this)
-                    .setPermissionNames(arrayOf(R.string.permission_shizuku))
-                    .setFunctionNames(arrayOf(R.string.install_hap))
-                    .setOnAgree {
-                        ShizukuUtil.requestPermission(this, REQUEST_CODE_SHIZUKU_INSTALL)
-                    }
-                    .setNeutralButton(R.string.guide, null)
-                    .show().apply {
-                        getButton(AlertDialog.BUTTON_NEUTRAL).setOnClickListener {
-                            openUrl(ShizukuUtil.URL_GUIDE)
-                        }
-                    }
+                RequestPermissionDialogFragment()
+                    .setPermissionNames(intArrayOf(R.string.permission_shizuku))
+                    .setFunctionNames(intArrayOf(R.string.install_hap))
+                    .setGuideUrl(ShizukuUtil.URL_GUIDE)
+                    .setOnAgreeKey(REQUEST_KEY_REQUEST_SHIZUKU)
+                    .show(supportFragmentManager, TAG_DIALOG_REQUEST_SHIZUKU)
             }
             return
         }
-        SimpleDialogFragment()
+        AlertDialogFragment()
             .setTitle(R.string.install_hap)
             .setMessage(R.string.install_hap_message)
             .setPositiveButton(android.R.string.ok, "install_hap")
             .setNegativeButton(android.R.string.cancel, null)
-            .show(supportFragmentManager, REQUEST_KEY_INSTALL_HAP)
+            .show(supportFragmentManager, TAG_DIALOG_INSTALL_HAP)
     }
 
     /**
@@ -449,6 +445,9 @@ class MainActivity : BaseActivity(), OnDragListener {
 
     companion object {
         private const val TAG = "MainActivity"
+        private const val TAG_DIALOG_INSTALL_HAP = "install_hap"
+        private const val TAG_DIALOG_REQUEST_SHIZUKU = "request_shizuku"
+        private const val TAG_DIALOG_REQUEST_STORAGE = "request_storage"
 
         /**
          * 文件读写权限
@@ -464,5 +463,8 @@ class MainActivity : BaseActivity(), OnDragListener {
         private const val REQUEST_CODE_SHIZUKU_INSTALL = 2
 
         private const val REQUEST_KEY_INSTALL_HAP = "install_hap"
+        private const val REQUEST_KEY_REQUEST_SHIZUKU = "request_shizuku"
+        private const val REQUEST_KEY_REQUEST_STORAGE = "request_storage"
     }
+
 }

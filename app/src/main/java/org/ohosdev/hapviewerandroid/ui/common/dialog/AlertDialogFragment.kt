@@ -9,7 +9,7 @@ import androidx.fragment.app.setFragmentResult
 import org.ohosdev.hapviewerandroid.extensions.contentSelectable
 import org.ohosdev.hapviewerandroid.extensions.ensureArguments
 
-class SimpleDialogFragment : DialogFragment() {
+open class AlertDialogFragment : DialogFragment() {
 
     private val onClickListener = DialogInterface.OnClickListener { dialog, which ->
         val requestKey = when (which) {
@@ -23,8 +23,11 @@ class SimpleDialogFragment : DialogFragment() {
         }
     }
 
-    override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
-        return AlertDialogBuilder(requireContext()).apply {
+    open fun onCreateAlertDialogBuilder(): AlertDialogBuilder<*> =
+        AlertDialogBuilder(requireContext())
+
+    open fun onAttachAlertDialogBuilder(builder: AlertDialogBuilder<*>) {
+        builder.apply {
             arguments?.also { args ->
                 args.getCharSequence(ARG_KEY_TITLE)?.also { setTitle(it) }
                 args.getCharSequence(ARG_KEY_MESSAGE)?.also { setMessage(it) }
@@ -40,8 +43,14 @@ class SimpleDialogFragment : DialogFragment() {
                     if (it != 0) setNeutralButton(it, onClickListener)
                 }
             }
-        }.create()
+        }
     }
+
+    override fun onCreateDialog(savedInstanceState: Bundle?) = onCreateAlertDialogBuilder().run {
+        onAttachAlertDialogBuilder(this)
+        create()
+    }
+
 
     override fun onStart() {
         super.onStart()
@@ -72,32 +81,28 @@ class SimpleDialogFragment : DialogFragment() {
      * @see AlertDialogBuilder.setMessage
      * */
     fun setMessage(message: CharSequence) = apply {
-        ensureArguments()
-        arguments?.putCharSequence(ARG_KEY_MESSAGE, message)
+        ensureArguments().putCharSequence(ARG_KEY_MESSAGE, message)
     }
 
     /**
      * @see AlertDialogBuilder.setMessage
      * */
     fun setMessage(@StringRes messageId: Int) = apply {
-        ensureArguments()
-        arguments?.putInt(ARG_KEY_MESSAGE_ID, messageId)
+        ensureArguments().putInt(ARG_KEY_MESSAGE_ID, messageId)
     }
 
     /**
      * @see Dialog.contentSelectable
      * */
     fun setSelectable(selectable: Boolean) = apply {
-        ensureArguments()
-        arguments?.putBoolean(ARG_KEY_SELECTABLE, selectable)
+        ensureArguments().putBoolean(ARG_KEY_SELECTABLE, selectable)
     }
 
     /**
      * @see AlertDialogBuilder.setPositiveButton
      * */
     fun setPositiveButton(@StringRes textId: Int, requestKey: String?) = apply {
-        ensureArguments()
-        arguments?.apply {
+        ensureArguments().apply {
             putInt(ARG_KEY_BUTTON_POSITIVE_ID, textId)
             putString(ARG_KEY_BUTTON_POSITIVE_KEY, requestKey)
         }
@@ -107,8 +112,7 @@ class SimpleDialogFragment : DialogFragment() {
      * @see AlertDialogBuilder.setNegativeButton
      * */
     fun setNegativeButton(@StringRes textId: Int, requestKey: String?) = apply {
-        ensureArguments()
-        arguments?.apply {
+        ensureArguments().apply {
             putInt(ARG_KEY_BUTTON_NEGATIVE_ID, textId)
             putString(ARG_KEY_BUTTON_NEGATIVE_KEY, requestKey)
         }
@@ -118,8 +122,7 @@ class SimpleDialogFragment : DialogFragment() {
      * @see AlertDialogBuilder.setNeutralButton
      * */
     fun setNeutralButton(@StringRes textId: Int, requestKey: String?) = apply {
-        ensureArguments()
-        arguments?.apply {
+        ensureArguments().apply {
             putInt(ARG_KEY_BUTTON_NEUTRAL_ID, textId)
             putString(ARG_KEY_BUTTON_NEUTRAL_KEY, requestKey)
         }

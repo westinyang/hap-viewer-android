@@ -26,7 +26,7 @@
     <string name="drop_here">拖到此处</string>
     <string name="permission_shizuku">Shizuku 权限</string>
     <string name="permission_storage">存储权限</string>
-    <string name="permission_storage_additional">如果您不授予该权限，文件将先复制到私有空间后再读取。</string>
+    <string name="permission_storage_additional">如果您不授予该权限，HAP 查看器将先复制文件到私有空间后再读取。</string>
     <string name="guide">指南</string>
     <string name="permission_request">权限请求</string>
     <string name="install">安装</string>
