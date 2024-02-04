@@ -15,11 +15,10 @@ class MoreInfoDialogFragment : DialogFragment() {
     private lateinit var htmlSpanned: CharSequence
 
     @OptIn(ExperimentalStdlibApi::class)
-    override fun onCreate(savedInstanceState: Bundle?) {
+    override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
         val stringColor: String
         val numberColor: String
         val keywordColor: String
-        super.onCreate(savedInstanceState)
         requireContext().obtainStyledAttributes(
             intArrayOf(
                 R.attr.codeColorString,
@@ -44,10 +43,6 @@ class MoreInfoDialogFragment : DialogFragment() {
             ),
             HtmlCompat.FROM_HTML_MODE_LEGACY
         )
-    }
-
-
-    override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
         return AlertDialogBuilder(requireContext())
             .setTitle(R.string.more_info)
             .setMessage(htmlSpanned)
