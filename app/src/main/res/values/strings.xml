@@ -28,6 +28,7 @@
     <string name="material3" translatable="false">Material 3</string>
     <string name="drop_here">Drop here</string>
     <string name="harmony" translatable="false">HarmonyOS</string>
+    <string name="permissions">Permissions</string>
     <string name="permission_shizuku">Shizuku permission</string>
     <string name="guide">Guide</string>
     <string name="permission_request">Permissions request</string>

@@ -2,12 +2,12 @@ package org.ohosdev.hapviewerandroid.view
 
 import android.content.Context
 import android.util.AttributeSet
-import android.view.ContextMenu.ContextMenuInfo
+import android.view.ContextMenu
 import android.view.View
 import androidx.recyclerview.widget.RecyclerView
 
 class AdvancedRecyclerView : RecyclerView {
-    private var contextMenuInfo: RecyclerViewContextMenuInfo<*>? = null
+    private var contextMenuInfo: ContextMenuInfo<*>? = null
 
     constructor(context: Context) : super(context)
     constructor(context: Context, attrs: AttributeSet?) : super(context, attrs)
@@ -17,7 +17,7 @@ class AdvancedRecyclerView : RecyclerView {
         defStyleAttr
     )
 
-    override fun getContextMenuInfo(): ContextMenuInfo? {
+    override fun getContextMenuInfo(): ContextMenu.ContextMenuInfo? {
         return contextMenuInfo
     }
 
@@ -27,14 +27,14 @@ class AdvancedRecyclerView : RecyclerView {
         val longPressPosition = getChildAdapterPosition(originalView)
         if (longPressPosition >= 0) {
             contextMenuInfo =
-                RecyclerViewContextMenuInfo(longPressPosition, getChildViewHolder(originalView))
+                ContextMenuInfo(longPressPosition, getChildViewHolder(originalView))
             return super.showContextMenuForChild(originalView)
         }
         return false
     }
 
-    class RecyclerViewContextMenuInfo<T : ViewHolder>(
+    class ContextMenuInfo<T : ViewHolder>(
         val position: Int,
         val viewHolder: T
-    ) : ContextMenuInfo
+    ) : ContextMenu.ContextMenuInfo
 }

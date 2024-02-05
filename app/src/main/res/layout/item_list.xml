@@ -13,7 +13,7 @@
         android:layout_height="wrap_content"
         android:textAppearance="?textAppearanceListItem"
         android:textColor="@color/text_primary_selector"
-        tools:text="@string/info_appName" />
+        tools:text="@android:string/unknownName" />
 
     <android.widget.Space
         android:id="@+id/spacer"

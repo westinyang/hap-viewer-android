@@ -12,6 +12,7 @@
     <string name="about_contributors">开源贡献</string>
 
     <string name="select_file_hap">选择 HAP 文件</string>
+    <string name="permissions">权限</string>
     <string name="permission_grant_fail">权限申请失败</string>
     <string name="exit_toast">再按一次返回键退出</string>
     <string name="copy" tools:ignore="PrivateResource">复制</string>

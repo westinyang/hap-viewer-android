@@ -31,16 +31,15 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:clipToPadding="false"
-        android:paddingBottom="?attr/paddingBottomWithFabSize"
         app:fitsSystemWindowsInsets="start|end|bottom"
         app:layout_behavior="@string/appbar_scrolling_view_behavior">
-
 
         <LinearLayout
             android:id="@+id/content_container"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:orientation="vertical">
+            android:orientation="vertical"
+            android:paddingBottom="?attr/paddingBottomWithFabSize">
 
             <include
                 android:id="@+id/basic_info"
@@ -52,6 +51,15 @@
             <include
                 android:id="@+id/details_info"
                 layout="@layout/activity_main_details"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="?cardMargin"
+                android:layout_marginTop="0dp"
+                android:layout_marginBottom="?cardMargin" />
+
+            <include
+                android:id="@+id/permissions_info"
+                layout="@layout/activity_main_permissions"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginHorizontal="?cardMargin"

@@ -9,7 +9,7 @@ import android.widget.LinearLayout
 import org.ohosdev.hapviewerandroid.R
 
 class ListItemGroup : LinearLayout {
-    private var contextMenuInfo: ListItemGroupContextMenuInfo? = null
+    private var contextMenuInfo: ContextMenuInfo? = null
 
     constructor(context: Context?) : this(context, null)
     constructor(context: Context?, attrs: AttributeSet?) : this(
@@ -32,12 +32,12 @@ class ListItemGroup : LinearLayout {
     override fun showContextMenuForChild(originalView: View?): Boolean {
         Log.d("TAG", "showContextMenuForChild: $originalView")
         if (originalView is ListItem) {
-            contextMenuInfo = ListItemGroupContextMenuInfo(originalView.title, originalView.valueText)
+            contextMenuInfo = ContextMenuInfo(originalView.title, originalView.valueText)
             return super.showContextMenuForChild(originalView)
         }
         return false
     }
 
-    class ListItemGroupContextMenuInfo(val title: String?, val valueText: String?) :
+    class ContextMenuInfo(val title: String?, val valueText: String?) :
         ContextMenu.ContextMenuInfo
 }

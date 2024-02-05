@@ -54,6 +54,7 @@ import org.ohosdev.hapviewerandroid.util.ShizukuUtil
 import org.ohosdev.hapviewerandroid.util.ShizukuUtil.ShizukuLifecycleObserver
 import org.ohosdev.hapviewerandroid.util.SystemUtil
 import org.ohosdev.hapviewerandroid.util.SystemUtil.isDarkNavigationBarSupported
+import org.ohosdev.hapviewerandroid.view.AdvancedRecyclerView
 import org.ohosdev.hapviewerandroid.view.drawable.ShadowBitmapDrawable
 import org.ohosdev.hapviewerandroid.view.list.ListItem
 import org.ohosdev.hapviewerandroid.view.list.ListItemGroup
@@ -67,6 +68,7 @@ class MainActivity : BaseActivity(), OnDragListener {
         set(value) {
             model.hapInfo.value = value
         }
+    private lateinit var permissionsAdapter: PermissionsAdapter
 
 
     // private val infoAdapter by lazy { InfoAdapter(this, this::onInfoItemClick) }
@@ -161,20 +163,34 @@ class MainActivity : BaseActivity(), OnDragListener {
             selectHapFile()
         }
         registerForContextMenu(detailsInfo.detailsGroup)
+        registerForContextMenu(permissionsInfo.permissionsList)
 
         detailsInfo.moreInfoItem.setOnClickListener { showMoreInfoDialog() }
+
+        permissionsInfo.apply {
+            permissionsList.apply {
+                adapter = PermissionsAdapter(this@MainActivity).also { permissionsAdapter = it }
+            }
+        }
     }
 
     override fun onCreateContextMenu(
-        menu: ContextMenu,
-        v: View?,
-        menuInfo: ContextMenu.ContextMenuInfo?
+        menu: ContextMenu, v: View, menuInfo: ContextMenu.ContextMenuInfo?
     ) {
         when (menuInfo) {
-            is ListItemGroup.ListItemGroupContextMenuInfo -> {
+            is ListItemGroup.ContextMenuInfo -> {
                 menu.setHeaderTitle(menuInfo.title)
                 if (!hapInfo.init && !menuInfo.valueText.isNullOrEmpty()) {
                     menuInflater.inflate(R.menu.menu_main_info, menu)
+                }
+            }
+
+            is AdvancedRecyclerView.ContextMenuInfo<*> -> {
+                when (val viewHolder = menuInfo.viewHolder) {
+                    is PermissionsAdapter.ViewHolder -> {
+                        menu.setHeaderTitle(viewHolder.title)
+                        menuInflater.inflate(R.menu.menu_main_info, menu)
+                    }
                 }
             }
 
@@ -184,17 +200,22 @@ class MainActivity : BaseActivity(), OnDragListener {
 
     override fun onContextItemSelected(item: MenuItem): Boolean {
         // 将各自的事件传出去
-        when (val menuInfo = item.menuInfo) {
-            is ListItemGroup.ListItemGroupContextMenuInfo -> {
-                return onInfoContextItemSelected(item, menuInfo)
-            }
+        return when (val menuInfo = item.menuInfo) {
+            is ListItemGroup.ContextMenuInfo -> onInfoContextItemSelected(item, menuInfo)
+            is AdvancedRecyclerView.ContextMenuInfo<*> ->
+                when (val viewHolder = menuInfo.viewHolder) {
+                    is PermissionsAdapter.ViewHolder -> onPermissionItemSelected(item, viewHolder)
+                    else -> super.onContextItemSelected(item)
+                }
+
+            else -> super.onContextItemSelected(item)
         }
-        return super.onContextItemSelected(item)
+
     }
 
     private fun onInfoContextItemSelected(
         item: MenuItem,
-        menuInfo: ListItemGroup.ListItemGroupContextMenuInfo
+        menuInfo: ListItemGroup.ContextMenuInfo
     ): Boolean {
         when (item.itemId) {
             R.id.action_copy -> {
@@ -203,6 +224,24 @@ class MainActivity : BaseActivity(), OnDragListener {
                     copyText(it)
                 }
                 showSnackBar(getString(R.string.copied_withName, menuInfo.title))
+            }
+
+            else -> return false
+        }
+        return true
+    }
+
+    private fun onPermissionItemSelected(
+        item: MenuItem,
+        viewHolder: PermissionsAdapter.ViewHolder
+    ): Boolean {
+        when (item.itemId) {
+            R.id.action_copy -> {
+                viewHolder.title.also {
+                    if (it.isNullOrEmpty()) return false
+                    copyText(it)
+                    showSnackBar(getString(R.string.copied_withName, it))
+                }
             }
 
             else -> return false
@@ -378,6 +417,7 @@ class MainActivity : BaseActivity(), OnDragListener {
                 techItem.setHapInfoValue(it.getTechDesc(this@MainActivity) ?: unknownTechString)
                 moreInfoItem.isEnabled = !it.init && it.moreInfo != null
             }
+            permissionsAdapter.submitList(it.requestPermissionNames)
         }
 
     }
