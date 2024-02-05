@@ -2,6 +2,7 @@
 <resources>
     <attr name="windowLightStatusBar" format="boolean" />
     <attr name="windowLightNavigationBar" format="boolean" />
+    <attr name="navigationBarColorCompatible" format="color" />
     <attr name="enableDivider" format="boolean" />
     <attr name="listPaddingVertical" format="dimension" />
     <attr name="windowGravityBottom" format="boolean" />

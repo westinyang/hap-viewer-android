@@ -5,6 +5,7 @@ import android.annotation.SuppressLint
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.graphics.Color
+import android.graphics.drawable.ColorDrawable
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
@@ -20,7 +21,10 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
 import androidx.coordinatorlayout.widget.CoordinatorLayout
 import androidx.core.app.ActivityCompat
+import androidx.core.view.WindowCompat
 import cn.hutool.json.JSONUtil
+import com.google.android.material.color.MaterialColors.getColor
+import com.google.android.material.resources.MaterialAttributes.resolveBoolean
 import com.google.android.material.snackbar.Snackbar
 import org.ohosdev.hapviewerandroid.BuildConfig
 import org.ohosdev.hapviewerandroid.R
@@ -46,9 +50,10 @@ import org.ohosdev.hapviewerandroid.ui.about.AboutDialogFragment
 import org.ohosdev.hapviewerandroid.ui.common.BaseActivity
 import org.ohosdev.hapviewerandroid.ui.common.dialog.AlertDialogFragment
 import org.ohosdev.hapviewerandroid.ui.common.dialog.RequestPermissionDialogFragment
-import org.ohosdev.hapviewerandroid.util.HarmonyOSUtil
 import org.ohosdev.hapviewerandroid.util.ShizukuUtil
 import org.ohosdev.hapviewerandroid.util.ShizukuUtil.ShizukuLifecycleObserver
+import org.ohosdev.hapviewerandroid.util.SystemUtil
+import org.ohosdev.hapviewerandroid.util.SystemUtil.isDarkNavigationBarSupported
 import org.ohosdev.hapviewerandroid.view.drawable.ShadowBitmapDrawable
 import org.ohosdev.hapviewerandroid.view.list.ListItem
 import org.ohosdev.hapviewerandroid.view.list.ListItemGroup
@@ -116,13 +121,20 @@ class MainActivity : BaseActivity(), OnDragListener {
         }
     }
 
+    @SuppressLint("RestrictedApi")
     private fun initViews() = binding.apply {
         // 在适当的安卓版本设置状态栏、导航栏透明
         window.statusBarColor = Color.TRANSPARENT
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+        val isLightNavigationBar =
+            resolveBoolean(this@MainActivity, R.attr.windowLightNavigationBar, false)
+        if (isDarkNavigationBarSupported || !isLightNavigationBar) {
             window.navigationBarColor = Color.TRANSPARENT
-        } else {
-            bottomScrim.background = null
+            WindowCompat.getInsetsController(window, window.decorView).also {
+                it.isAppearanceLightNavigationBars = isLightNavigationBar
+            }
+            bottomScrim.background = ColorDrawable(
+                getColor(this@MainActivity, R.attr.navigationBarColorCompatible, Color.RED)
+            )
         }
 
         setContentView(root)

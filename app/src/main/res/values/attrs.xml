@@ -1,8 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <!-- Booleans -->
+    <!-- System bars -->
     <attr name="windowLightStatusBar" format="boolean" />
     <attr name="windowLightNavigationBar" format="boolean" />
+    <attr name="navigationBarColorCompatible" format="color" />
+
     <attr name="enableDivider" format="boolean" />
 
     <attr name="codeColorNumber" format="color" />

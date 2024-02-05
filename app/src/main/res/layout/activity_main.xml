@@ -80,7 +80,6 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="bottom"
-        android:background="@drawable/navigation_bar_background"
         app:fitsSystemWindowsInsets="bottom"
         app:layout_insetEdge="bottom" />
 
