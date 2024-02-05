@@ -1,15 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
-
 <com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/topCard"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_margin="?cardMargin"
-    app:layout_constraintEnd_toEndOf="parent"
-    app:layout_constraintStart_toStartOf="parent"
-    app:layout_constraintTop_toTopOf="parent"
     tools:showIn="@layout/activity_main">
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -18,15 +12,16 @@
         android:clipChildren="false">
 
         <ImageView
-            android:id="@+id/imageView"
+            android:id="@+id/hap_icon_image"
             android:layout_width="@dimen/icon_width"
             android:layout_height="@dimen/icon_width"
             android:layout_margin="?itemMargin"
+            android:background="@drawable/bitmap_shadow"
             android:contentDescription="@string/info_icon"
             android:src="@drawable/ic_default_new"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"/>
+            app:layout_constraintTop_toTopOf="parent" />
 
         <TextView
             android:id="@+id/app_name"
@@ -39,7 +34,7 @@
             android:textIsSelectable="true"
             android:visibility="gone"
             app:layout_constraintBottom_toTopOf="@+id/version"
-            app:layout_constraintStart_toEndOf="@+id/imageView"
+            app:layout_constraintStart_toEndOf="@+id/hap_icon_image"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintVertical_chainStyle="packed"
             tools:text="应用名" />
@@ -55,7 +50,7 @@
             android:textIsSelectable="true"
             android:visibility="gone"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toEndOf="@id/imageView"
+            app:layout_constraintStart_toEndOf="@id/hap_icon_image"
             app:layout_constraintTop_toBottomOf="@id/app_name"
             tools:text="版本号" />
     </androidx.constraintlayout.widget.ConstraintLayout>

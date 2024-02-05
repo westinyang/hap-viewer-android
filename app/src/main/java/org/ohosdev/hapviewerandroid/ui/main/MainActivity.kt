@@ -90,11 +90,11 @@ class MainActivity : BaseActivity(), OnDragListener {
         // isParsing 与 isInstalling 同时影响着菜单的禁用状态，所以要调用 invalidateMenu()
         model.isParsing.observe(this) {
             invalidateMenu()
-            binding.progressBar.visibility = if (it) View.VISIBLE else View.GONE
+            binding.foregroundProgress.visibility = if (it) View.VISIBLE else View.GONE
         }
         model.isInstalling.observe(this) {
             invalidateMenu()
-            binding.backgroundProgressIndicator.visibility = if (it) View.VISIBLE else View.GONE
+            binding.backgroundProgress.visibility = if (it) View.VISIBLE else View.GONE
         }
         model.snackBarEvent.observe(this) { it.consume { showSnackBar(it.text) } }
 
@@ -128,8 +128,6 @@ class MainActivity : BaseActivity(), OnDragListener {
         setContentView(root)
         setSupportActionBar(toolbar)
 
-        basicInfo.imageView.background = ShadowBitmapDrawable()
-
         dropMask.root.setOnDragListener(this@MainActivity)
 
         selectHapButton.setOnClickListener {
@@ -150,9 +148,9 @@ class MainActivity : BaseActivity(), OnDragListener {
 
             selectHapFile()
         }
-        registerForContextMenu(detailInfo.infoItemGroup)
+        registerForContextMenu(detailsInfo.detailsGroup)
 
-        detailInfo.moreInfoItem.setOnClickListener { showMoreInfoDialog() }
+        detailsInfo.moreInfoItem.setOnClickListener { showMoreInfoDialog() }
     }
 
     override fun onCreateContextMenu(
@@ -217,7 +215,7 @@ class MainActivity : BaseActivity(), OnDragListener {
     override fun onPrepareOptionsMenu(menu: Menu?): Boolean {
         menu?.apply {
             findItem(R.id.action_install).apply {
-                isVisible = HarmonyOSUtil.isHarmonyOS
+                isVisible = SystemUtil.isOhosSupported
                 isEnabled =
                     model.run { !hapInfo.value?.init!! && !isParsing.value!! && !isInstalling.value!! }
             }
@@ -341,7 +339,7 @@ class MainActivity : BaseActivity(), OnDragListener {
     override fun showSnackBar(text: String) =
         Snackbar.make(binding.root, text, Snackbar.LENGTH_SHORT)
             .overrideAnimationDurationIfNeeded()
-            .setAnchorView(R.id.selectHapButton)
+            .setAnchorView(R.id.select_hap_button)
             .apply { show() }
 
 
@@ -359,7 +357,7 @@ class MainActivity : BaseActivity(), OnDragListener {
                 val enabled = !it.init && value != null
                 valueText = if (enabled) value else unknownString
             }
-            binding.detailInfo.apply {
+            binding.detailsInfo.apply {
                 appNameItem.setHapInfoValue(it.appName)
                 packageNameItem.setHapInfoValue(it.packageName)
                 versionNameItem.setHapInfoValue(it.versionName)
@@ -378,7 +376,7 @@ class MainActivity : BaseActivity(), OnDragListener {
      * 如果 `bitmap` 为空，则显示默认图标。
      * */
     private fun applyHapIcon(hapInfo: HapInfo) {
-        binding.basicInfo.imageView.apply {
+        binding.basicInfo.hapIconImage.apply {
             val iconBitmap = if (hapInfo.icon != null) {
                 setImageBitmap(hapInfo.icon)
                 hapInfo.icon

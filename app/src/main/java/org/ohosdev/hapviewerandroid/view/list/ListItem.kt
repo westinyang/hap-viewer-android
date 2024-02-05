@@ -5,7 +5,7 @@ import android.util.AttributeSet
 import android.view.LayoutInflater
 import android.widget.FrameLayout
 import org.ohosdev.hapviewerandroid.R
-import org.ohosdev.hapviewerandroid.databinding.ListItemBinding
+import org.ohosdev.hapviewerandroid.databinding.ItemListBinding
 
 class ListItem : FrameLayout {
     var title: String? = null
@@ -25,8 +25,8 @@ class ListItem : FrameLayout {
             }
         }
 
-    private val binding: ListItemBinding =
-        ListItemBinding.inflate(LayoutInflater.from(context), this, false).apply {
+    private val binding: ItemListBinding =
+        ItemListBinding.inflate(LayoutInflater.from(context), this, false).apply {
             addView(this.root)
         }
 

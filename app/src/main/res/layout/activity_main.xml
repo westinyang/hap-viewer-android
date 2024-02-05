@@ -15,19 +15,19 @@
         app:fitsSystemWindowsInsets="top|start|end"
         app:layout_behavior="org.ohosdev.hapviewerandroid.view.behavior.AppBarLayoutBehavior"
         app:liftOnScroll="?liftOnScroll"
-        app:liftOnScrollTargetViewId="@id/nested_scroll_view">
+        app:liftOnScrollTargetViewId="@id/content_scroll">
 
         <com.google.android.material.appbar.MaterialToolbar
             android:id="@+id/toolbar"
             android:layout_width="match_parent"
-            android:layout_height="?attr/actionBarSize"
+            android:layout_height="wrap_content"
             app:popupTheme="?actionBarPopupTheme"
             tools:title="@string/app_name" />
     </com.google.android.material.appbar.AppBarLayout>
 
     <!-- BUG:RecyclerView回收失效 -->
     <androidx.core.widget.NestedScrollView
-        android:id="@+id/nested_scroll_view"
+        android:id="@+id/content_scroll"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:clipToPadding="false"
@@ -36,24 +36,33 @@
         app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
 
-        <androidx.constraintlayout.widget.ConstraintLayout
+        <LinearLayout
             android:id="@+id/content_container"
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="match_parent"
+            android:orientation="vertical">
 
             <include
                 android:id="@+id/basic_info"
-                layout="@layout/info_basic" />
+                layout="@layout/activity_main_basic"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="?cardMargin" />
 
             <include
-                android:id="@+id/detail_info"
-                layout="@layout/info_details" />
+                android:id="@+id/details_info"
+                layout="@layout/activity_main_details"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="?cardMargin"
+                android:layout_marginTop="0dp"
+                android:layout_marginBottom="?cardMargin" />
 
-        </androidx.constraintlayout.widget.ConstraintLayout>
+        </LinearLayout>
     </androidx.core.widget.NestedScrollView>
 
     <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
-        android:id="@+id/selectHapButton"
+        android:id="@+id/select_hap_button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="bottom|end"
@@ -82,7 +91,7 @@
         app:layout_fitsSystemWindowsInsets="bottom|start|end">
 
         <com.google.android.material.progressindicator.LinearProgressIndicator
-            android:id="@+id/background_progress_indicator"
+            android:id="@+id/background_progress"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="top"
@@ -90,7 +99,7 @@
             android:visibility="gone" />
 
         <ProgressBar
-            android:id="@+id/progress_bar"
+            android:id="@+id/foreground_progress"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
