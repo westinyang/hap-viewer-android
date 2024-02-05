@@ -12,11 +12,11 @@
         android:clipToPadding="false"
         android:paddingVertical="?attr/listPaddingVertical">
 
-        <org.ohosdev.hapviewerandroid.view.list.ListItem
+        <!-- <org.ohosdev.hapviewerandroid.view.list.ListItem
             android:id="@+id/app_name_item"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:title="@string/info_appName" />
+            android:title="@string/info_appName" /> -->
 
         <org.ohosdev.hapviewerandroid.view.list.ListItem
             android:id="@+id/package_name_item"
@@ -24,7 +24,7 @@
             android:layout_height="wrap_content"
             android:title="@string/info_appPackageName" />
 
-        <org.ohosdev.hapviewerandroid.view.list.ListItem
+        <!-- <org.ohosdev.hapviewerandroid.view.list.ListItem
             android:id="@+id/version_name_item"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -34,7 +34,7 @@
             android:id="@+id/version_code_item"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:title="@string/info_versionCode" />
+            android:title="@string/info_versionCode" /> -->
 
         <org.ohosdev.hapviewerandroid.view.list.ListItem
             android:id="@+id/target_item"

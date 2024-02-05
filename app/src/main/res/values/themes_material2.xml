@@ -11,6 +11,7 @@
 
         <item name="android:listPreferredItemPaddingStart">?listPreferredItemPaddingStart</item>
         <item name="android:listPreferredItemPaddingEnd">?listPreferredItemPaddingEnd</item>
+
         <item name="textAppearanceTitleMedium">?textAppearanceSubtitle2</item>
     </style>
 

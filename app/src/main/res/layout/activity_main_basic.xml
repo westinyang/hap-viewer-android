@@ -25,31 +25,28 @@
 
         <TextView
             android:id="@+id/app_name"
-            style="?textAppearanceHeadline5"
+            style="?textAppearanceSubtitle1"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="16dp"
+            android:layout_marginHorizontal="?itemMargin"
             android:text="@android:string/unknownName"
             android:textColor="?colorOnBackground"
             android:textIsSelectable="true"
-            android:visibility="gone"
             app:layout_constraintBottom_toTopOf="@+id/version"
             app:layout_constraintStart_toEndOf="@+id/hap_icon_image"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_chainStyle="packed"
+            app:layout_constraintTop_toTopOf="@+id/hap_icon_image"
             tools:text="应用名" />
 
         <TextView
             android:id="@+id/version"
-            style="?textAppearanceHeadline6"
+            style="?textAppearanceSubtitle2"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="16dp"
+            android:layout_marginHorizontal="?itemMargin"
             android:text="@android:string/unknownName"
-            android:textColor="?colorOnBackground"
+            android:textColor="?android:textColorSecondary"
             android:textIsSelectable="true"
-            android:visibility="gone"
-            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintBottom_toBottomOf="@+id/hap_icon_image"
             app:layout_constraintStart_toEndOf="@id/hap_icon_image"
             app:layout_constraintTop_toBottomOf="@id/app_name"
             tools:text="版本号" />

@@ -42,5 +42,7 @@
     <string name="permission_request_message">HAP 查看器需要 %1$s 来确保可以 %2$s。%3$s</string>
     <string name="colon">：</string>
     <string name="more_info">更多信息</string>
-
+    <string name="unknown">未知</string>
+    <string name="unknown_appName">未知应用名</string>
+    <string name="unknown_packageName">未知包名</string>
 </resources>

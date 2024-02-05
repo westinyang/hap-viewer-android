@@ -34,6 +34,7 @@ import org.ohosdev.hapviewerandroid.app.AppPreference.ThemeType.MATERIAL1
 import org.ohosdev.hapviewerandroid.app.AppPreference.ThemeType.MATERIAL2
 import org.ohosdev.hapviewerandroid.app.AppPreference.ThemeType.MATERIAL3
 import org.ohosdev.hapviewerandroid.databinding.ActivityMainBinding
+import org.ohosdev.hapviewerandroid.extensions.applyDividerIfEnabled
 import org.ohosdev.hapviewerandroid.extensions.copyText
 import org.ohosdev.hapviewerandroid.extensions.getBitmap
 import org.ohosdev.hapviewerandroid.extensions.getFirstUri
@@ -170,6 +171,7 @@ class MainActivity : BaseActivity(), OnDragListener {
         permissionsInfo.apply {
             permissionsList.apply {
                 adapter = PermissionsAdapter(this@MainActivity).also { permissionsAdapter = it }
+                applyDividerIfEnabled()
             }
         }
     }
@@ -395,24 +397,31 @@ class MainActivity : BaseActivity(), OnDragListener {
 
 
     private fun onHapInfoChanged(hapInfo: HapInfo = HapInfo.INIT) {
-        val unknownString = getString(android.R.string.unknownName)
+        val unknownString = getString(R.string.unknown)
         val unknownTechString = getString(R.string.info_tech_unknown)
         hapInfo.let {
-            // 显示基础信息，暂时用不到。
-            /* binding.basicInfo.apply {
-                appName.text = it.appName
-                version.text = String.format("%s (%s)", it.versionName, it.versionCode)
-            } */
             applyHapIcon(it)
             fun ListItem.setHapInfoValue(value: String?) {
                 val enabled = !it.init && value != null
                 valueText = if (enabled) value else unknownString
             }
+            binding.basicInfo.apply {
+                appName.text = if (!it.init && !it.appName.isNullOrEmpty()) {
+                    it.appName
+                } else {
+                    getString(R.string.unknown_appName)
+                }
+                version.text = if (!it.init) {
+                    "%s (%s)".format(it.versionName, it.versionCode)
+                } else {
+                    getString(R.string.unknown_packageName)
+                }
+            }
             binding.detailsInfo.apply {
-                appNameItem.setHapInfoValue(it.appName)
+                // appNameItem.setHapInfoValue(it.appName)
                 packageNameItem.setHapInfoValue(it.packageName)
-                versionNameItem.setHapInfoValue(it.versionName)
-                versionCodeItem.setHapInfoValue(it.versionCode)
+                // versionNameItem.setHapInfoValue(it.versionName)
+                // versionCodeItem.setHapInfoValue(it.versionCode)
                 targetItem.setHapInfoValue("API ${it.targetAPIVersion} (${it.apiReleaseType})")
                 techItem.setHapInfoValue(it.getTechDesc(this@MainActivity) ?: unknownTechString)
                 moreInfoItem.isEnabled = !it.init && it.moreInfo != null

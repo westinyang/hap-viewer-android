@@ -3,6 +3,7 @@
     <style name="Base.Theme.HapViewerAndroid.Harmony" parent="Theme.Harmony">
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>
+
         <item name="textAppearanceTitleMedium">?textAppearanceSubtitle2</item>
 
         <item name="codeColorString">@color/harmony_code_color_string</item>
