@@ -15,14 +15,23 @@ import androidx.core.content.ContextCompat
 import androidx.core.content.getSystemService
 import org.ohosdev.hapviewerandroid.R
 import org.ohosdev.hapviewerandroid.app.HapViewerApp
+import java.io.File
 
 val Context.thisApp get() = applicationContext as HapViewerApp
+
+/**
+ * 自动获取缓存目录。如果外部存储可用，就使用外部存储缓存目录，否则获取内部缓存目录
+ * @see Context.getExternalCacheDir
+ * @see Context.getCacheDir
+ * */
+val Context.autoCacheDir: File get() = externalCacheDir ?: cacheDir
 
 fun Context.isPermissionGranted(permission: String) =
     ContextCompat.checkSelfPermission(this, permission) == PackageManager.PERMISSION_GRANTED
 
 /**
  * 获取资源中的 `Bitmap`
+ * @see BitmapFactory.decodeResource
  * */
 fun Context.getBitmap(@DrawableRes resId: Int): Bitmap? {
     return BitmapFactory.decodeResource(resources, resId)

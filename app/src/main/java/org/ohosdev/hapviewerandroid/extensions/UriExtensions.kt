@@ -1,53 +1,26 @@
 package org.ohosdev.hapviewerandroid.extensions
 
 import android.Manifest
-import android.content.ContentResolver
+import android.content.ContentResolver.SCHEME_CONTENT
+import android.content.ContentResolver.SCHEME_FILE
 import android.content.ContentUris
 import android.content.Context
 import android.net.Uri
 import android.os.Environment
 import android.provider.DocumentsContract
 import android.provider.MediaStore
-import androidx.documentfile.provider.DocumentFile
+import android.util.Log
+import androidx.core.text.isDigitsOnly
 import org.ohosdev.hapviewerandroid.app.DIR_PATH_EXTERNAL_FILES
 import java.io.File
 import java.io.FileOutputStream
 import java.io.IOException
 
+private const val TAG = "UriExtensions"
+
 val Uri.isExternalStorageDocument get() = authority.equals("com.android.externalstorage.documents")
 val Uri.isDownloadsDocument get() = authority.equals("com.android.providers.downloads.documents")
 val Uri.isMediaDocument get() = authority.equals("com.android.providers.media.documents")
-
-
-/**
- * Get the value of the data column for this Uri. This is useful for
- * MediaStore Uris, and other file-based ContentProviders.
- *
- * @param context       The context.
- * @param selection     (Optional) Filter used in the query.
- * @param selectionArgs (Optional) Selection arguments used in the query.
- * @return The value of the _data column, which is typically a file path.
- */
-@Throws(IOException::class)
-fun Uri.getDataColumn(
-    context: Context,
-    selection: String?,
-    selectionArgs: Array<String>?
-): String? {
-    val column = "_data"
-    val projection = arrayOf(column)
-
-    val cursor = context.contentResolver.query(this, projection, selection, selectionArgs, null)
-        ?: return null
-    cursor.use {
-        if (it.moveToFirst() == true) {
-            val columnIndex = it.getColumnIndex(column)
-            return it.getString(columnIndex)
-        }
-    }
-
-    return null
-}
 
 
 /**
@@ -61,38 +34,36 @@ fun Uri.getDataColumn(
  * @author paulburke
  */
 @Throws(IOException::class)
-fun Uri.getPath(context: Context): String? {
+fun Uri.getFilePath(context: Context): String? {
     // DocumentProvider
     if (DocumentsContract.isDocumentUri(context, this)) {
+        val docId = DocumentsContract.getDocumentId(this)
         if (isExternalStorageDocument) {
-            val docId = DocumentsContract.getDocumentId(this)
-            val split = docId.split(":".toRegex())
+            val split = docId.split(":")
             val type = split[0]
+            val relativePath = split[1]
             if ("primary".equals(type, true))
-                return "${Environment.getExternalStorageDirectory().absolutePath}/${split[1]}"
+                return "${Environment.getExternalStorageDirectory().absolutePath}/$relativePath}"
             else
                 TODO("handle non-primary volumes")
         } else if (isDownloadsDocument) {
-            val id = DocumentsContract.getDocumentId(this)
-            val contentUri = ContentUris.withAppendedId(
-                Uri.parse("content://downloads/public_downloads"), id.toLong()
-            )
-            return contentUri.getDataColumn(context, null, null)
+            if (docId.isEmpty() || !docId.isDigitsOnly()) return null
+            val contentUri =
+                ContentUris.withAppendedId(Uri.parse("content://downloads/public_downloads"), docId.toLong())
+            return context.contentResolver.getDataColumn(contentUri)
         } else if (isMediaDocument) {
-            val docId = DocumentsContract.getDocumentId(this)
-            val split = docId.split(":".toRegex())
-            val contentUri = when (split[0]) {
+            val split = docId.split(":")
+            val contentUri: Uri = when (split[0]) {
                 "image" -> MediaStore.Images.Media.EXTERNAL_CONTENT_URI
                 "video" -> MediaStore.Video.Media.EXTERNAL_CONTENT_URI
                 "audio" -> MediaStore.Audio.Media.EXTERNAL_CONTENT_URI
-                else -> null
-            } ?: return null
-
-            return contentUri.getDataColumn(context, "_id=?", arrayOf(split[1]))
+                else -> return null
+            }
+            return context.contentResolver.getDataColumn(contentUri, "_id=?", arrayOf(split[1]))
         }
-    } else if ("content".equals(scheme, true)) {
-        return getDataColumn(context, null, null)
-    } else if ("file".equals(scheme, true)) {
+    } else if (SCHEME_CONTENT.equals(scheme, true)) {
+        return context.contentResolver.getDataColumn(this)
+    } else if (SCHEME_FILE.equals(scheme, true)) {
         return path
     }
     return null
@@ -101,32 +72,31 @@ fun Uri.getPath(context: Context): String? {
 /**
  * 把文件复制到沙盒目录
  *
- * 注意：scheme 为 file 的 uri不会被复制
+ * 注意：仅支持 scheme 为 content 的 uri
  *
  * [android10以上 uri转file uri转真实路径](https://blog.csdn.net/jingzz1/article/details/106188462)
+ *
+ * @param destFile 目标文件，默认为 `缓存目录/external_files/{name}`
  * @throws IOException 当文件无法获取时抛出异常
+ * @throws IllegalArgumentException 当uri不合法时抛出异常
  */
-@Throws(IOException::class)
-fun Uri.copyToPrivateFile(
+@Throws(IOException::class, IllegalArgumentException::class)
+fun Uri.copyFileToPrivateDir(
     ctx: Context,
-    name: String
+    name: String,
+    destFile: File = File(ctx.autoCacheDir, "${DIR_PATH_EXTERNAL_FILES}/${name}")
 ): File {
-    var file: File? = null
-    if (scheme == ContentResolver.SCHEME_CONTENT) {
-        val contentResolver = ctx.contentResolver
-        val cacheDir = (ctx.externalCacheDir ?: ctx.cacheDir)
-        file = File(cacheDir, "${DIR_PATH_EXTERNAL_FILES}/${name}")
-        file.parentFile?.mkdirs()
-        contentResolver.openInputStream(this).use { inputStream ->
-            if (inputStream == null) throw IOException("Cannot open ${this@copyToPrivateFile} using contentResolver.openInputStream.")
-            FileOutputStream(file).use { outputStream ->
-                inputStream.copyTo(outputStream)
-            }
+    if (scheme != SCHEME_CONTENT) {
+        throw IllegalArgumentException("Scheme '$scheme' is not supported.")
+    }
+    destFile.parentFile?.mkdirs()
+    ctx.contentResolver.openInputStream(this).use { inputStream ->
+        if (inputStream == null) throw IOException("Cannot open ${this@copyFileToPrivateDir} using contentResolver.openInputStream.")
+        FileOutputStream(destFile).use { outputStream ->
+            inputStream.copyTo(outputStream)
         }
     }
-    if (file == null)
-        throw IOException("file is null.")
-    return file
+    return destFile
 }
 
 /**
@@ -137,29 +107,31 @@ fun Uri.copyToPrivateFile(
  */
 fun Uri.getOrCopyFile(context: Context, name: String): File? {
     if (context.isPermissionGranted(Manifest.permission.READ_EXTERNAL_STORAGE)) {
-        try {
-            val path = getPath(context)
-            if (path != null) {
+        runCatching {
+            getFilePath(context)?.also { path ->
                 File(path).also {
-                    if (it.isFile && it.canRead()) return it
+                    if (it.isFile && it.canRead()) {
+                        return it
+                    }
                 }
             }
-        } catch (e: Exception) {
-            e.printStackTrace()
+        }.onFailure {
+            Log.w(TAG, "getOrCopyFile: Failed to get file path: $this: ${it.localizedMessage}\n${it.stackTrace}")
         }
     }
-    try {
-        return copyToPrivateFile(context, name)
-    } catch (e: Exception) {
-        e.printStackTrace()
-    }
+    runCatching {
+        return copyFileToPrivateDir(context, name)
+    }.onFailure { it.printStackTrace() }
     return null
 }
 
-fun Uri.getFileName(context: Context): String? {
-    return when (scheme) {
-        ContentResolver.SCHEME_FILE -> path?.let { File(it).name }
-        ContentResolver.SCHEME_CONTENT -> DocumentFile.fromSingleUri(context, this)?.name
-        else -> throw RuntimeException("Uri.getFileName: Not support scheme: $this")
-    }
+/**
+ * 当 scheme 为 file 时，获取 path 中的文件名
+ * 当 scheme 为 content 时，使用 `context.contentResolve` 查询文件名
+ * @throws IllegalArgumentException 当 scheme 不为 file 或 content 时抛出异常
+ */
+fun Uri.getFileName(context: Context) = when (scheme) {
+    SCHEME_FILE -> path?.let { File(it).name }
+    SCHEME_CONTENT -> context.contentResolver.getDocumentName(this)
+    else -> throw IllegalArgumentException("Not support scheme: $this")
 }
