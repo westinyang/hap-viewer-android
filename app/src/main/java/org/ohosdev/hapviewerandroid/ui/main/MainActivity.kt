@@ -10,7 +10,6 @@ import android.net.Uri
 import android.os.Build
 import android.os.Bundle
 import android.util.Log
-import android.view.ContextMenu
 import android.view.DragEvent
 import android.view.Menu
 import android.view.MenuItem
@@ -55,6 +54,7 @@ import org.ohosdev.hapviewerandroid.util.ShizukuUtil
 import org.ohosdev.hapviewerandroid.util.ShizukuUtil.ShizukuLifecycleObserver
 import org.ohosdev.hapviewerandroid.util.SystemUtil
 import org.ohosdev.hapviewerandroid.util.SystemUtil.isDarkNavigationBarSupported
+import org.ohosdev.hapviewerandroid.util.ohos.getOhosPermSortName
 import org.ohosdev.hapviewerandroid.view.AdvancedRecyclerView
 import org.ohosdev.hapviewerandroid.view.drawable.ShadowBitmapDrawable
 import org.ohosdev.hapviewerandroid.view.list.ListItem
@@ -163,8 +163,7 @@ class MainActivity : BaseActivity(), OnDragListener {
 
             selectHapFile()
         }
-        registerForContextMenu(detailsInfo.detailsGroup)
-        registerForContextMenu(permissionsInfo.permissionsList)
+
 
 
         basicInfo.apply {
@@ -173,37 +172,33 @@ class MainActivity : BaseActivity(), OnDragListener {
                 it.revealOnFocusHint = false
             }
         }
-        detailsInfo.moreInfoItem.setOnClickListener { showMoreInfoDialog() }
+        detailsInfo.apply {
+            moreInfoItem.setOnClickListener { showMoreInfoDialog() }
+            detailsGroup.apply {
+                registerForContextMenu(this)
+                setOnCreateContextMenuListener { menu, _, menuInfo ->
+                    menuInfo as ListItemGroup.ContextMenuInfo
+                    menu.setHeaderTitle(menuInfo.title)
+                    if (!hapInfo.init && !menuInfo.valueText.isNullOrEmpty()) {
+                        menuInflater.inflate(R.menu.menu_main_info, menu)
+                    }
+                }
+            }
+        }
         permissionsInfo.apply {
             permissionsList.apply {
                 adapter = PermissionsAdapter(this@MainActivity).also { permissionsAdapter = it }
                 applyDividerIfEnabled()
                 itemAnimator = null
-            }
-        }
-    }
-
-    override fun onCreateContextMenu(
-        menu: ContextMenu, v: View, menuInfo: ContextMenu.ContextMenuInfo?
-    ) {
-        when (menuInfo) {
-            is ListItemGroup.ContextMenuInfo -> {
-                menu.setHeaderTitle(menuInfo.title)
-                if (!hapInfo.init && !menuInfo.valueText.isNullOrEmpty()) {
+                registerForContextMenu(this)
+                setOnCreateContextMenuListener { menu, _, menuInfo ->
+                    @Suppress("UNCHECKED_CAST")
+                    menuInfo as AdvancedRecyclerView.ContextMenuInfo<PermissionsAdapter.ViewHolder>
+                    menu.setHeaderTitle(menuInfo.viewHolder.title?.let { it.getOhosPermSortName() ?: it })
                     menuInflater.inflate(R.menu.menu_main_info, menu)
                 }
-            }
 
-            is AdvancedRecyclerView.ContextMenuInfo<*> -> {
-                when (val viewHolder = menuInfo.viewHolder) {
-                    is PermissionsAdapter.ViewHolder -> {
-                        menu.setHeaderTitle(viewHolder.title)
-                        menuInflater.inflate(R.menu.menu_main_info, menu)
-                    }
-                }
             }
-
-            else -> super.onCreateContextMenu(menu, v, menuInfo)
         }
     }
 
@@ -219,7 +214,6 @@ class MainActivity : BaseActivity(), OnDragListener {
 
             else -> super.onContextItemSelected(item)
         }
-
     }
 
     private fun onInfoContextItemSelected(
