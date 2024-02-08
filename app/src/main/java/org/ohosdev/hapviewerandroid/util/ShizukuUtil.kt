@@ -1,6 +1,5 @@
 package org.ohosdev.hapviewerandroid.util
 
-import android.app.Activity
 import android.content.pm.PackageManager
 import androidx.lifecycle.DefaultLifecycleObserver
 import androidx.lifecycle.LifecycleOwner
