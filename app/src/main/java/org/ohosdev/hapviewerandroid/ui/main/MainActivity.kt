@@ -19,6 +19,7 @@ import android.widget.TextView
 import androidx.activity.OnBackPressedCallback
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
+import androidx.annotation.StringRes
 import androidx.coordinatorlayout.widget.CoordinatorLayout
 import androidx.core.app.ActivityCompat
 import androidx.core.view.WindowCompat
@@ -34,7 +35,7 @@ import org.ohosdev.hapviewerandroid.app.AppPreference.ThemeType.MATERIAL2
 import org.ohosdev.hapviewerandroid.app.AppPreference.ThemeType.MATERIAL3
 import org.ohosdev.hapviewerandroid.databinding.ActivityMainBinding
 import org.ohosdev.hapviewerandroid.extensions.applyDividerIfEnabled
-import org.ohosdev.hapviewerandroid.extensions.copyText
+import org.ohosdev.hapviewerandroid.extensions.copyAndShowSnackBar
 import org.ohosdev.hapviewerandroid.extensions.getBitmap
 import org.ohosdev.hapviewerandroid.extensions.getFirstUri
 import org.ohosdev.hapviewerandroid.extensions.getTechDesc
@@ -160,8 +161,14 @@ class MainActivity : BaseActivity(), OnDragListener {
             selectHapFile()
         }
         basicInfo.apply {
-            arrayOf(nameText, packageText, versionText).forEach {
-                it.isFocusedByDefault = false
+            root.apply {
+                registerForContextMenu(this)
+                setOnCreateContextMenuListener { menu, _, menuInfo ->
+                    menu.setHeaderTitle(R.string.copy)
+                    if (!hapInfo.init) {
+                        menuInflater.inflate(R.menu.menu_main_info_basic, menu)
+                    }
+                }
             }
         }
         detailsInfo.apply {
@@ -194,54 +201,45 @@ class MainActivity : BaseActivity(), OnDragListener {
         }
     }
 
-    override fun onContextItemSelected(item: MenuItem): Boolean {
+    override fun onContextItemSelected(item: MenuItem) = when (val menuInfo = item.menuInfo) {
         // 将各自的事件传出去
-        return when (val menuInfo = item.menuInfo) {
-            is ListItemGroup.ContextMenuInfo -> onInfoContextItemSelected(item, menuInfo)
-            is AdvancedRecyclerView.ContextMenuInfo<*> ->
-                when (val viewHolder = menuInfo.viewHolder) {
-                    is PermissionsAdapter.ViewHolder -> onPermissionItemSelected(item, viewHolder)
-                    else -> super.onContextItemSelected(item)
-                }
-
-            else -> super.onContextItemSelected(item)
-        }
-    }
-
-    private fun onInfoContextItemSelected(
-        item: MenuItem,
-        menuInfo: ListItemGroup.ContextMenuInfo
-    ): Boolean {
-        when (item.itemId) {
-            R.id.action_copy -> {
-                menuInfo.valueText.also {
-                    if (it.isNullOrEmpty()) return false
-                    copyText(it)
-                }
-                showSnackBar(getString(R.string.copied_withName, menuInfo.title))
+        is ListItemGroup.ContextMenuInfo -> onInfoContextItemSelected(item, menuInfo)
+        is AdvancedRecyclerView.ContextMenuInfo<*> ->
+            when (val viewHolder = menuInfo.viewHolder) {
+                is PermissionsAdapter.ViewHolder -> onPermissionItemSelected(item, viewHolder)
+                else -> super.onContextItemSelected(item)
             }
 
+        is BasicInfoCard.ContextMenuInfo -> onBasicInfoContentItemSelected(item)
+        else -> super.onContextItemSelected(item)
+    }
+
+
+    private fun onInfoContextItemSelected(item: MenuItem, menuInfo: ListItemGroup.ContextMenuInfo): Boolean {
+        when (item.itemId) {
+            R.id.action_copy -> copyAndShowSnackBar(menuInfo.valueText, menuInfo.title)
             else -> return false
         }
         return true
     }
 
-    private fun onPermissionItemSelected(
-        item: MenuItem,
-        viewHolder: PermissionsAdapter.ViewHolder
-    ): Boolean {
+    private fun onPermissionItemSelected(item: MenuItem, viewHolder: PermissionsAdapter.ViewHolder): Boolean {
         when (item.itemId) {
-            R.id.action_copy -> {
-                viewHolder.title.also {
-                    if (it.isNullOrEmpty()) return false
-                    copyText(it)
-                    showSnackBar(getString(R.string.copied_withName, it))
-                }
-            }
-
+            R.id.action_copy -> copyAndShowSnackBar(viewHolder.title)
             else -> return false
         }
         return true
+    }
+
+    private fun onBasicInfoContentItemSelected(item: MenuItem): Boolean {
+        val content = when (item.itemId) {
+            R.id.action_copy_app_name -> Pair(R.string.info_appName, hapInfo.appName)
+            R.id.action_copy_version_name -> Pair(R.string.info_versionName, hapInfo.versionName)
+            R.id.action_copy_version_code -> Pair(R.string.info_versionCode, hapInfo.versionCode)
+            R.id.action_copy_package_name -> Pair(R.string.info_appPackageName, hapInfo.packageName)
+            else -> return false
+        }
+        return copyAndShowSnackBar(content.second, getString(content.first))
     }
 
 
@@ -404,7 +402,7 @@ class MainActivity : BaseActivity(), OnDragListener {
                 valueText = if (enabled) value else unknownString
             }
 
-            fun TextView.setHapInfoText(value: String?, unknownStringId: Int?) {
+            fun TextView.setHapInfoText(value: String?, @StringRes unknownStringId: Int?) {
                 val enabled = !it.init && !value.isNullOrEmpty()
                 text = when {
                     enabled -> value

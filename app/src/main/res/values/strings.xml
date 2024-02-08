@@ -50,4 +50,8 @@
     <string name="unknown_appName">Unknown app name</string>
     <string name="unknown_version">Unknown version</string>
     <string name="unknown_packageName">Unknown package name</string>
+    <string name="copy_package_name">Copy package name</string>
+    <string name="copy_version_code">Copy version code</string>
+    <string name="copy_version_name">Copy version name</string>
+    <string name="copy_app_name">Copy app name</string>
 </resources>

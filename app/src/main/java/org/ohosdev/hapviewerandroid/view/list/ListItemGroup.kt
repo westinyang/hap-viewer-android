@@ -30,7 +30,6 @@ class ListItemGroup : LinearLayout {
     }
 
     override fun showContextMenuForChild(originalView: View?): Boolean {
-        Log.d("TAG", "showContextMenuForChild: $originalView")
         if (originalView is ListItem) {
             contextMenuInfo = ContextMenuInfo(originalView.title, originalView.valueText)
             return super.showContextMenuForChild(originalView)
