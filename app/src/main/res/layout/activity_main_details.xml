@@ -18,11 +18,11 @@
             android:layout_height="wrap_content"
             android:title="@string/info_appName" /> -->
 
-        <org.ohosdev.hapviewerandroid.view.list.ListItem
+        <!-- <org.ohosdev.hapviewerandroid.view.list.ListItem
             android:id="@+id/package_name_item"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:title="@string/info_appPackageName" />
+            android:title="@string/info_appPackageName" /> -->
 
         <!-- <org.ohosdev.hapviewerandroid.view.list.ListItem
             android:id="@+id/version_name_item"

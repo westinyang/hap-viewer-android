@@ -166,8 +166,14 @@ class MainActivity : BaseActivity(), OnDragListener {
         registerForContextMenu(detailsInfo.detailsGroup)
         registerForContextMenu(permissionsInfo.permissionsList)
 
-        detailsInfo.moreInfoItem.setOnClickListener { showMoreInfoDialog() }
 
+        basicInfo.apply {
+            val textViews = arrayOf(nameText, packageText, versionText)
+            textViews.forEach {
+                it.revealOnFocusHint = false
+            }
+        }
+        detailsInfo.moreInfoItem.setOnClickListener { showMoreInfoDialog() }
         permissionsInfo.apply {
             permissionsList.apply {
                 adapter = PermissionsAdapter(this@MainActivity).also { permissionsAdapter = it }
@@ -413,20 +419,26 @@ class MainActivity : BaseActivity(), OnDragListener {
                 valueText = if (enabled) value else unknownString
             }
             binding.basicInfo.apply {
-                appName.text = if (!it.init && !it.appName.isNullOrEmpty()) {
+                nameText.text = if (!it.init && !it.appName.isNullOrEmpty()) {
                     it.appName
                 } else {
                     getString(R.string.unknown_appName)
                 }
-                version.text = if (!it.init) {
-                    "%s (%s)".format(it.versionName, it.versionCode)
+                versionText.text =
+                    if (!it.init && !(it.versionName.isNullOrEmpty() && it.versionCode.isNullOrEmpty())) {
+                        "%s (%s)".format(it.versionName ?: unknownString, it.versionCode ?: unknownString)
+                    } else {
+                        getString(R.string.unknown_version)
+                    }
+                packageText.text = if (!it.init && !it.packageName.isNullOrEmpty()) {
+                    it.packageName
                 } else {
                     getString(R.string.unknown_packageName)
                 }
             }
             binding.detailsInfo.apply {
                 // appNameItem.setHapInfoValue(it.appName)
-                packageNameItem.setHapInfoValue(it.packageName)
+                // packageNameItem.setHapInfoValue(it.packageName)
                 // versionNameItem.setHapInfoValue(it.versionName)
                 // versionCodeItem.setHapInfoValue(it.versionCode)
                 targetItem.setHapInfoValue("API ${it.targetAPIVersion} (${it.apiReleaseType})")

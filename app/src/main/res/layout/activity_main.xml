@@ -32,6 +32,7 @@
         android:layout_height="match_parent"
         android:clipToPadding="false"
         app:fitsSystemWindowsInsets="start|end|bottom"
+        android:descendantFocusability="blocksDescendants"
         app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
         <LinearLayout

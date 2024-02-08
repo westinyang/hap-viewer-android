@@ -44,5 +44,6 @@
     <string name="more_info">更多信息</string>
     <string name="unknown">未知</string>
     <string name="unknown_appName">未知应用名</string>
+    <string name="unknown_version">未知版本</string>
     <string name="unknown_packageName">未知包名</string>
 </resources>

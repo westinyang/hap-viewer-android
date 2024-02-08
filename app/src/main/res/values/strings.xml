@@ -48,5 +48,6 @@
     <string name="more_info">More informations</string>
     <string name="unknown">Unknown</string>
     <string name="unknown_appName">Unknown app name</string>
+    <string name="unknown_version">Unknown version</string>
     <string name="unknown_packageName">Unknown package name</string>
 </resources>
