@@ -7,12 +7,12 @@ import android.util.AttributeSet
 import com.google.android.material.shape.MaterialShapeDrawable
 import com.google.android.material.shape.MaterialShapeUtils
 import org.ohosdev.hapviewerandroid.extensions.resolveBoolean
-import com.google.android.material.appbar.AppBarLayout as OriginAppBarLayout
+import com.google.android.material.appbar.AppBarLayout as GoogleAppBarLayout
 
 /**
  * 修复 AndroidP 以下应用栏有阴影的问题
  * */
-class AppBarLayout : OriginAppBarLayout {
+class AppBarLayout : GoogleAppBarLayout {
 
     @delegate:SuppressLint("PrivateResource")
     val isMaterial3Theme by lazy {

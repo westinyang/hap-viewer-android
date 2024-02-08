@@ -3,7 +3,6 @@ package org.ohosdev.hapviewerandroid.extensions
 import android.content.Context
 import android.os.RemoteException
 import android.util.Log
-import org.ohosdev.hapviewerandroid.R
 import org.ohosdev.hapviewerandroid.model.HapInfo
 import org.ohosdev.hapviewerandroid.util.ExecuteResult
 import org.ohosdev.hapviewerandroid.util.helper.ShizukuServiceHelper
@@ -55,3 +54,10 @@ fun HapInfo.getTechDesc(context: Context) = techList.let {
     if (!it.isNullOrEmpty()) it.joinToString(context.localisedSeparator) else null
 }
 
+/**
+ * 获取版本名和版本号，格式为 `版本名 (版本号)`。
+ * */
+fun HapInfo.getVersionNameAndCode(unknownString: String) =
+    if (versionCode != null || versionCode != null)
+        "%s (%s)".format(versionName ?: unknownString, versionCode ?: unknownString)
+    else null

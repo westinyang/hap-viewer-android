@@ -15,6 +15,7 @@ import android.view.Menu
 import android.view.MenuItem
 import android.view.View
 import android.view.View.OnDragListener
+import android.widget.TextView
 import androidx.activity.OnBackPressedCallback
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
@@ -37,6 +38,7 @@ import org.ohosdev.hapviewerandroid.extensions.copyText
 import org.ohosdev.hapviewerandroid.extensions.getBitmap
 import org.ohosdev.hapviewerandroid.extensions.getFirstUri
 import org.ohosdev.hapviewerandroid.extensions.getTechDesc
+import org.ohosdev.hapviewerandroid.extensions.getVersionNameAndCode
 import org.ohosdev.hapviewerandroid.extensions.hasFileMime
 import org.ohosdev.hapviewerandroid.extensions.init
 import org.ohosdev.hapviewerandroid.extensions.isGranted
@@ -157,12 +159,9 @@ class MainActivity : BaseActivity(), OnDragListener {
 
             selectHapFile()
         }
-
-
-
         basicInfo.apply {
             arrayOf(nameText, packageText, versionText).forEach {
-                it.revealOnFocusHint = false
+                it.isFocusedByDefault = false
             }
         }
         detailsInfo.apply {
@@ -401,26 +400,22 @@ class MainActivity : BaseActivity(), OnDragListener {
             applyHapIcon(it)
             // 自动根据 hapInfo 的当前状态（如：初始状态）设置 valueText
             fun ListItem.setHapInfoValue(value: String?) {
-                val enabled = !it.init && value != null
+                val enabled = !it.init && !value.isNullOrEmpty()
                 valueText = if (enabled) value else unknownString
             }
+
+            fun TextView.setHapInfoText(value: String?, unknownStringId: Int?) {
+                val enabled = !it.init && !value.isNullOrEmpty()
+                text = when {
+                    enabled -> value
+                    unknownStringId != null -> getString(unknownStringId)
+                    else -> unknownString
+                }
+            }
             binding.basicInfo.apply {
-                nameText.text = if (!it.init && !it.appName.isNullOrEmpty()) {
-                    it.appName
-                } else {
-                    getString(R.string.unknown_appName)
-                }
-                versionText.text =
-                    if (!it.init && !(it.versionName.isNullOrEmpty() && it.versionCode.isNullOrEmpty())) {
-                        "%s (%s)".format(it.versionName ?: unknownString, it.versionCode ?: unknownString)
-                    } else {
-                        getString(R.string.unknown_version)
-                    }
-                packageText.text = if (!it.init && !it.packageName.isNullOrEmpty()) {
-                    it.packageName
-                } else {
-                    getString(R.string.unknown_packageName)
-                }
+                nameText.setHapInfoText(it.appName, R.string.unknown_appName)
+                versionText.setHapInfoText(it.getVersionNameAndCode(unknownString), R.string.unknown_packageName)
+                packageText.setHapInfoText(it.packageName, R.string.unknown_packageName)
             }
             binding.detailsInfo.apply {
                 // appNameItem.setHapInfoValue(it.appName)
