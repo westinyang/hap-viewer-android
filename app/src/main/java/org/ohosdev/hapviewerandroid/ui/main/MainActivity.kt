@@ -172,6 +172,7 @@ class MainActivity : BaseActivity(), OnDragListener {
             permissionsList.apply {
                 adapter = PermissionsAdapter(this@MainActivity).also { permissionsAdapter = it }
                 applyDividerIfEnabled()
+                itemAnimator = null
             }
         }
     }
