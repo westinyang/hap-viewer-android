@@ -340,14 +340,12 @@ class MainActivity : BaseActivity(), OnDragListener {
     }
 
     private fun showMoreInfoDialog() {
-        Log.d(TAG, "showMoreInfoDialog: ${JSON.toJSONString(hapInfo.moreInfo, true)}")
         MoreInfoDialogFragment()
             .setInfoJson(
                 JSON.toJSONString(hapInfo.moreInfo, true)
                     .replace("\t", "    ")
-                    .replace("(\".*\"):(\".*\")".toRegex()) {
-                        "${it.groupValues[1]}: ${it.groupValues[2]}"
-                    })
+                    .replace("([^\\\\]\".*\"):(\\S)".toRegex()) { "${it.groupValues[1]}: ${it.groupValues[2]}" }
+            )
             .show(supportFragmentManager, MoreInfoDialogFragment.TAG)
     }
 
