@@ -121,12 +121,10 @@ class MainActivity : BaseActivity(), OnDragListener {
         }
     }
 
-    @SuppressLint("RestrictedApi")
     private fun initViews() = binding.apply {
         // 在适当的安卓版本设置状态栏、导航栏透明
         window.statusBarColor = Color.TRANSPARENT
-        val isLightNavigationBar =
-            resolveBoolean(R.attr.windowLightNavigationBar, false)
+        val isLightNavigationBar = resolveBoolean(R.attr.windowLightNavigationBar, false)
         if (isDarkNavigationBarSupported || !isLightNavigationBar) {
             window.navigationBarColor = Color.TRANSPARENT
             WindowCompat.getInsetsController(window, window.decorView).also {
