@@ -1,5 +1,6 @@
 package org.ohosdev.hapviewerandroid.ui.about
 
+import android.annotation.SuppressLint
 import android.content.Context
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.widget.PopupMenu
@@ -39,12 +40,13 @@ class AboutDialogBuilder(context: Context) : AlertDialogBuilder<AboutDialogBuild
         setNeutralButton(R.string.legal_more, null)
     }
 
+    @SuppressLint("ClickableViewAccessibility")
     override fun create(): AlertDialog = super.create().apply {
         setOnShowListener {
             contentSelectable = true
             contentMovementMethod = RTEditorMovementMethod.getInstance()
-            getButton(AlertDialog.BUTTON_NEUTRAL).let {
-                PopupMenu(context, it).apply {
+            getButton(AlertDialog.BUTTON_NEUTRAL).let { button ->
+                PopupMenu(context, button).apply {
                     inflate(R.menu.menu_legal)
                     setOnMenuItemClickListener {
                         val link = when (it.itemId) {
@@ -55,8 +57,8 @@ class AboutDialogBuilder(context: Context) : AlertDialogBuilder<AboutDialogBuild
                         context.openUrl(link)
                         true
                     }
-                    it.setOnTouchListener(dragToOpenListener)
-                    it.setOnClickListener { show() }
+                    button.setOnTouchListener(dragToOpenListener)
+                    button.setOnClickListener { show() }
                 }
             }
         }
@@ -105,6 +107,10 @@ class AboutDialogBuilder(context: Context) : AlertDialogBuilder<AboutDialogBuild
         const val KEY_DESC = "description"
         const val KEY_INFO = "information"
         const val ELEMENT_BR = "<br/>"
+
+        /**
+         * 匹配{{xxx}}，用于替换字符串
+         * */
         val REGEX_KEY = Regex("\\{\\{\\s*(\\S*)\\s*\\}\\}")
         val contributors = arrayOf(
             Person("westinyang", URL_HOME_WESTINYANG),

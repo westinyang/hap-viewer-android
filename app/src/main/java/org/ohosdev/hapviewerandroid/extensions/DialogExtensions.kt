@@ -32,9 +32,7 @@ fun Dialog.setContentAutoLinkMask(mask: Int) {
  * 鸿蒙风格将对话框的 Gravity 修正为底部
  * */
 fun Dialog.fixDialogGravityIfNeeded() {
-    context.theme.obtainStyledAttributes(intArrayOf(windowGravityBottom)).apply {
-        if (getBoolean(0, false)) {
-            window!!.setGravity(Gravity.BOTTOM)
-        }
-    }.recycle()
+    if (context.resolveBoolean(windowGravityBottom, false)) return
+    if (window == null) throw RuntimeException("Dialog window is null")
+    window!!.setGravity(Gravity.BOTTOM)
 }

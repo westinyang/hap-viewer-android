@@ -3,6 +3,7 @@ package org.ohosdev.hapviewerandroid.extensions
 import android.content.Context
 import android.os.Build
 import android.os.FileUtils
+import androidx.annotation.ChecksSdkIntAtLeast
 import java.io.File
 import java.io.FileInputStream
 import java.io.FileOutputStream
@@ -10,6 +11,9 @@ import java.io.InputStream
 import java.io.OutputStream
 import java.nio.channels.FileChannel
 import kotlin.io.copyTo as ktCopyTo
+
+@get:ChecksSdkIntAtLeast(api = Build.VERSION_CODES.Q)
+val isSystemFileUtilsSupported = Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q
 
 fun FileChannel.copyTo(out: FileChannel) {
     val size = this.size()
@@ -25,7 +29,7 @@ fun FileChannel.copyTo(out: FileChannel) {
  * Android 10 以上使用系统自带的方法，速度会有所提升。
  * */
 fun FileInputStream.copyTo(out: FileOutputStream) {
-    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+    if (isSystemFileUtilsSupported) {
         FileUtils.copy(this.fd, out.fd)
     } else {
         channel.use { inputChannel ->
@@ -37,12 +41,12 @@ fun FileInputStream.copyTo(out: FileOutputStream) {
 }
 
 fun InputStream.copyTo(out: OutputStream) {
-    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+    if (isSystemFileUtilsSupported) {
         FileUtils.copy(this, out)
     } else if (this is FileInputStream && out is FileOutputStream) {
-        this.copyTo(out)
+        copyTo(out)
     } else {
-        this.ktCopyTo(out)
+        ktCopyTo(out)
     }
 }
 
@@ -54,10 +58,8 @@ fun File.copyTo(out: File) {
     }
 }
 
-fun File.isExternalCache(context: Context): Boolean {
-    return context.externalCacheDir?.let { startsWith(it) } ?: false
-            || startsWith(context.cacheDir)
-}
+fun File.isExternalCache(context: Context) =
+    context.externalCacheDir?.let { startsWith(it) } ?: false || startsWith(context.cacheDir)
 
 
 fun File.deleteIfCache(context: Context) {

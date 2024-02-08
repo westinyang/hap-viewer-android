@@ -28,7 +28,9 @@ var HapInfo.installing
  * */
 fun HapInfo.destroy(context: Context) {
     icon?.recycle()
-    if (hapFilePath != null) File(hapFilePath).deleteIfCache(context)
+    hapFilePath?.also {
+        File(it).deleteIfCache(context)
+    }
 }
 
 @Throws(RemoteException::class)
@@ -43,15 +45,13 @@ fun HapInfo.installToSelf(helper: ShizukuServiceHelper): ExecuteResult {
         ).also {
             Log.i(TAG, "installed hap: $it")
         }
-    }.getOrElse {
-        ExecuteResult(1, it.localizedMessage, null)
-    }
+    }.getOrElse { ExecuteResult(1, it.localizedMessage, null) }
     installing = false
     return result
 }
 
 fun HapInfo.getTechDesc(context: Context) = techList.let {
     // techList可能为空
-    if (!it.isNullOrEmpty()) it.joinToString(context.getString(R.string.separator)) else null
+    if (!it.isNullOrEmpty()) it.joinToString(context.localisedSeparator) else null
 }
 

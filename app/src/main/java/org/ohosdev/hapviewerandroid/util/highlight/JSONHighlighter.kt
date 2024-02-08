@@ -16,16 +16,11 @@ object JSONHighlighter {
         stringColor: String = COLOR_STRING,
         keywordColor: String = COLOR_KEYWORD,
         numberColor: String = COLOR_NUMBER
-    ): String {
-        var highlightedJson = jsonText
-        highlightedJson = PATTERN_SPACE.replace(highlightedJson, "&nbsp;")
-        highlightedJson =
-            PATTERN_STRING.replace(highlightedJson) { "${it.groupValues[1]}<span style=\"color: $stringColor;\">${it.groupValues[2]}</span>" }
-        highlightedJson =
-            PATTERN_KEYWORD.replace(highlightedJson) { "<span style=\"color: $keywordColor;\">${it.value}</span>" }
-        highlightedJson =
-            PATTERN_NUMBER.replace(highlightedJson) { "${it.groupValues[1]}<span style=\"color: $numberColor;\">${it.groupValues[2]}</span>${it.groupValues[3]}" }
-        highlightedJson = PATTERN_WRAP.replace(highlightedJson, "<br />")
-        return highlightedJson
-    }
+    ) = jsonText
+        .replace(PATTERN_SPACE, "&nbsp;")
+        .replace(PATTERN_STRING) { "${it.groupValues[1]}<span style=\"color: $stringColor;\">${it.groupValues[2]}</span>" }
+        .replace(PATTERN_KEYWORD) { "<span style=\"color: $keywordColor;\">${it.value}</span>" }
+        .replace(PATTERN_NUMBER) { "${it.groupValues[1]}<span style=\"color: $numberColor;\">${it.groupValues[2]}</span>${it.groupValues[3]}" }
+        .replace(PATTERN_WRAP, "<br />")
+
 }

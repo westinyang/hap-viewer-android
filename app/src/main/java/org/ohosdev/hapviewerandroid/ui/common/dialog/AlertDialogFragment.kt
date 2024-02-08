@@ -11,7 +11,7 @@ import org.ohosdev.hapviewerandroid.extensions.ensureArguments
 
 open class AlertDialogFragment : DialogFragment() {
 
-    private val onClickListener = DialogInterface.OnClickListener { dialog, which ->
+    private val onClickListener = DialogInterface.OnClickListener { _, which ->
         val requestKey = when (which) {
             Dialog.BUTTON_POSITIVE -> ARG_KEY_BUTTON_POSITIVE_KEY
             Dialog.BUTTON_NEGATIVE -> ARG_KEY_BUTTON_NEGATIVE_KEY

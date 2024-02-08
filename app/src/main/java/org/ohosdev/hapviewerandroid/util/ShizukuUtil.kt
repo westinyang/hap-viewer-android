@@ -17,30 +17,17 @@ class ShizukuUtil {
         const val PERMISSION = "moe.shizuku.manager.permission.API_V23"
         const val URL_GUIDE = "https://shizuku.rikka.app/zh-hans/guide/setup/"
 
-        fun checkPermission(): ShizukuStatus {
-            return runCatching {
-                return if (Shizuku.isPreV11()) {
-                    NOT_SUPPORT
-                } else if (Shizuku.checkSelfPermission() == PackageManager.PERMISSION_GRANTED) {
-                    GRANTED
-                } else if (Shizuku.shouldShowRequestPermissionRationale()) {
-                    SHOULD_SHOW_REQUEST_PERMISSION_RATIONALE
-                } else {
-                    NOT_GRANTED
-                }
-            }.getOrElse { ERROR }
-        }
-
-        fun requestPermission(activity: Activity, requestCode: Int) {
-            try {
-                Shizuku.requestPermission(requestCode)
-            } catch (e: Exception) {
-                e.printStackTrace()
-                activity.onRequestPermissionsResult(
-                    requestCode, arrayOf(PERMISSION), intArrayOf(PackageManager.PERMISSION_DENIED)
-                )
+        fun checkPermission() = runCatching {
+            return@runCatching if (Shizuku.isPreV11()) {
+                NOT_SUPPORT
+            } else if (Shizuku.checkSelfPermission() == PackageManager.PERMISSION_GRANTED) {
+                GRANTED
+            } else if (Shizuku.shouldShowRequestPermissionRationale()) {
+                SHOULD_SHOW_REQUEST_PERMISSION_RATIONALE
+            } else {
+                NOT_GRANTED
             }
-        }
+        }.getOrElse { ERROR }
     }
 
     enum class ShizukuStatus {
@@ -58,11 +45,9 @@ class ShizukuUtil {
             }
         private val onBinderReceivedListener =
             Shizuku.OnBinderReceivedListener { binderReceivedListener?.onBinderReceived() }
-        private val onBinderDeadListener =
-            Shizuku.OnBinderDeadListener { binderDeadListener?.onBinderDead() }
+        private val onBinderDeadListener = Shizuku.OnBinderDeadListener { binderDeadListener?.onBinderDead() }
 
-        private var requestPermissionResultListener: Shizuku.OnRequestPermissionResultListener? =
-            null
+        private var requestPermissionResultListener: Shizuku.OnRequestPermissionResultListener? = null
         private var binderReceivedListener: Shizuku.OnBinderReceivedListener? = null
         private var binderDeadListener: Shizuku.OnBinderDeadListener? = null
 

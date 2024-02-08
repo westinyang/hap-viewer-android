@@ -1,5 +1,6 @@
 package org.ohosdev.hapviewerandroid.extensions
 
+import android.annotation.SuppressLint
 import android.content.ClipData
 import android.content.ClipboardManager
 import android.content.Context
@@ -8,11 +9,13 @@ import android.content.res.Resources
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.net.Uri
+import androidx.annotation.AttrRes
 import androidx.annotation.DrawableRes
 import androidx.annotation.PluralsRes
 import androidx.browser.customtabs.CustomTabsIntent
 import androidx.core.content.ContextCompat
 import androidx.core.content.getSystemService
+import com.google.android.material.resources.MaterialAttributes
 import org.ohosdev.hapviewerandroid.R
 import org.ohosdev.hapviewerandroid.app.HapViewerApp
 import java.io.File
@@ -71,3 +74,10 @@ val Context.localisedSeparator get() = getString(R.string.separator)
  * 本地化的冒号，中文为”：“，英文为“: ”
  * */
 val Context.localisedColon get() = getString(R.string.colon)
+
+/**
+ * 返回所提供属性 `attributeResId` 的布尔值，如果属性不是布尔值或不存在于当前主题中，则返回 `defaultValue`。
+ * */
+@SuppressLint("RestrictedApi")
+fun Context.resolveBoolean(@AttrRes attributeResId: Int, defaultValue: Boolean) =
+    MaterialAttributes.resolveBoolean(this, attributeResId, defaultValue)

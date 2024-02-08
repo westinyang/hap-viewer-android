@@ -23,7 +23,6 @@ import androidx.core.app.ActivityCompat
 import androidx.core.view.WindowCompat
 import com.alibaba.fastjson.JSON
 import com.google.android.material.color.MaterialColors.getColor
-import com.google.android.material.resources.MaterialAttributes.resolveBoolean
 import com.google.android.material.snackbar.Snackbar
 import org.ohosdev.hapviewerandroid.BuildConfig
 import org.ohosdev.hapviewerandroid.R
@@ -43,6 +42,8 @@ import org.ohosdev.hapviewerandroid.extensions.init
 import org.ohosdev.hapviewerandroid.extensions.isGranted
 import org.ohosdev.hapviewerandroid.extensions.isPermissionGranted
 import org.ohosdev.hapviewerandroid.extensions.overrideAnimationDurationIfNeeded
+import org.ohosdev.hapviewerandroid.extensions.requestShizukuPermission
+import org.ohosdev.hapviewerandroid.extensions.resolveBoolean
 import org.ohosdev.hapviewerandroid.extensions.setFragmentResultListener
 import org.ohosdev.hapviewerandroid.extensions.thisApp
 import org.ohosdev.hapviewerandroid.model.HapInfo
@@ -113,14 +114,10 @@ class MainActivity : BaseActivity(), OnDragListener {
             model.installHapWaitingShizuku(hapInfo)
         }
         setFragmentResultListener(REQUEST_KEY_REQUEST_SHIZUKU) {
-            ShizukuUtil.requestPermission(this, REQUEST_CODE_SHIZUKU_INSTALL)
+            requestShizukuPermission(REQUEST_CODE_SHIZUKU_INSTALL)
         }
         setFragmentResultListener(REQUEST_KEY_REQUEST_STORAGE) {
-            ActivityCompat.requestPermissions(
-                this,
-                PERMISSIONS_EXTERNAL_STORAGE,
-                REQUEST_CODE_SELECT_FILE
-            )
+            ActivityCompat.requestPermissions(this, PERMISSIONS_EXTERNAL_STORAGE, REQUEST_CODE_SELECT_FILE)
         }
     }
 
@@ -129,15 +126,14 @@ class MainActivity : BaseActivity(), OnDragListener {
         // 在适当的安卓版本设置状态栏、导航栏透明
         window.statusBarColor = Color.TRANSPARENT
         val isLightNavigationBar =
-            resolveBoolean(this@MainActivity, R.attr.windowLightNavigationBar, false)
+            resolveBoolean(R.attr.windowLightNavigationBar, false)
         if (isDarkNavigationBarSupported || !isLightNavigationBar) {
             window.navigationBarColor = Color.TRANSPARENT
             WindowCompat.getInsetsController(window, window.decorView).also {
                 it.isAppearanceLightNavigationBars = isLightNavigationBar
             }
-            bottomScrim.background = ColorDrawable(
-                getColor(this@MainActivity, R.attr.navigationBarColorCompatible, Color.RED)
-            )
+            bottomScrim.background =
+                ColorDrawable(getColor(this@MainActivity, R.attr.navigationBarColorCompatible, Color.RED))
         }
 
         setContentView(root)
@@ -167,8 +163,7 @@ class MainActivity : BaseActivity(), OnDragListener {
 
 
         basicInfo.apply {
-            val textViews = arrayOf(nameText, packageText, versionText)
-            textViews.forEach {
+            arrayOf(nameText, packageText, versionText).forEach {
                 it.revealOnFocusHint = false
             }
         }
@@ -404,8 +399,9 @@ class MainActivity : BaseActivity(), OnDragListener {
     private fun onHapInfoChanged(hapInfo: HapInfo = HapInfo.INIT) {
         val unknownString = getString(R.string.unknown)
         val unknownTechString = getString(R.string.info_tech_unknown)
-        hapInfo.let {
+        hapInfo.also {
             applyHapIcon(it)
+            // 自动根据 hapInfo 的当前状态（如：初始状态）设置 valueText
             fun ListItem.setHapInfoValue(value: String?) {
                 val enabled = !it.init && value != null
                 valueText = if (enabled) value else unknownString
@@ -484,7 +480,7 @@ class MainActivity : BaseActivity(), OnDragListener {
         AlertDialogFragment()
             .setTitle(R.string.install_hap)
             .setMessage(R.string.install_hap_message)
-            .setPositiveButton(android.R.string.ok, "install_hap")
+            .setPositiveButton(android.R.string.ok, REQUEST_KEY_INSTALL_HAP)
             .setNegativeButton(android.R.string.cancel, null)
             .show(supportFragmentManager, TAG_DIALOG_INSTALL_HAP)
     }
@@ -522,9 +518,7 @@ class MainActivity : BaseActivity(), OnDragListener {
         /**
          * 文件读写权限
          * */
-        private val PERMISSIONS_EXTERNAL_STORAGE = arrayOf(
-            Manifest.permission.READ_EXTERNAL_STORAGE
-        )
+        private val PERMISSIONS_EXTERNAL_STORAGE = arrayOf(Manifest.permission.READ_EXTERNAL_STORAGE)
 
         /**
          * 文件读写权限，用于选择文件 请求码

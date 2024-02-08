@@ -20,7 +20,7 @@ import org.ohosdev.hapviewerandroid.extensions.init
 import org.ohosdev.hapviewerandroid.extensions.installToSelf
 import org.ohosdev.hapviewerandroid.extensions.installing
 import org.ohosdev.hapviewerandroid.model.HapInfo
-import org.ohosdev.hapviewerandroid.util.HapUtil
+import org.ohosdev.hapviewerandroid.util.ohos.HapUtil
 import org.ohosdev.hapviewerandroid.util.event.SnackBarEvent
 import org.ohosdev.hapviewerandroid.util.helper.ShizukuServiceHelper
 import java.io.File

@@ -11,8 +11,6 @@ import org.ohosdev.hapviewerandroid.view.list.ListItem
 class PermissionsAdapter(val context: Context) :
     ListAdapter<String, PermissionsAdapter.ViewHolder>(DIFF_CALLBACK) {
 
-    private val layoutInflater = LayoutInflater.from(context)
-
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int) =
         ViewHolder(ListItem(context))
 

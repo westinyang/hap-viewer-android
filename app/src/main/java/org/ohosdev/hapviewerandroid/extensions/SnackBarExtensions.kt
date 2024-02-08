@@ -28,21 +28,15 @@ fun <T : BaseTransientBottomBar<T>> T.overrideAnimationDurationIfNeeded() = appl
     runCatching<BaseTransientBottomBar<T>, Unit> {
         setDeclaredField(
             "animationSlideDuration",
-            resolveThemeDuration(
-                context, R.attr.motionDurationMedium2, DEFAULT_SLIDE_ANIMATION_DURATION
-            )
+            resolveThemeDuration(context, R.attr.motionDurationMedium2, DEFAULT_SLIDE_ANIMATION_DURATION)
         )
         setDeclaredField(
             "animationFadeInDuration",
-            resolveThemeDuration(
-                context, R.attr.motionDurationShort2, DEFAULT_ANIMATION_FADE_IN_DURATION
-            )
+            resolveThemeDuration(context, R.attr.motionDurationShort2, DEFAULT_ANIMATION_FADE_IN_DURATION)
         )
         setDeclaredField(
             "animationFadeOutDuration",
-            resolveThemeDuration(
-                context, R.attr.motionDurationShort1, DEFAULT_ANIMATION_FADE_OUT_DURATION
-            )
+            resolveThemeDuration(context, R.attr.motionDurationShort1, DEFAULT_ANIMATION_FADE_OUT_DURATION)
         )
     }.onFailure { it.printStackTrace() }
 }

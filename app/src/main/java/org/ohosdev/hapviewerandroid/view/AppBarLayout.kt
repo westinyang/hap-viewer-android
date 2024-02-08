@@ -4,9 +4,9 @@ import android.annotation.SuppressLint
 import android.content.Context
 import android.os.Build
 import android.util.AttributeSet
-import com.google.android.material.resources.MaterialAttributes.resolveBoolean
 import com.google.android.material.shape.MaterialShapeDrawable
 import com.google.android.material.shape.MaterialShapeUtils
+import org.ohosdev.hapviewerandroid.extensions.resolveBoolean
 import com.google.android.material.appbar.AppBarLayout as OriginAppBarLayout
 
 /**
@@ -14,9 +14,9 @@ import com.google.android.material.appbar.AppBarLayout as OriginAppBarLayout
  * */
 class AppBarLayout : OriginAppBarLayout {
 
-    @delegate:SuppressLint("RestrictedApi", "PrivateResource")
+    @delegate:SuppressLint("PrivateResource")
     val isMaterial3Theme by lazy {
-        resolveBoolean(context, com.google.android.material.R.attr.isMaterial3Theme, false)
+        context.resolveBoolean(com.google.android.material.R.attr.isMaterial3Theme, false)
     }
     val materialBackground
         get() = background.run { if (this is MaterialShapeDrawable) this else null }

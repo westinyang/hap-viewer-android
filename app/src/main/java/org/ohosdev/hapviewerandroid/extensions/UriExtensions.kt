@@ -72,15 +72,14 @@ fun Uri.getFilePath(context: Context): String? {
 /**
  * 把文件复制到沙盒目录
  *
- * 注意：仅支持 scheme 为 content 的 uri
+ * **注意**：仅支持 scheme 为 content 的 uri，否则将抛出异常
  *
  * [android10以上 uri转file uri转真实路径](https://blog.csdn.net/jingzz1/article/details/106188462)
  *
  * @param destFile 目标文件，默认为 `缓存目录/external_files/{name}`
  * @throws IOException 当文件无法获取时抛出异常
- * @throws IllegalArgumentException 当uri不合法时抛出异常
  */
-@Throws(IOException::class, IllegalArgumentException::class)
+@Throws(IOException::class)
 fun Uri.copyFileToPrivateDir(
     ctx: Context,
     name: String,

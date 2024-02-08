@@ -20,6 +20,7 @@ import android.renderscript.ScriptIntrinsicBlur
  * (这个类虽然废弃了，但是也可以用)
  * @param context 上下文
  */
+@Suppress("DEPRECATION")
 fun Bitmap.blur(context: Context, radius: Float = 8f) {
     val renderScript = RenderScript.create(context)
     val scriptIntrinsicBlur = ScriptIntrinsicBlur.create(renderScript, Element.U8_4(renderScript))

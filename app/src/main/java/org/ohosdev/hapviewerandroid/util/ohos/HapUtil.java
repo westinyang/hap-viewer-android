@@ -1,4 +1,4 @@
-package org.ohosdev.hapviewerandroid.util;
+package org.ohosdev.hapviewerandroid.util.ohos;
 
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
