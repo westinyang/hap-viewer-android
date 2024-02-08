@@ -22,7 +22,7 @@ import androidx.activity.viewModels
 import androidx.coordinatorlayout.widget.CoordinatorLayout
 import androidx.core.app.ActivityCompat
 import androidx.core.view.WindowCompat
-import cn.hutool.json.JSONUtil
+import com.alibaba.fastjson.JSON
 import com.google.android.material.color.MaterialColors.getColor
 import com.google.android.material.resources.MaterialAttributes.resolveBoolean
 import com.google.android.material.snackbar.Snackbar
@@ -334,8 +334,14 @@ class MainActivity : BaseActivity(), OnDragListener {
     }
 
     private fun showMoreInfoDialog() {
+        Log.d(TAG, "showMoreInfoDialog: ${JSON.toJSONString(hapInfo.moreInfo, true)}")
         MoreInfoDialogFragment()
-            .setInfoJson(JSONUtil.toJsonPrettyStr(hapInfo.moreInfo))
+            .setInfoJson(
+                JSON.toJSONString(hapInfo.moreInfo, true)
+                    .replace("\t", "    ")
+                    .replace("(\".*\"):(\".*\")".toRegex()) {
+                        "${it.groupValues[1]}: ${it.groupValues[2]}"
+                    })
             .show(supportFragmentManager, MoreInfoDialogFragment.TAG)
     }
 
