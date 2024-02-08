@@ -414,7 +414,7 @@ class MainActivity : BaseActivity(), OnDragListener {
             }
             binding.basicInfo.apply {
                 nameText.setHapInfoText(it.appName, R.string.unknown_appName)
-                versionText.setHapInfoText(it.getVersionNameAndCode(unknownString), R.string.unknown_packageName)
+                versionText.setHapInfoText(it.getVersionNameAndCode(unknownString), R.string.unknown_version)
                 packageText.setHapInfoText(it.packageName, R.string.unknown_packageName)
             }
             binding.detailsInfo.apply {
