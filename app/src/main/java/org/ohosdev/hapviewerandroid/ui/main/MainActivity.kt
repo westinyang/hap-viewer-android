@@ -417,6 +417,13 @@ class MainActivity : BaseActivity(), OnDragListener {
                 nameText.setHapInfoText(it.appName, R.string.unknown_appName)
                 versionText.setHapInfoText(it.getVersionNameAndCode(unknownString), R.string.unknown_version)
                 packageText.setHapInfoText(it.packageName, R.string.unknown_packageName)
+                root.contentDescription = getString(
+                    R.string.accessibility_hap_basic_info_description,
+                    hapInfo.appName ?: unknownString,
+                    hapInfo.versionName ?: unknownString,
+                    hapInfo.versionCode ?: unknownString,
+                    hapInfo.packageName ?: unknownString
+                )
             }
             binding.detailsInfo.apply {
                 // appNameItem.setHapInfoValue(it.appName)

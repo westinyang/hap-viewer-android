@@ -46,12 +46,16 @@
     <string name="permission_storage_additional">If you do not grant this permission, HAP Viewer will copy the file to private space before reading it.</string>
     <string name="colon">": "</string>
     <string name="more_info">More informations</string>
+
     <string name="unknown">Unknown</string>
     <string name="unknown_appName">Unknown app name</string>
     <string name="unknown_version">Unknown version</string>
     <string name="unknown_packageName">Unknown package name</string>
+
     <string name="copy_package_name">Copy package name</string>
     <string name="copy_version_code">Copy version code</string>
     <string name="copy_version_name">Copy version name</string>
     <string name="copy_app_name">Copy app name</string>
+
+    <string name="accessibility_hap_basic_info_description">App name: %1$s, version name: %2$s, version code: %3$s, package name: %4$s.</string>
 </resources>

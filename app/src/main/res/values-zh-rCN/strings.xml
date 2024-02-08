@@ -42,12 +42,16 @@
     <string name="permission_request_message">HAP 查看器需要 %1$s 来确保可以 %2$s。%3$s</string>
     <string name="colon">：</string>
     <string name="more_info">更多信息</string>
+    
     <string name="unknown">未知</string>
     <string name="unknown_appName">未知应用名</string>
     <string name="unknown_version">未知版本</string>
     <string name="unknown_packageName">未知包名</string>
+
     <string name="copy_package_name">复制包名</string>
     <string name="copy_version_code">复制版本号</string>
     <string name="copy_version_name">复制版本名</string>
     <string name="copy_app_name">复制应用名</string>
+
+    <string name="accessibility_hap_basic_info_description">应用名：%1$s，版本名：%2$s，版本号：%3$s，包名：%4$s。</string>
 </resources>
