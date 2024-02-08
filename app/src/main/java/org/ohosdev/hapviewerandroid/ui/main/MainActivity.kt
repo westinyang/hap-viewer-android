@@ -160,6 +160,9 @@ class MainActivity : BaseActivity(), OnDragListener {
 
             selectHapFile()
         }
+        contentScroll.apply {
+            isScrollWithFocus = false
+        }
         basicInfo.apply {
             root.apply {
                 registerForContextMenu(this)
