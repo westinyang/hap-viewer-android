@@ -61,9 +61,7 @@
         <!-- ItemBackground -->
         <item name="selectableItemBackground">?listChoiceBackgroundIndicator</item>
         <item name="selectableItemBackgroundBorderless">?listChoiceBackgroundIndicator</item>
-        <item name="listChoiceBackgroundIndicator">
-            @drawable/harmony_list_choice_background_indicator
-        </item>
+        <item name="listChoiceBackgroundIndicator">@drawable/harmony_list_choice_background_indicator</item>
         <item name="actionBarItemBackground">@drawable/harmony_action_bar_item_background</item>
 
         <!-- Divider -->
@@ -72,9 +70,7 @@
         <item name="materialDividerStyle">@style/Widget.Harmony.MaterialDivider</item>
 
         <item name="radioButtonStyle">@style/Widget.Harmony.CompoundButton.RadioButton</item>
-        <item name="extendedFloatingActionButtonStyle">
-            @style/Widget.Harmony.ExtendedFloatingActionButton
-        </item>
+        <item name="extendedFloatingActionButtonStyle">@style/Widget.Harmony.ExtendedFloatingActionButton</item>
 
         <item name="listPreferredItemPaddingStart">@dimen/harmony_dimen_defaultPaddingStart</item>
         <item name="listPreferredItemPaddingEnd">@dimen/harmony_dimen_defaultPaddingEnd</item>

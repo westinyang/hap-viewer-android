@@ -30,9 +30,7 @@
         <item name="codeColorNumber">@color/material_code_color_number</item>
         <item name="codeColorKeyword">@color/material_code_color_keyword</item>
 
-        <item name="materialCardViewElevatedStyle">
-            @style/Widget.HapViewerAndroid.CardView.Elevated
-        </item>
+        <item name="materialCardViewElevatedStyle">@style/Widget.HapViewerAndroid.CardView.Elevated</item>
         <item name="materialCardViewStyle">?materialCardViewElevatedStyle</item>
 
         <item name="selectFileIcon">@drawable/ic_file</item>
