@@ -10,6 +10,7 @@ import android.net.Uri
 import android.os.Build
 import android.os.Bundle
 import android.util.Log
+import android.view.ContextMenu
 import android.view.DragEvent
 import android.view.Menu
 import android.view.MenuItem
@@ -178,8 +179,10 @@ class MainActivity : BaseActivity(), OnDragListener {
             moreInfoItem.setOnClickListener { showMoreInfoDialog() }
             detailsGroup.apply {
                 registerForContextMenu(this)
-                setOnCreateContextMenuListener { menu, _, menuInfo ->
-                    menuInfo as ListItemGroup.ContextMenuInfo
+                setOnCreateContextMenuListener { menu, _, menuInfo: ContextMenu.ContextMenuInfo? ->
+                    if (menuInfo == null || menuInfo !is ListItemGroup.ContextMenuInfo) {
+                        return@setOnCreateContextMenuListener
+                    }
                     menu.setHeaderTitle(menuInfo.title)
                     if (!hapInfo.init && !menuInfo.valueText.isNullOrEmpty()) {
                         menuInflater.inflate(R.menu.menu_main_info, menu)
@@ -193,7 +196,10 @@ class MainActivity : BaseActivity(), OnDragListener {
                 applyDividerIfEnabled()
                 itemAnimator = null
                 registerForContextMenu(this)
-                setOnCreateContextMenuListener { menu, _, menuInfo ->
+                setOnCreateContextMenuListener { menu, _, menuInfo: ContextMenu.ContextMenuInfo? ->
+                    if (menuInfo == null || menuInfo !is AdvancedRecyclerView.ContextMenuInfo<*>) {
+                        return@setOnCreateContextMenuListener
+                    }
                     @Suppress("UNCHECKED_CAST")
                     menuInfo as AdvancedRecyclerView.ContextMenuInfo<PermissionsAdapter.ViewHolder>
                     menu.setHeaderTitle(menuInfo.viewHolder.title?.let { it.getOhosPermSortName() ?: it })
