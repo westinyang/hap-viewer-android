@@ -3,6 +3,8 @@ package org.ohosdev.hapviewerandroid.ui.main
 import android.app.Application
 import android.net.Uri
 import android.os.RemoteException
+import android.provider.DocumentsContract
+import android.util.Log
 import androidx.annotation.StringRes
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.MutableLiveData
@@ -12,17 +14,18 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import org.ohosdev.hapviewerandroid.R
+import org.ohosdev.hapviewerandroid.extensions.canRead
 import org.ohosdev.hapviewerandroid.extensions.deleteIfCache
 import org.ohosdev.hapviewerandroid.extensions.destroy
-import org.ohosdev.hapviewerandroid.extensions.getFileName
 import org.ohosdev.hapviewerandroid.extensions.getOrCopyFile
 import org.ohosdev.hapviewerandroid.extensions.init
 import org.ohosdev.hapviewerandroid.extensions.installToSelf
 import org.ohosdev.hapviewerandroid.extensions.installing
+import org.ohosdev.hapviewerandroid.extensions.toDocumentFile
 import org.ohosdev.hapviewerandroid.model.HapInfo
-import org.ohosdev.hapviewerandroid.util.ohos.HapUtil
 import org.ohosdev.hapviewerandroid.util.event.SnackBarEvent
 import org.ohosdev.hapviewerandroid.util.helper.ShizukuServiceHelper
+import org.ohosdev.hapviewerandroid.util.ohos.HapUtil
 import java.io.File
 
 // https://developer.android.google.cn/topic/libraries/architecture/viewmodel?hl=zh-cn
@@ -37,14 +40,28 @@ class MainViewModel(private val app: Application) : AndroidViewModel(app) {
     private val shizukuServiceHelper = ShizukuServiceHelper()
 
     fun handelUri(uri: Uri) = viewModelScope.launch {
+        Log.i(TAG, "handelUri: $uri")
         isParsing.value = true
         withContext(Dispatchers.IO) {
-            // TODO: 文件名校验
-            val uuid = UUID.randomUUID().toString(true)
-            val fileName = uri.getFileName(app)
-            val name = "${uuid}_$fileName"
+            val documentFile = uri.toDocumentFile(app) ?: run {
+                showSnackBar("uri not legal")
+                return@withContext
+            }
+            val isDocumentUri = DocumentsContract.isDocumentUri(app, uri)
+            // 第三方的实现可能有问题，所以需要判断uri。
 
-            val file = uri.getOrCopyFile(app, name)
+            if (isDocumentUri && !documentFile.isFile) {
+                showSnackBar(R.string.error_uri_not_document)
+                return@withContext
+            }
+            if (isDocumentUri && !uri.canRead(app)) {
+                showSnackBar(R.string.error_file_unreadable)
+                return@withContext
+            }
+            // TODO: 文件名校验
+            val fileName = documentFile.name ?: "unknown"
+            val randomName = "${UUID.randomUUID().toString(true)}_$fileName"
+            val file = documentFile.getOrCopyFile(app, randomName)
             if (file == null) {
                 showSnackBar(R.string.parse_error_fail_obtain)
                 return@withContext
@@ -149,5 +166,9 @@ class MainViewModel(private val app: Application) : AndroidViewModel(app) {
         super.onCleared()
         runCatching { shizukuServiceHelper.unbindUserService() }.onFailure { it.printStackTrace() }
         autoDestroyHapInfoRunnable(this.hapInfo.value!!, true)()
+    }
+
+    companion object {
+        private const val TAG = "MainViewModel"
     }
 }

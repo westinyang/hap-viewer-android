@@ -58,4 +58,8 @@
     <string name="copy_app_name">Copy app name</string>
 
     <string name="accessibility_hap_basic_info_description">App name: %1$s, version name: %2$s, version code: %3$s, package name: %4$s.</string>
+
+    <string name="error_file_unreadable">The file is unreadable.</string>
+    <string name="error_uri_not_document">This URI is not a document.</string>
+    <string name="error_uri_not_valid">The URI is not valid.</string>
 </resources>

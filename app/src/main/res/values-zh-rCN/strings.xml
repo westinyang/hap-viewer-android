@@ -54,4 +54,8 @@
     <string name="copy_app_name">复制应用名</string>
 
     <string name="accessibility_hap_basic_info_description">应用名：%1$s，版本名：%2$s，版本号：%3$s，包名：%4$s。</string>
+
+    <string name="error_file_unreadable">文件不可读。</string>
+    <string name="error_uri_not_document">此 URI 不是文档。</string>
+    <string name="error_uri_not_valid">URI 不合法。</string>
 </resources>

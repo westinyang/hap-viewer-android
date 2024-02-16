@@ -58,12 +58,15 @@ fun File.copyTo(out: File) {
     }
 }
 
-fun File.isExternalCache(context: Context) =
-    context.externalCacheDir?.let { startsWith(it) } ?: false || startsWith(context.cacheDir)
+/**
+ * 判断文件是否位于缓存路径 [Context.getCacheDir]、[Context.getExternalCacheDirs] 下。
+ * */
+fun File.isInCache(context: Context) =
+    startsWith(context.cacheDir) || context.externalCacheDirs.find { startsWith(it) } != null
 
 
 fun File.deleteIfCache(context: Context) {
-    if (isExternalCache(context)) {
+    if (isInCache(context)) {
         if (!delete()) {
             deleteOnExit()
         }
