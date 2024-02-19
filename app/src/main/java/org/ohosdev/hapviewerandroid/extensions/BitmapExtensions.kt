@@ -20,6 +20,7 @@ import android.renderscript.ScriptIntrinsicBlur
  * (这个类虽然废弃了，但是也可以用)
  * @param context 上下文
  */
+@Suppress("DEPRECATION")
 fun Bitmap.blur(context: Context, radius: Float = 8f) {
     val renderScript = RenderScript.create(context)
     val scriptIntrinsicBlur = ScriptIntrinsicBlur.create(renderScript, Element.U8_4(renderScript))
@@ -36,39 +37,48 @@ fun Bitmap.blur(context: Context, radius: Float = 8f) {
  * 创建阴影 Bitmap
  *
  * @param context 上下文对象
- * @param height 新图片总高度
- * @param width 新图片总宽度
- * @param padding 新图片边距
+ * @param height 视图高度，不包括阴影
+ * @param width 视图宽度，不包括阴影
+ * @param shadowRadius 阴影半径
  * @return 阴影Bitmap
  */
-fun Bitmap.newShadowBitmap(context: Context, padding: Int = 0, width: Int, height: Int): Bitmap {
+fun Bitmap.newShadowBitmap(
+    context: Context,
+    shadowRadius: Float = 0f,
+    width: Int,
+    height: Int
+): Bitmap {
     val srcWidth = this.width
     val srcHeight = this.height
-    val innerWidth: Int
-    val innerHeight: Int
-    // 计算新的宽高，使图片四周留出4dp边距
-    if (srcWidth > srcHeight) {
-        innerWidth = width - padding * 2
-        innerHeight = (innerWidth.toFloat() / srcWidth * srcHeight + 0.5f).toInt()
+    val scaledWidth: Int
+    val scaledHeight: Int
+
+    if (srcWidth.toFloat() / srcHeight > width.toFloat() / height) {
+        scaledWidth = width
+        scaledHeight = (width.toFloat() / srcWidth * srcHeight + 0.5f).toInt()
     } else {
-        innerHeight = height - padding * 2
-        innerWidth = (innerHeight.toFloat() / srcHeight * srcWidth + 0.5f).toInt()
+        scaledHeight = height
+        scaledWidth = (height.toFloat() / srcHeight * srcWidth + 0.5f).toInt()
     }
 
-    val newBitmap = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888)
+    val newBitmap = Bitmap.createBitmap(
+        (width + shadowRadius * 2 + 0.5f).toInt(),
+        (height + shadowRadius * 2 + 0.5f).toInt(),
+        Bitmap.Config.ARGB_8888
+    )
     val canvas = Canvas(newBitmap)
     val paint = Paint(Paint.ANTI_ALIAS_FLAG)
     // 添加黑色滤镜，使图片变为黑色
     val colorMatrix = ColorMatrix()
     colorMatrix.setScale(0f, 0f, 0f, 0.3f)
     paint.colorFilter = ColorMatrixColorFilter(colorMatrix)
-    val rect = Rect(0, 0, innerWidth, innerHeight)
+    val rect = Rect(0, 0, scaledWidth, scaledHeight)
     rect.offset(
-        ((width - innerWidth).toFloat() / 2).toInt(),
-        ((height - innerHeight).toFloat() / 2).toInt()
+        ((width - scaledWidth) / 2 + shadowRadius).toInt(),
+        ((height - scaledHeight) / 2 + shadowRadius).toInt()
     )
     canvas.drawBitmap(this, null, rect, paint)
     // 模糊一下图片，使图片变虚，看起来好像阴影
-    newBitmap.blur(context)
+    newBitmap.blur(context, shadowRadius)
     return newBitmap
 }

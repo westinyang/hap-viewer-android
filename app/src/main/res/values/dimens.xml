@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <dimen name="icon_padding">4dp</dimen>
-    <dimen name="icon_width">100dp</dimen>
+    <dimen name="icon_shadow_radius">4dp</dimen>
+    <dimen name="icon_width">92dp</dimen>
 </resources>

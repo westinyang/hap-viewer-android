@@ -1,5 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources xmlns:tools="http://schemas.android.com/tools" tools:ignore="PrivateResource">
+    <!-- 修正CheckBox和RadioButton的大小 -->
+    <style name="Widget.HapViewerAndroid.CompoundButton.CheckBox" parent="Widget.MaterialComponents.CompoundButton.CheckBox">
+        <item name="android:minWidth">0dp</item>
+        <item name="android:minHeight">0dp</item>
+    </style>
+
+    <style name="Widget.HapViewerAndroid.CompoundButton.RadioButton" parent="Widget.MaterialComponents.CompoundButton.RadioButton">
+        <item name="android:minWidth">0dp</item>
+        <item name="android:minHeight">0dp</item>
+    </style>
 
     <!-- CardView -->
     <style name="Widget.HapViewerAndroid.CardView.Elevated" parent="Widget.MaterialComponents.CardView">
@@ -22,5 +32,28 @@
         <item name="android:background">@null</item>
         <item name="titleTextColor">@color/material_on_surface_emphasis_high_type</item>
         <item name="subtitleTextColor">@color/material_on_surface_emphasis_medium</item>
+    </style>
+
+    <!-- ListItem -->
+    <style name="Widget.ListItemGroup.Material" parent="">
+        <item name="android:orientation">vertical</item>
+    </style>
+
+    <style name="Widget.ListItem.Material" parent="">
+        <item name="android:background">?selectableItemBackground</item>
+        <item name="android:focusable">auto</item>
+        <item name="android:clickable">true</item>
+        <item name="android:longClickable">true</item>
+        <item name="android:contextClickable">true</item>
+    </style>
+
+    <style name="Widget.ListItem.Layout.Material" parent="">
+        <item name="android:padding">16dp</item>
+        <item name="android:minHeight">48dp</item>
+        <item name="android:orientation">vertical</item>
+    </style>
+
+    <style name="Widget.ListItem.Layout.Spacer.Material" parent="">
+        <item name="android:visibility">gone</item>
     </style>
 </resources>

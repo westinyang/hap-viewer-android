@@ -8,8 +8,7 @@ abstract class BaseEvent {
      * @param onConsume 仅当第一次调用该方法时立即执行此回调
      * */
     fun consume(onConsume: (() -> Unit)? = null): Boolean {
-        if (consumed)
-            return false
+        if (consumed) return false
         consumed = true
         onConsume?.invoke()
         return true

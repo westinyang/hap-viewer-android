@@ -1,12 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:clipToPadding="false"
     app:edgeToEdge="true">
 
-    <com.google.android.material.appbar.AppBarLayout
+    <org.ohosdev.hapviewerandroid.view.AppBarLayout
         android:id="@+id/appbar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -14,54 +15,73 @@
         app:fitsSystemWindowsInsets="top|start|end"
         app:layout_behavior="org.ohosdev.hapviewerandroid.view.behavior.AppBarLayoutBehavior"
         app:liftOnScroll="?liftOnScroll"
-        app:liftOnScrollTargetViewId="@id/nested_scroll_view">
+        app:liftOnScrollTargetViewId="@id/content_scroll">
 
         <com.google.android.material.appbar.MaterialToolbar
             android:id="@+id/toolbar"
             android:layout_width="match_parent"
-            android:layout_height="?attr/actionBarSize"
-            app:popupTheme="?actionBarPopupTheme" />
-    </com.google.android.material.appbar.AppBarLayout>
+            android:layout_height="wrap_content"
+            app:popupTheme="?actionBarPopupTheme"
+            tools:title="@string/app_name" />
+    </org.ohosdev.hapviewerandroid.view.AppBarLayout>
 
     <!-- BUG:RecyclerView回收失效 -->
-    <androidx.core.widget.NestedScrollView
-        android:id="@+id/nested_scroll_view"
+    <org.ohosdev.hapviewerandroid.view.NestedScrollView
+        android:id="@+id/content_scroll"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:clipToPadding="false"
-        android:paddingBottom="?paddingBottomFabSize"
         app:fitsSystemWindowsInsets="start|end|bottom"
-        app:layout_behavior="com.google.android.material.appbar.AppBarLayout$ScrollingViewBehavior">
+        android:descendantFocusability="blocksDescendants"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
-
-        <androidx.constraintlayout.widget.ConstraintLayout
+        <LinearLayout
             android:id="@+id/content_container"
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:paddingBottom="?attr/paddingBottomWithFabSize">
 
             <include
                 android:id="@+id/basic_info"
-                layout="@layout/info_basic" />
+                layout="@layout/activity_main_basic"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="?cardMargin" />
 
             <include
-                android:id="@+id/detail_info"
-                layout="@layout/info_details" />
+                android:id="@+id/details_info"
+                layout="@layout/activity_main_details"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="?cardMargin"
+                android:layout_marginTop="0dp"
+                android:layout_marginBottom="?cardMargin" />
 
-        </androidx.constraintlayout.widget.ConstraintLayout>
-    </androidx.core.widget.NestedScrollView>
+            <include
+                android:id="@+id/permissions_info"
+                layout="@layout/activity_main_permissions"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="?cardMargin"
+                android:layout_marginTop="0dp"
+                android:layout_marginBottom="?cardMargin" />
 
+        </LinearLayout>
+    </org.ohosdev.hapviewerandroid.view.NestedScrollView>
 
     <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
-        android:id="@+id/selectHapButton"
+        android:id="@+id/select_hap_button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_gravity="bottom|end"
         android:layout_margin="16dp"
         android:text="@string/select_file_hap"
         app:icon="?selectFileIcon"
-        app:layout_anchor="@id/bottom_scrim"
-        app:layout_anchorGravity="top|end"
-        app:layout_dodgeInsetEdges="bottom"
         app:layout_fitsSystemWindowsInsets="end" />
+
+    <!-- app:layout_anchor="@id/bottom_scrim"
+        app:layout_anchorGravity="top|end" 会导致UI频繁刷新 -->
 
     <!-- 悬浮球不能直接设置底部衬边，也不能给CoordinatorLayout设置衬边，只好通过这种方法解决底部边距问题了 -->
     <FrameLayout
@@ -69,18 +89,17 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="bottom"
-        android:background="@drawable/navigation_bar_background"
         app:fitsSystemWindowsInsets="bottom"
         app:layout_insetEdge="bottom" />
 
     <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        app:layout_behavior="com.google.android.material.appbar.AppBarLayout$ScrollingViewBehavior"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior"
         app:layout_fitsSystemWindowsInsets="bottom|start|end">
 
         <com.google.android.material.progressindicator.LinearProgressIndicator
-            android:id="@+id/background_progress_indicator"
+            android:id="@+id/background_progress"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="top"
@@ -88,7 +107,7 @@
             android:visibility="gone" />
 
         <ProgressBar
-            android:id="@+id/progress_bar"
+            android:id="@+id/foreground_progress"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"

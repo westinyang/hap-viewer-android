@@ -39,17 +39,17 @@
     </style>
 
     <style name="Widget.Harmony.PopupMenu" parent="Widget.MaterialComponents.PopupMenu">
-        <item name="android:popupElevation">50dp</item>
+        <item name="android:popupElevation">@dimen/harmony_elevation_s3_radius</item>
         <item name="android:popupEnterTransition">@null</item>
         <item name="android:popupExitTransition">@null</item>
         <item name="android:popupAnimationStyle">@style/Animation.Harmony.PopupWindow</item>
         <item name="android:dropDownVerticalOffset">0dp</item>
-        <item name="android:dropDownHorizontalOffset">-12dp</item>
+        <item name="android:dropDownHorizontalOffset">0dp</item>
     </style>
 
     <style name="Widget.Harmony.PopupMenu.Overflow" parent="Widget.MaterialComponents.PopupMenu.Overflow">
         <item name="overlapAnchor">false</item>
-        <item name="android:popupElevation">50dp</item>
+        <item name="android:popupElevation">@dimen/harmony_elevation_s3_radius</item>
         <item name="android:popupEnterTransition">@null</item>
         <item name="android:popupExitTransition">@null</item>
         <item name="android:popupAnimationStyle">@style/Animation.Harmony.PopupWindow</item>
@@ -58,10 +58,17 @@
     </style>
 
     <style name="Widget.Harmony.ListView.DropDown" parent="Widget.AppCompat.ListView.DropDown">
-        <item name="android:divider">@drawable/harmony_divider</item>
+        <item name="android:divider">@drawable/harmony_divider_menu</item>
         <item name="android:dividerHeight">0.5dp</item>
         <item name="android:listSelector">@drawable/harmony_menu_choice_background_indicator
         </item>
+    </style>
+
+    <style name="Widget.Harmony.PopupMenu.ContextMenu" parent="Widget.MaterialComponents.PopupMenu.ContextMenu">
+        <item name="android:popupElevation">@dimen/harmony_elevation_s3_radius</item>
+        <item name="android:popupEnterTransition">@null</item>
+        <item name="android:popupExitTransition">@null</item>
+        <item name="android:popupAnimationStyle">@style/Animation.Harmony.PopupWindow</item>
     </style>
 
     <!-- Card -->
@@ -75,8 +82,8 @@
     <style name="Widget.Harmony.MaterialDivider" parent="Widget.MaterialComponents.MaterialDivider">
         <item name="dividerColor">@color/harmony_color_divider</item>
         <item name="dividerThickness">0.5dp</item>
-        <item name="dividerInsetStart">16dp</item>
-        <item name="dividerInsetEnd">16dp</item>
+        <item name="dividerInsetStart">?listPreferredItemPaddingStart</item>
+        <item name="dividerInsetEnd">?listPreferredItemPaddingEnd</item>
     </style>
 
     <!-- Dialog -->
@@ -89,6 +96,10 @@
         <item name="android:layout_gravity">bottom|center_horizontal</item>
         <item name="android:layout">@layout/harmony_alert_dialog_material</item>
         <item name="shapeAppearance">@style/ShapeAppearance.Harmony.AlertDialog</item>
+        <item name="backgroundInsetStart">0dp</item>
+        <item name="backgroundInsetTop">16dp</item>
+        <item name="backgroundInsetEnd">0dp</item>
+        <item name="backgroundInsetBottom">16dp</item>
     </style>
 
     <style name="Widget.Harmony.Button.Dialog" parent="Widget.AppCompat.Button">
@@ -108,10 +119,14 @@
         <item name="buttonBarNegativeButtonStyle">?buttonBarButtonStyle</item>
         <item name="buttonBarPositiveButtonStyle">?buttonBarButtonStyle</item>
         <item name="android:windowAnimationStyle">@style/Animation.Harmony.AlertDialog</item>
+
+        <item name="windowGravityBottom">@bool/harmony_dialogGravityBottom</item>
     </style>
 
     <style name="Widget.Harmony.CompoundButton.RadioButton" parent="Widget.Emui.HwRadioButton">
         <item name="android:background">@null</item>
+        <item name="android:minWidth">0dp</item>
+        <item name="android:minHeight">0dp</item>
     </style>
 
     <style name="Widget.Harmony.ExtendedFloatingActionButton" parent="Widget.MaterialComponents.ExtendedFloatingActionButton.Icon">
@@ -121,6 +136,10 @@
     <style name="ShapeAppearance.Harmony.AlertDialog" parent="">
         <item name="cornerFamily">rounded</item>
         <item name="cornerSize">24dp</item>
+    </style>
+
+    <style name="TextAppearance.Harmony.Widget.PopupMenu.Header" parent="TextAppearance.AppCompat.Widget.PopupMenu.Header">
+        <item name="android:textColor">?colorPrimary</item>
     </style>
 
 </resources>

@@ -25,19 +25,16 @@ class UserService() : IUserService.Stub() {
         destroy()
     }
 
-    override fun execute(
-        cmdarray: MutableList<String>,
-        envp: MutableList<String>?,
-        dir: String?
-    ): ExecuteResult = runBlocking(Dispatchers.IO) {
-        val process = Runtime.getRuntime().exec(
-            cmdarray.toTypedArray(), envp?.toTypedArray(), dir?.let { File(it) }
-        )
-        val exitCode = process.waitFor()
-        val error = process.errorStream.readBytes().decodeToString()
-        val output = process.inputStream.readBytes().decodeToString()
-        return@runBlocking ExecuteResult(exitCode, error, output)
-    }
+    override fun execute(cmdarray: MutableList<String>, envp: MutableList<String>?, dir: String?) =
+        runBlocking(Dispatchers.IO) {
+            val process = Runtime.getRuntime().exec(
+                cmdarray.toTypedArray(), envp?.toTypedArray(), dir?.let { File(it) }
+            )
+            val exitCode = process.waitFor()
+            val error = process.errorStream.readBytes().decodeToString()
+            val output = process.inputStream.readBytes().decodeToString()
+            return@runBlocking ExecuteResult(exitCode, error, output)
+        }
 
 
     companion object {

@@ -3,9 +3,16 @@
     <style name="Platform.V23.Theme.HapViewerAndroid.Material2" parent="Theme.MaterialComponents.DayNight">
         <item name="android:statusBarColor">@color/system_window_scrim</item>
         <item name="android:navigationBarColor">@color/system_window_scrim_compat</item>
+        <item name="navigationBarColorCompatible">@color/system_window_scrim</item>
+
         <item name="android:windowLightStatusBar">?windowLightStatusBar</item>
         <item name="windowLightStatusBar">?isLightTheme</item>
         <item name="windowLightNavigationBar">?isLightTheme</item>
+
+        <item name="android:listPreferredItemPaddingStart">?listPreferredItemPaddingStart</item>
+        <item name="android:listPreferredItemPaddingEnd">?listPreferredItemPaddingEnd</item>
+
+        <item name="textAppearanceTitleMedium">?textAppearanceSubtitle2</item>
     </style>
 
     <style name="Platform.Theme.HapViewerAndroid.Material2" parent="Platform.V23.Theme.HapViewerAndroid.Material2" />
@@ -19,23 +26,36 @@
         <item name="colorSecondary">@color/color_secondary</item>
         <item name="colorOnSecondary">@android:color/white</item>
 
-        <item name="materialCardViewOutlinedStyle">
-            @style/Widget.HapViewerAndroid.CardView.Outlined
-        </item>
-        <item name="materialCardViewElevatedStyle">
-            @style/Widget.HapViewerAndroid.CardView.Elevated
-        </item>
+        <item name="codeColorString">@color/material_code_color_string</item>
+        <item name="codeColorNumber">@color/material_code_color_number</item>
+        <item name="codeColorKeyword">@color/material_code_color_keyword</item>
+
+        <item name="materialCardViewOutlinedStyle">@style/Widget.HapViewerAndroid.CardView.Outlined</item>
+        <item name="materialCardViewElevatedStyle">@style/Widget.HapViewerAndroid.CardView.Elevated</item>
         <item name="materialCardViewStyle">?materialCardViewOutlinedStyle</item>
         <item name="actionBarStyle">@style/Widget.MaterialComponents.ActionBar.Surface</item>
         <item name="actionBarTheme">@style/ThemeOverlay.HapViewerAndroid.ActionBar.Surface</item>
         <item name="appBarLayoutStyle">@style/Widget.MaterialComponents.AppBarLayout.Surface</item>
         <item name="toolbarSurfaceStyle">@style/Widget.HapViewerAndroid.Toolbar.Surface</item>
         <item name="toolbarStyle">?toolbarSurfaceStyle</item>
-        <item name="liftOnScroll">true</item>
-        <item name="paddingBottomFabSize">64dp</item>
-        <item name="cardPaddingVertical">8dp</item>
+        <item name="checkboxStyle">@style/Widget.HapViewerAndroid.CompoundButton.CheckBox</item>
+        <item name="radioButtonStyle">@style/Widget.HapViewerAndroid.CompoundButton.RadioButton
+        </item>
+
         <item name="selectFileIcon">@drawable/ic_file</item>
         <item name="dropFileIcon">@drawable/ic_file_upload</item>
+
+        <item name="liftOnScroll">true</item>
+        <item name="listItemGroupStyle">@style/Widget.ListItemGroup.Material</item>
+        <item name="listItemStyle">@style/Widget.ListItem.Material</item>
+        <item name="listItemLayoutStyle">@style/Widget.ListItem.Layout.Material</item>
+        <item name="listItemSpacerStyle">@style/Widget.ListItem.Layout.Spacer.Material</item>
+        <item name="paddingBottomWithFabSize">64dp</item>
+        <item name="cardMargin">16dp</item>
+        <item name="listPaddingVertical">8dp</item>
+        <item name="listPreferredItemPaddingStart">16dp</item>
+        <item name="listPreferredItemPaddingEnd">16dp</item>
+        <item name="itemMargin">16dp</item>
     </style>
 
     <style name="Theme.HapViewerAndroid.Material2" parent="Base.Theme.HapViewerAndroid.Material2" />

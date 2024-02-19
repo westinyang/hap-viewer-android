@@ -3,9 +3,14 @@
     <style name="Platform.V23.Theme.HapViewerAndroid.Material3" parent="Theme.Material3.DynamicColors.DayNight">
         <item name="android:statusBarColor">@color/system_window_scrim</item>
         <item name="android:navigationBarColor">@color/system_window_scrim_compat</item>
+        <item name="navigationBarColorCompatible">@color/system_window_scrim</item>
+
         <item name="android:windowLightStatusBar">?windowLightStatusBar</item>
         <item name="windowLightStatusBar">?isLightTheme</item>
         <item name="windowLightNavigationBar">?isLightTheme</item>
+
+        <item name="android:listPreferredItemPaddingStart">?listPreferredItemPaddingStart</item>
+        <item name="android:listPreferredItemPaddingEnd">?listPreferredItemPaddingEnd</item>
     </style>
 
     <style name="Platform.Theme.HapViewerAndroid.Material3" parent="Platform.V23.Theme.HapViewerAndroid.Material3" />
@@ -13,64 +18,37 @@
     <style name="Base.Theme.HapViewerAndroid.Material3" parent="Platform.Theme.HapViewerAndroid.Material3">
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>
+
         <item name="colorAccent">?colorPrimary</item>
-        <item name="materialCardViewStyle">?materialCardViewElevatedStyle</item>
-        <item name="liftOnScroll">true</item>
-        <item name="paddingBottomFabSize">72dp</item>
-        <item name="cardPaddingVertical">8dp</item>
+
+        <item name="codeColorString">@color/material3_code_color_string</item>
+        <item name="codeColorNumber">@color/material3_code_color_number</item>
+        <item name="codeColorKeyword">@color/material3_code_color_keyword</item>
+
+        <item name="materialCardViewFilledStyle">@style/Widget.HapViewerAndroid.Material3.CardView.Elevated</item>
+        <item name="materialCardViewStyle">?materialCardViewFilledStyle</item>
+        <item name="actionBarPopupTheme">@style/ThemeOverlay.Material3.DynamicColors.DayNight</item>
+        <item name="checkboxStyle">@style/Widget.HapViewerAndroid.CompoundButton.CheckBox</item>
+        <item name="radioButtonStyle">@style/Widget.HapViewerAndroid.CompoundButton.RadioButton</item>
+
+        <!-- 恢复正常的列表标题大小 -->
+        <item name="textAppearanceTitleMedium">@style/TextAppearance.HapViewerAndroid.Material3.TitleMedium</item>
+
         <item name="selectFileIcon">@drawable/ic_file</item>
         <item name="dropFileIcon">@drawable/ic_file_upload</item>
-        <item name="actionBarPopupTheme">@style/ThemeOverlay.HapViewerAndroid.DayNight</item>
+
+        <item name="liftOnScroll">true</item>
+        <item name="listItemGroupStyle">@style/Widget.ListItemGroup.Material</item>
+        <item name="listItemStyle">@style/Widget.ListItem.Material</item>
+        <item name="listItemLayoutStyle">@style/Widget.ListItem.Layout.Material</item>
+        <item name="listItemSpacerStyle">@style/Widget.ListItem.Layout.Spacer.Material</item>
+        <item name="paddingBottomWithFabSize">72dp</item>
+        <item name="cardMargin">16dp</item>
+        <item name="listPaddingVertical">8dp</item>
+        <item name="listPreferredItemPaddingStart">16dp</item>
+        <item name="listPreferredItemPaddingEnd">16dp</item>
+        <item name="itemMargin">16dp</item>
     </style>
 
     <style name="Theme.HapViewerAndroid.Material3" parent="Base.Theme.HapViewerAndroid.Material3" />
-
-    <style name="ThemeOverlay.HapViewerAndroid.Light" parent="" tools:ignore="PrivateResource">
-        <item name="android:textColorPrimary">@color/m3_default_color_primary_text</item>
-        <item name="android:textColorPrimaryInverse">@color/m3_dark_default_color_primary_text
-        </item>
-        <item name="android:textColorSecondary">@color/m3_default_color_secondary_text</item>
-        <item name="android:textColorSecondaryInverse">@color/m3_dark_default_color_secondary_text
-        </item>
-        <item name="android:textColorTertiary">@color/m3_default_color_secondary_text</item>
-        <item name="android:textColorTertiaryInverse">@color/m3_dark_default_color_secondary_text
-        </item>
-        <item name="android:textColorPrimaryDisableOnly">@color/m3_primary_text_disable_only</item>
-        <item name="android:textColorPrimaryInverseDisableOnly">
-            @color/m3_dark_primary_text_disable_only
-        </item>
-        <item name="android:textColorHint">@color/m3_hint_foreground</item>
-        <item name="android:textColorHintInverse">@color/m3_dark_hint_foreground</item>
-        <item name="android:textColorHighlight">@color/m3_highlighted_text</item>
-        <item name="android:textColorHighlightInverse">@color/m3_dark_highlighted_text</item>
-        <item name="android:textColorLink">?attr/colorPrimary</item>
-        <item name="android:textColorLinkInverse">?attr/colorPrimaryInverse</item>
-        <item name="android:textColorAlertDialogListItem">@color/m3_default_color_primary_text
-        </item>
-    </style>
-
-    <style name="ThemeOverlay.HapViewerAndroid.Dark" parent="" tools:ignore="PrivateResource">
-        <item name="android:textColorPrimary">@color/m3_dark_default_color_primary_text</item>
-        <item name="android:textColorPrimaryInverse">@color/m3_default_color_primary_text</item>
-        <item name="android:textColorSecondary">@color/m3_dark_default_color_secondary_text</item>
-        <item name="android:textColorSecondaryInverse">@color/m3_default_color_secondary_text</item>
-        <item name="android:textColorTertiary">@color/m3_dark_default_color_secondary_text</item>
-        <item name="android:textColorTertiaryInverse">@color/m3_default_color_secondary_text</item>
-        <item name="android:textColorPrimaryDisableOnly">@color/m3_dark_primary_text_disable_only
-        </item>
-        <item name="android:textColorPrimaryInverseDisableOnly">
-            @color/m3_primary_text_disable_only
-        </item>
-        <item name="android:textColorHint">@color/m3_dark_hint_foreground</item>
-        <item name="android:textColorHintInverse">@color/m3_hint_foreground</item>
-        <item name="android:textColorHighlight">@color/m3_dark_highlighted_text</item>
-        <item name="android:textColorHighlightInverse">@color/m3_highlighted_text</item>
-        <item name="android:textColorLink">?attr/colorPrimary</item>
-        <item name="android:textColorLinkInverse">?attr/colorPrimaryInverse</item>
-        <item name="android:textColorAlertDialogListItem">
-            @color/m3_dark_default_color_primary_text
-        </item>
-    </style>
-
-    <style name="ThemeOverlay.HapViewerAndroid.DayNight" parent="ThemeOverlay.HapViewerAndroid.Light" />
 </resources>

@@ -1,11 +1,13 @@
 package org.ohosdev.hapviewerandroid.model;
 
-import android.content.Context;
 import android.graphics.Bitmap;
 
-import org.ohosdev.hapviewerandroid.R;
+import com.alibaba.fastjson.JSONArray;
 
+import java.util.List;
+import java.util.Map;
 import java.util.Set;
+
 
 /**
  * Hap安装包信息
@@ -14,7 +16,10 @@ import java.util.Set;
  */
 public class HapInfo {
     public static final HapInfo INIT = new HapInfo(true);
-    public boolean init = false;
+    public static final int FLAG_FILE_STATE_INSTALLING = 1;
+    public static final int FLAG_FILE_STATE_INIT = 1 << 1;
+
+    public int fileStateFlags = 0;
 
     /* app. */
     public Bitmap icon;
@@ -33,37 +38,23 @@ public class HapInfo {
     /* module. */
     public String mainElement;
 
+    public JSONArray requestPermissions;
+    public List<String> requestPermissionNames;
+
+    /* more */
+    public Map<String, Object> moreInfo;
+
     /* 额外 */
     public String hapFilePath;
     public Set<String> techList;
-    private String techDesc;
 
     public HapInfo() {
     }
 
     public HapInfo(boolean init) {
-        this.init = init;
-    }
-
-    public String getTechDesc() {
-        if (techList != null && techList.size() > 0) {
-            techDesc = String.join("、", techList);
-        } else {
-            techDesc = "原生开发或未知开发技术";
+        if (init) {
+            fileStateFlags |= FLAG_FILE_STATE_INIT;
         }
-        return techDesc;
     }
 
-    public void setTechDesc(String techDesc) {
-        this.techDesc = techDesc;
-    }
-
-    public String getTechDesc(Context context) {
-        if (techList != null && techList.size() > 0) {
-            techDesc = String.join(context.getString(R.string.separator), techList);
-        } else {
-            techDesc = context.getString(R.string.info_tech_unknown);
-        }
-        return techDesc;
-    }
 }

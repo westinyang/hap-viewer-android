@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    style="?attr/listItemLayoutStyle"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:gravity="center_vertical">
+    <!-- 鸿蒙风格横向排列，质感风格纵向排列 -->
+
+    <TextView
+        android:id="@+id/titleText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?textAppearanceListItem"
+        android:textColor="@color/text_primary_selector"
+        tools:text="@android:string/unknownName" />
+
+    <android.widget.Space
+        android:id="@+id/spacer"
+        style="?attr/listItemSpacerStyle"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:visibility="invisible" />
+
+    <TextView
+        android:id="@+id/valueText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?textAppearanceListItemSecondary"
+        android:textColor="@color/text_secondary_selector"
+        tools:text="@android:string/unknownName" />
+</LinearLayout>

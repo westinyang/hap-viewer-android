@@ -1,13 +1,26 @@
-<resources xmlns:tools="http://schemas.android.com/tools">
+<resources>
 
     <style name="Base.Theme.HapViewerAndroid.Harmony" parent="Theme.Harmony">
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>
 
-        <item name="liftOnScroll">false</item>
-        <item name="paddingBottomFabSize">64dp</item>
+        <item name="textAppearanceTitleMedium">?textAppearanceSubtitle2</item>
+
+        <item name="codeColorString">@color/harmony_code_color_string</item>
+        <item name="codeColorNumber">@color/harmony_code_color_number</item>
+        <item name="codeColorKeyword">@color/harmony_code_color_keyword</item>
+
         <item name="selectFileIcon">@drawable/harmony_ic_public_file_filled</item>
         <item name="dropFileIcon">@drawable/harmony_ic_public_upload_filled</item>
+
+        <item name="liftOnScroll">false</item>
+        <item name="listItemGroupStyle">@style/Widget.ListItemGroup.Harmony</item>
+        <item name="listItemStyle">@style/Widget.ListItem.Material</item>
+        <item name="listItemLayoutStyle">@style/Widget.ListItem.Layout.Harmony</item>
+        <item name="listItemSpacerStyle">@style/Widget.ListItem.Layout.Spacer.Harmony</item>
+        <item name="cardMargin">@dimen/harmony_space_elements_card</item>
+        <item name="paddingBottomWithFabSize">64dp</item>
+        <item name="itemMargin">12dp</item>
     </style>
 
     <style name="Theme.HapViewerAndroid.Harmony" parent="Base.Theme.HapViewerAndroid.Harmony" />

@@ -1,76 +1,86 @@
 package org.ohosdev.hapviewerandroid.ui.main
 
 import android.Manifest
+import android.annotation.SuppressLint
 import android.content.Intent
 import android.content.pm.PackageManager
-import android.graphics.Bitmap
 import android.graphics.Color
-import android.graphics.drawable.BitmapDrawable
+import android.graphics.drawable.ColorDrawable
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
-import android.text.util.Linkify
 import android.util.Log
+import android.view.ContextMenu
 import android.view.DragEvent
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
 import android.view.View.OnDragListener
+import android.widget.TextView
 import androidx.activity.OnBackPressedCallback
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
-import androidx.appcompat.app.AlertDialog
-import androidx.appcompat.widget.PopupMenu
+import androidx.annotation.StringRes
 import androidx.coordinatorlayout.widget.CoordinatorLayout
 import androidx.core.app.ActivityCompat
-import androidx.recyclerview.widget.LinearLayoutManager
-import com.google.android.material.dialog.MaterialAlertDialogBuilder
+import androidx.core.view.WindowCompat
+import com.alibaba.fastjson.JSON
+import com.google.android.material.color.MaterialColors.getColor
 import com.google.android.material.snackbar.Snackbar
-import com.onegravity.rteditor.RTEditorMovementMethod
 import org.ohosdev.hapviewerandroid.BuildConfig
 import org.ohosdev.hapviewerandroid.R
-import org.ohosdev.hapviewerandroid.adapter.InfoAdapter
 import org.ohosdev.hapviewerandroid.app.AppPreference
 import org.ohosdev.hapviewerandroid.app.AppPreference.ThemeType.HARMONY
 import org.ohosdev.hapviewerandroid.app.AppPreference.ThemeType.MATERIAL1
 import org.ohosdev.hapviewerandroid.app.AppPreference.ThemeType.MATERIAL2
 import org.ohosdev.hapviewerandroid.app.AppPreference.ThemeType.MATERIAL3
-import org.ohosdev.hapviewerandroid.app.BaseActivity
-import org.ohosdev.hapviewerandroid.app.URL_OPEN_SOURCE_LICENSES
-import org.ohosdev.hapviewerandroid.app.URL_PRIVACY_POLICY
-import org.ohosdev.hapviewerandroid.app.URL_REPOSITORY
 import org.ohosdev.hapviewerandroid.databinding.ActivityMainBinding
 import org.ohosdev.hapviewerandroid.extensions.applyDividerIfEnabled
-import org.ohosdev.hapviewerandroid.extensions.contentMovementMethod
-import org.ohosdev.hapviewerandroid.extensions.contentSelectable
+import org.ohosdev.hapviewerandroid.extensions.copyAndShowSnackBar
 import org.ohosdev.hapviewerandroid.extensions.getBitmap
 import org.ohosdev.hapviewerandroid.extensions.getFirstUri
+import org.ohosdev.hapviewerandroid.extensions.getTechDesc
+import org.ohosdev.hapviewerandroid.extensions.getVersionNameAndCode
 import org.ohosdev.hapviewerandroid.extensions.hasFileMime
+import org.ohosdev.hapviewerandroid.extensions.init
 import org.ohosdev.hapviewerandroid.extensions.isGranted
 import org.ohosdev.hapviewerandroid.extensions.isPermissionGranted
-import org.ohosdev.hapviewerandroid.extensions.newShadowBitmap
-import org.ohosdev.hapviewerandroid.extensions.openUrl
 import org.ohosdev.hapviewerandroid.extensions.overrideAnimationDurationIfNeeded
-import org.ohosdev.hapviewerandroid.extensions.setContentAutoLinkMask
+import org.ohosdev.hapviewerandroid.extensions.requestShizukuPermission
+import org.ohosdev.hapviewerandroid.extensions.resolveBoolean
+import org.ohosdev.hapviewerandroid.extensions.setFragmentResultListener
 import org.ohosdev.hapviewerandroid.extensions.thisApp
 import org.ohosdev.hapviewerandroid.model.HapInfo
-import org.ohosdev.hapviewerandroid.util.HarmonyOSUtil
+import org.ohosdev.hapviewerandroid.ui.about.AboutDialogFragment
+import org.ohosdev.hapviewerandroid.ui.common.BaseActivity
+import org.ohosdev.hapviewerandroid.ui.common.dialog.AlertDialogFragment
+import org.ohosdev.hapviewerandroid.ui.common.dialog.RequestPermissionDialogFragment
 import org.ohosdev.hapviewerandroid.util.ShizukuUtil
 import org.ohosdev.hapviewerandroid.util.ShizukuUtil.ShizukuLifecycleObserver
-import org.ohosdev.hapviewerandroid.util.dialog.RequestPermissionDialogBuilder
+import org.ohosdev.hapviewerandroid.util.SystemUtil
+import org.ohosdev.hapviewerandroid.util.SystemUtil.isDarkNavigationBarSupported
+import org.ohosdev.hapviewerandroid.util.ohos.getOhosPermSortName
+import org.ohosdev.hapviewerandroid.view.AdvancedRecyclerView
+import org.ohosdev.hapviewerandroid.view.drawable.ShadowBitmapDrawable
+import org.ohosdev.hapviewerandroid.view.list.ListItem
+import org.ohosdev.hapviewerandroid.view.list.ListItemGroup
 
 class MainActivity : BaseActivity(), OnDragListener {
-
-    private val infoAdapter by lazy { InfoAdapter(this) }
-
     private val binding by lazy { ActivityMainBinding.inflate(layoutInflater) }
     override val rootView: CoordinatorLayout get() = binding.root
-
-    private val onExitCallback by lazy { OnExitCallback() }
     private val model: MainViewModel by viewModels()
+    private var hapInfo
+        get() = model.hapInfo.value!!
+        set(value) {
+            model.hapInfo.value = value
+        }
+    private lateinit var permissionsAdapter: PermissionsAdapter
 
+
+    // private val infoAdapter by lazy { InfoAdapter(this, this::onInfoItemClick) }
     private val selectFileResultLauncher =
         registerForActivityResult<String, Uri>(ActivityResultContracts.GetContent()) { handelUri(it) }
+    private val onExitCallback by lazy { OnExitCallback() }
 
     init {
         ShizukuLifecycleObserver().apply {
@@ -89,36 +99,47 @@ class MainActivity : BaseActivity(), OnDragListener {
         initViews()
         onBackPressedDispatcher.addCallback(this, onExitCallback)
 
-        model.hapInfo.observe(this) { onHapInfoChanged(it) }
+        model.hapInfo.observe(this, this::onHapInfoChanged)
         // isParsing 与 isInstalling 同时影响着菜单的禁用状态，所以要调用 invalidateMenu()
         model.isParsing.observe(this) {
             invalidateMenu()
-            binding.progressBar.visibility = if (it) View.VISIBLE else View.GONE
+            binding.foregroundProgress.visibility = if (it) View.VISIBLE else View.GONE
         }
         model.isInstalling.observe(this) {
             invalidateMenu()
-            binding.backgroundProgressIndicator.visibility = if (it) View.VISIBLE else View.GONE
+            binding.backgroundProgress.visibility = if (it) View.VISIBLE else View.GONE
         }
         model.snackBarEvent.observe(this) { it.consume { showSnackBar(it.text) } }
 
         // 解析传入的 Intent
         if (savedInstanceState == null) handelUri(intent.data)
+
+        setFragmentResultListener(REQUEST_KEY_INSTALL_HAP) {
+            model.installHapWaitingShizuku(hapInfo)
+        }
+        setFragmentResultListener(REQUEST_KEY_REQUEST_SHIZUKU) {
+            requestShizukuPermission(REQUEST_CODE_SHIZUKU_INSTALL)
+        }
+        setFragmentResultListener(REQUEST_KEY_REQUEST_STORAGE) {
+            ActivityCompat.requestPermissions(this, PERMISSIONS_EXTERNAL_STORAGE, REQUEST_CODE_SELECT_FILE)
+        }
     }
 
     private fun initViews() = binding.apply {
+        // 在适当的安卓版本设置状态栏、导航栏透明
         window.statusBarColor = Color.TRANSPARENT
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O)
+        val isLightNavigationBar = resolveBoolean(R.attr.windowLightNavigationBar, false)
+        if (isDarkNavigationBarSupported || !isLightNavigationBar) {
             window.navigationBarColor = Color.TRANSPARENT
-        else bottomScrim.background = null
+            WindowCompat.getInsetsController(window, window.decorView).also {
+                it.isAppearanceLightNavigationBars = isLightNavigationBar
+            }
+            bottomScrim.background =
+                ColorDrawable(getColor(this@MainActivity, R.attr.navigationBarColorCompatible, Color.RED))
+        }
 
         setContentView(root)
         setSupportActionBar(toolbar)
-
-        detailInfo.recyclerView.apply {
-            adapter = infoAdapter
-            layoutManager = LinearLayoutManager(this@MainActivity)
-            applyDividerIfEnabled()
-        }
 
         dropMask.root.setOnDragListener(this@MainActivity)
 
@@ -129,24 +150,107 @@ class MainActivity : BaseActivity(), OnDragListener {
                 && !isPermissionGranted(Manifest.permission.READ_EXTERNAL_STORAGE)
                 && shouldShowRequestPermissionRationale(Manifest.permission.READ_EXTERNAL_STORAGE)
             ) {
-                RequestPermissionDialogBuilder(this@MainActivity)
-                    .setPermissionNames(arrayOf(R.string.permission_storage))
-                    .setFunctionNames(arrayOf(R.string.read_file_directly))
+                RequestPermissionDialogFragment()
+                    .setPermissionNames(intArrayOf(R.string.permission_storage))
+                    .setFunctionNames(intArrayOf(R.string.read_file_directly))
                     .setAdditional(R.string.permission_storage_additional)
-                    .setOnAgree {
-                        ActivityCompat.requestPermissions(
-                            this@MainActivity,
-                            PERMISSIONS_EXTERNAL_STORAGE,
-                            REQUEST_CODE_SELECT_FILE
-                        )
-                    }
-                    .show()
+                    .setOnAgreeKey(REQUEST_KEY_REQUEST_STORAGE)
+                    .show(supportFragmentManager, TAG_DIALOG_REQUEST_STORAGE)
                 return@setOnClickListener
             }
 
             selectHapFile()
         }
+        contentScroll.apply {
+            isScrollWithFocus = false
+        }
+        basicInfo.apply {
+            root.apply {
+                registerForContextMenu(this)
+                setOnCreateContextMenuListener { menu, _, menuInfo ->
+                    menu.setHeaderTitle(R.string.copy)
+                    if (!hapInfo.init) {
+                        menuInflater.inflate(R.menu.menu_main_info_basic, menu)
+                    }
+                }
+            }
+        }
+        detailsInfo.apply {
+            moreInfoItem.setOnClickListener { showMoreInfoDialog() }
+            detailsGroup.apply {
+                registerForContextMenu(this)
+                setOnCreateContextMenuListener { menu, _, menuInfo: ContextMenu.ContextMenuInfo? ->
+                    if (menuInfo == null || menuInfo !is ListItemGroup.ContextMenuInfo) {
+                        return@setOnCreateContextMenuListener
+                    }
+                    menu.setHeaderTitle(menuInfo.title)
+                    if (!hapInfo.init && !menuInfo.valueText.isNullOrEmpty()) {
+                        menuInflater.inflate(R.menu.menu_main_info, menu)
+                    }
+                }
+            }
+        }
+        permissionsInfo.apply {
+            permissionsList.apply {
+                adapter = PermissionsAdapter(this@MainActivity).also { permissionsAdapter = it }
+                applyDividerIfEnabled()
+                itemAnimator = null
+                registerForContextMenu(this)
+                setOnCreateContextMenuListener { menu, _, menuInfo: ContextMenu.ContextMenuInfo? ->
+                    if (menuInfo == null || menuInfo !is AdvancedRecyclerView.ContextMenuInfo<*>) {
+                        return@setOnCreateContextMenuListener
+                    }
+                    @Suppress("UNCHECKED_CAST")
+                    menuInfo as AdvancedRecyclerView.ContextMenuInfo<PermissionsAdapter.ViewHolder>
+                    menu.setHeaderTitle(menuInfo.viewHolder.title?.let { it.getOhosPermSortName() ?: it })
+                    menuInflater.inflate(R.menu.menu_main_info, menu)
+                }
+
+            }
+        }
     }
+
+    override fun onContextItemSelected(item: MenuItem) = when (val menuInfo = item.menuInfo) {
+        // 将各自的事件传出去
+        is ListItemGroup.ContextMenuInfo -> onInfoContextItemSelected(item, menuInfo)
+        is AdvancedRecyclerView.ContextMenuInfo<*> ->
+            when (val viewHolder = menuInfo.viewHolder) {
+                is PermissionsAdapter.ViewHolder -> onPermissionItemSelected(item, viewHolder)
+                else -> super.onContextItemSelected(item)
+            }
+
+        is BasicInfoCard.ContextMenuInfo -> onBasicInfoContentItemSelected(item)
+        else -> super.onContextItemSelected(item)
+    }
+
+
+    private fun onInfoContextItemSelected(item: MenuItem, menuInfo: ListItemGroup.ContextMenuInfo): Boolean {
+        when (item.itemId) {
+            R.id.action_copy -> copyAndShowSnackBar(menuInfo.valueText, menuInfo.title)
+            else -> return false
+        }
+        return true
+    }
+
+    private fun onPermissionItemSelected(item: MenuItem, viewHolder: PermissionsAdapter.ViewHolder): Boolean {
+        when (item.itemId) {
+            R.id.action_copy -> copyAndShowSnackBar(viewHolder.title)
+            else -> return false
+        }
+        return true
+    }
+
+    private fun onBasicInfoContentItemSelected(item: MenuItem): Boolean {
+        val content = when (item.itemId) {
+            R.id.action_copy_app_name -> Pair(R.string.info_appName, hapInfo.appName)
+            R.id.action_copy_version_name -> Pair(R.string.info_versionName, hapInfo.versionName)
+            R.id.action_copy_version_code -> Pair(R.string.info_versionCode, hapInfo.versionCode)
+            R.id.action_copy_package_name -> Pair(R.string.info_appPackageName, hapInfo.packageName)
+            else -> return false
+        }
+        return copyAndShowSnackBar(content.second, getString(content.first))
+    }
+
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
         val inflater = menuInflater
@@ -164,7 +268,7 @@ class MainActivity : BaseActivity(), OnDragListener {
     override fun onPrepareOptionsMenu(menu: Menu?): Boolean {
         menu?.apply {
             findItem(R.id.action_install).apply {
-                isVisible = HarmonyOSUtil.isHarmonyOS
+                isVisible = SystemUtil.isOhosSupported
                 isEnabled =
                     model.run { !hapInfo.value?.init!! && !isParsing.value!! && !isInstalling.value!! }
             }
@@ -180,7 +284,7 @@ class MainActivity : BaseActivity(), OnDragListener {
             R.id.action_theme_material2 -> changeTheme(MATERIAL2)
             R.id.action_theme_material3 -> changeTheme(MATERIAL3)
             R.id.action_theme_harmony -> changeTheme(HARMONY)
-            R.id.action_install -> model.hapInfo.value?.let { installHap(it) }
+            R.id.action_install -> installHap(hapInfo)
             else -> return false
         }
         return true
@@ -192,16 +296,19 @@ class MainActivity : BaseActivity(), OnDragListener {
         grantResults: IntArray
     ) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
-        permissions.forEachIndexed { i, permission ->
-            Log.i(TAG, "申请权限：" + permission + "，申请结果：" + grantResults[i])
+        if (BuildConfig.DEBUG) {
+            permissions.forEachIndexed { i, permission ->
+                Log.i(TAG, "申请权限：$permission，申请结果：${grantResults[i]}")
+            }
         }
         if (grantResults.all { it == PackageManager.PERMISSION_GRANTED }) {
             when (requestCode) {
                 REQUEST_CODE_SELECT_FILE -> selectHapFile()
-                REQUEST_CODE_SHIZUKU_INSTALL -> installHap(model.hapInfo.value!!)
+                REQUEST_CODE_SHIZUKU_INSTALL -> installHap(hapInfo)
             }
         } else {
             when (requestCode) {
+                // 可以在不获得权限的情况下选择文件
                 REQUEST_CODE_SELECT_FILE -> selectHapFile()
                 else -> showSnackBar(R.string.permission_grant_fail)
             }
@@ -210,49 +317,31 @@ class MainActivity : BaseActivity(), OnDragListener {
 
     override fun onResume() {
         super.onResume()
-        // Snackbar 可能不会显示，也就不会重新启用，这时候就需要在重新进入应用时启用一下二次返回。
+        // Snack bar 可能不会显示，也就不会重新启用，这时候就需要在重新进入应用时启用一下二次返回。
         onExitCallback.isEnabled = true
     }
 
     override fun onPause() {
         super.onPause()
-        // 退出时可能会显示Snackbar，以至于下一次弹出多个snackbar
+        // 退出时可能会显示Snack bar，以至于下一次弹出多个Snack bar
         onExitCallback.closeSnackBar()
     }
 
 
     private fun showAboutDialog() {
-        // 华为设备上拖拽阴影在 Material Dialog 有bug
-        MaterialAlertDialogBuilder(this)
-            .setTitle(R.string.about)
-            .setMessage("") // 将在 apply 中设置
-            .setPositiveButton(android.R.string.ok, null)
-            .setNeutralButton(R.string.legal_more, null)
-            .show().apply {
-                contentSelectable = true
-                setContentAutoLinkMask(Linkify.WEB_URLS)
-                setMessage(
-                    getString(R.string.about_message, BuildConfig.VERSION_NAME, URL_REPOSITORY)
-                )
-                setContentAutoLinkMask(0)
-                contentMovementMethod = RTEditorMovementMethod.getInstance()
-                getButton(AlertDialog.BUTTON_NEUTRAL).apply {
-                    val popupMenu = PopupMenu(this@MainActivity, this)
-                    popupMenu.inflate(R.menu.menu_legal)
-                    popupMenu.setOnMenuItemClickListener {
-                        val link = when (it.itemId) {
-                            R.id.action_privacy_policy -> URL_PRIVACY_POLICY
-                            R.id.action_open_source_licenses -> URL_OPEN_SOURCE_LICENSES
-                            else -> throw NoSuchElementException("Unknown itemId: $it")
-                        }
-                        openUrl(link)
-                        true
-                    }
-                    setOnTouchListener(popupMenu.dragToOpenListener)
-                    setOnClickListener { popupMenu.show() }
-                }
-            }
+        AboutDialogFragment().show(supportFragmentManager, AboutDialogFragment.TAG)
     }
+
+    private fun showMoreInfoDialog() {
+        MoreInfoDialogFragment()
+            .setInfoJson(
+                JSON.toJSONString(hapInfo.moreInfo, true)
+                    .replace("\t", "    ")
+                    .replace("([^\\\\]\".*\"):(\\S)".toRegex()) { "${it.groupValues[1]}: ${it.groupValues[2]}" }
+            )
+            .show(supportFragmentManager, MoreInfoDialogFragment.TAG)
+    }
+
 
     private fun selectHapFile() {
         // Hap 文件 mime 类型未知，使用 */* 更保险
@@ -263,7 +352,9 @@ class MainActivity : BaseActivity(), OnDragListener {
      * 解析 Uri，如果为空就什么都不做
      * */
     private fun handelUri(uri: Uri?) {
-        uri?.let { model.handelUri(uri) }
+        if (uri != null) {
+            model.handelUri(uri)
+        }
     }
 
     private fun changeTheme(themeType: AppPreference.ThemeType) {
@@ -271,20 +362,6 @@ class MainActivity : BaseActivity(), OnDragListener {
         if (themeManager.isThemeChanged()) {
             recreate()
         }
-    }
-
-    /**
-     * 创建图标的带有边距的背景阴影
-     *
-     * @param src 原始 Bitmap
-     * @return 阴影 BitmapDrawable
-     */
-    private fun newIconShadowDrawable(src: Bitmap): BitmapDrawable {
-        val iconPadding = resources.getDimensionPixelSize(R.dimen.icon_padding)
-        val iconWidth = resources.getDimensionPixelSize(R.dimen.icon_width)
-        return BitmapDrawable(
-            resources, src.newShadowBitmap(this, iconPadding, iconWidth, iconWidth)
-        )
     }
 
     override fun onDrag(v: View, event: DragEvent): Boolean {
@@ -314,24 +391,58 @@ class MainActivity : BaseActivity(), OnDragListener {
         handelUri(intent.data)
     }
 
-    override fun showSnackBar(text: String): Snackbar {
-        // 重写该方法，将 SnackBar 放置到悬浮按钮之上
-        return Snackbar.make(binding.root, text, Snackbar.LENGTH_SHORT)
+    // 重写该方法，将 SnackBar 放置到悬浮按钮之上
+    @SuppressLint("ShowToast")
+    override fun showSnackBar(text: String) =
+        Snackbar.make(binding.root, text, Snackbar.LENGTH_SHORT)
             .overrideAnimationDurationIfNeeded()
-            .setAnchorView(R.id.selectHapButton)
+            .setAnchorView(R.id.select_hap_button)
             .apply { show() }
-    }
+
 
     private fun onHapInfoChanged(hapInfo: HapInfo = HapInfo.INIT) {
-        hapInfo.let {
-            // 显示基础信息，暂时用不到。
-            /* binding.basicInfo.apply {
-                appName.text = it.appName
-                version.text = String.format("%s (%s)", it.versionName, it.versionCode)
-            } */
+        val unknownString = getString(R.string.unknown)
+        val unknownTechString = getString(R.string.info_tech_unknown)
+        hapInfo.also {
             applyHapIcon(it)
-            infoAdapter.setInfo(it)
+            // 自动根据 hapInfo 的当前状态（如：初始状态）设置 valueText
+            fun ListItem.setHapInfoValue(value: String?) {
+                val enabled = !it.init && !value.isNullOrEmpty()
+                valueText = if (enabled) value else unknownString
+            }
+
+            fun TextView.setHapInfoText(value: String?, @StringRes unknownStringId: Int?) {
+                val enabled = !it.init && !value.isNullOrEmpty()
+                text = when {
+                    enabled -> value
+                    unknownStringId != null -> getString(unknownStringId)
+                    else -> unknownString
+                }
+            }
+            binding.basicInfo.apply {
+                nameText.setHapInfoText(it.appName, R.string.unknown_appName)
+                versionText.setHapInfoText(it.getVersionNameAndCode(unknownString), R.string.unknown_version)
+                packageText.setHapInfoText(it.packageName, R.string.unknown_packageName)
+                root.contentDescription = getString(
+                    R.string.accessibility_hap_basic_info_description,
+                    hapInfo.appName ?: unknownString,
+                    hapInfo.versionName ?: unknownString,
+                    hapInfo.versionCode ?: unknownString,
+                    hapInfo.packageName ?: unknownString
+                )
+            }
+            binding.detailsInfo.apply {
+                // appNameItem.setHapInfoValue(it.appName)
+                // packageNameItem.setHapInfoValue(it.packageName)
+                // versionNameItem.setHapInfoValue(it.versionName)
+                // versionCodeItem.setHapInfoValue(it.versionCode)
+                targetItem.setHapInfoValue("API ${it.targetAPIVersion} (${it.apiReleaseType})")
+                techItem.setHapInfoValue(it.getTechDesc(this@MainActivity) ?: unknownTechString)
+                moreInfoItem.isEnabled = !it.init && it.moreInfo != null
+            }
+            permissionsAdapter.submitList(it.requestPermissionNames)
         }
+
     }
 
     /**
@@ -340,7 +451,7 @@ class MainActivity : BaseActivity(), OnDragListener {
      * 如果 `bitmap` 为空，则显示默认图标。
      * */
     private fun applyHapIcon(hapInfo: HapInfo) {
-        binding.basicInfo.imageView.apply {
+        binding.basicInfo.hapIconImage.apply {
             val iconBitmap = if (hapInfo.icon != null) {
                 setImageBitmap(hapInfo.icon)
                 hapInfo.icon
@@ -348,7 +459,11 @@ class MainActivity : BaseActivity(), OnDragListener {
                 setImageResource(R.drawable.ic_default_new)
                 getBitmap(R.drawable.ic_default_new)!!
             }
-            background = newIconShadowDrawable(iconBitmap)
+            background.apply {
+                if (this is ShadowBitmapDrawable) {
+                    setShadowBitmap(iconBitmap, resources.getDimension(R.dimen.icon_shadow_radius))
+                }
+            }
         }
     }
 
@@ -360,29 +475,26 @@ class MainActivity : BaseActivity(), OnDragListener {
         if (hapInfo.init) return
         if (!ShizukuUtil.checkPermission().isGranted) {
             if (showRequestDialog) {
-                RequestPermissionDialogBuilder(this)
-                    .setPermissionNames(arrayOf(R.string.permission_shizuku))
-                    .setFunctionNames(arrayOf(R.string.install_hap))
-                    .setOnAgree {
-                        ShizukuUtil.requestPermission(this, REQUEST_CODE_SHIZUKU_INSTALL)
-                    }
-                    .setNeutralButton(R.string.guide, null)
-                    .show().apply {
-                        getButton(AlertDialog.BUTTON_NEUTRAL).setOnClickListener {
-                            openUrl(ShizukuUtil.URL_GUIDE)
-                        }
-                    }
+                RequestPermissionDialogFragment()
+                    .setPermissionNames(intArrayOf(R.string.permission_shizuku))
+                    .setFunctionNames(intArrayOf(R.string.install_hap))
+                    .setGuideUrl(ShizukuUtil.URL_GUIDE)
+                    .setOnAgreeKey(REQUEST_KEY_REQUEST_SHIZUKU)
+                    .show(supportFragmentManager, TAG_DIALOG_REQUEST_SHIZUKU)
             }
             return
         }
-        MaterialAlertDialogBuilder(this)
+        AlertDialogFragment()
             .setTitle(R.string.install_hap)
             .setMessage(R.string.install_hap_message)
-            .setPositiveButton(android.R.string.ok) { _, _ -> model.installHapWaitingShizuku(hapInfo) }
+            .setPositiveButton(android.R.string.ok, REQUEST_KEY_INSTALL_HAP)
             .setNegativeButton(android.R.string.cancel, null)
-            .show()
+            .show(supportFragmentManager, TAG_DIALOG_INSTALL_HAP)
     }
 
+    /**
+     * 按两次返回键退出
+     * */
     private inner class OnExitCallback : OnBackPressedCallback(true) {
         // 不能共用一个 SnackBar
         var snackBar: Snackbar? = null
@@ -401,25 +513,29 @@ class MainActivity : BaseActivity(), OnDragListener {
 
         }
 
-        fun closeSnackBar() {
-            snackBar?.dismiss()
-        }
+        fun closeSnackBar() = snackBar?.dismiss()
     }
 
     companion object {
         private const val TAG = "MainActivity"
+        private const val TAG_DIALOG_INSTALL_HAP = "install_hap"
+        private const val TAG_DIALOG_REQUEST_SHIZUKU = "request_shizuku"
+        private const val TAG_DIALOG_REQUEST_STORAGE = "request_storage"
 
         /**
          * 文件读写权限
          * */
-        private val PERMISSIONS_EXTERNAL_STORAGE = arrayOf(
-            Manifest.permission.READ_EXTERNAL_STORAGE
-        )
+        private val PERMISSIONS_EXTERNAL_STORAGE = arrayOf(Manifest.permission.READ_EXTERNAL_STORAGE)
 
         /**
          * 文件读写权限，用于选择文件 请求码
          * */
         private const val REQUEST_CODE_SELECT_FILE = 1
         private const val REQUEST_CODE_SHIZUKU_INSTALL = 2
+
+        private const val REQUEST_KEY_INSTALL_HAP = "install_hap"
+        private const val REQUEST_KEY_REQUEST_SHIZUKU = "request_shizuku"
+        private const val REQUEST_KEY_REQUEST_STORAGE = "request_storage"
     }
+
 }

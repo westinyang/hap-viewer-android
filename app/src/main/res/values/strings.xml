@@ -1,23 +1,26 @@
-<resources>
+<resources xmlns:tools="http://schemas.android.com/tools">
     <string name="app_name">HAP Viewer</string>
+    <string name="app_name_full">HAP Viewer for Android</string>
+    <string name="app_description">Support for parsing OpenHarmony, HarmonyOS API 9+ (Stage model) application installation packages, support for running on Android devices with Android 7+.</string>
     <string name="menu_about">About</string>
+
+    <!-- The words in it are a bit different from other words in other languages, so they have to be singled out. -->
     <string name="about">About</string>
-    <string name="about_message">HAP Viewer for Android
-\n\nSupport for parsing OpenHarmony, HarmonyOS API 9+ (Stage model) application installation packages, support for running on Android devices with Android 7+
-\n\nVersion：%1$s
-\nOpen Source：%2$s
-\nLicense：Apache 2.0
-\nContributors：westinyang、Jesse205
-\nQQ Group：752399947</string>
+    <string name="about_version">Version</string>
+    <string name="about_source">Source</string>
+    <string name="about_license">License</string>
+    <string name="about_contributors">Contributors</string>
+
     <string name="select_file_hap">Select HAP file</string>
     <string name="permission_grant_fail">Permission request failed.</string>
     <string name="exit_toast">Press the back button again to exit.</string>
+    <string name="copy" tools:ignore="PrivateResource">Copy</string>
     <string name="copied">Copied.</string>
     <string name="copied_withName">Copied %s.</string>
     <string name="parse_error_fail_obtain">File acquisition failure.</string>
     <string name="parse_error_fail">Hap file parsing failed, currently only supports parsing API 9+ (Stage model) application installers.</string>
     <string name="parse_error_type">Wrong file type, please select a hap file.</string>
-    <string name="separator">, </string>
+    <string name="separator">", "</string>
     <string name="parse_continue_ignoreError">Ignore error, Continue parse</string>
     <string name="menu_theme">Theme</string>
     <string name="material2" translatable="false">Material 2</string>
@@ -25,19 +28,38 @@
     <string name="material3" translatable="false">Material 3</string>
     <string name="drop_here">Drop here</string>
     <string name="harmony" translatable="false">HarmonyOS</string>
+    <string name="permissions">Permissions</string>
     <string name="permission_shizuku">Shizuku permission</string>
     <string name="guide">Guide</string>
     <string name="permission_request">Permissions request</string>
     <string name="install">Install</string>
     <string name="unknown_error">Unknown error</string>
     <string name="install_finished">Installation finished</string>
-    <string name="legal_more">Legal info...</string>
+    <string name="legal_more">Legal info…</string>
     <string name="privacy_policy">Privacy policy</string>
     <string name="open_source_licenses">Open source licenses</string>
     <string name="install_hap">Install HAP</string>
     <string name="install_hap_message">Installation of HAP requires the support of the operating system and must have the correct signature, so packages you download from unofficial application markets will most likely not install. For unknown reasons, it is not possible to determine whether the installation of the software was successful or not, so the software will always display \"Installation finished\".</string>
     <string name="read_file_directly">Reading files directly</string>
-    <string name="permission_request_message">We need %1$s to ensure that we can %2$s. %3$s</string>
+    <string name="permission_request_message">HAP Viewer needs %1$s in order for %2$s to work correctly. %3$s</string>
     <string name="permission_storage">Storage permission</string>
-    <string name="permission_storage_additional">If you do not grant this permission, the file will be copied to the private space before being read.</string>
+    <string name="permission_storage_additional">If you do not grant this permission, HAP Viewer will copy the file to private space before reading it.</string>
+    <string name="colon">": "</string>
+    <string name="more_info">More informations</string>
+
+    <string name="unknown">Unknown</string>
+    <string name="unknown_appName">Unknown app name</string>
+    <string name="unknown_version">Unknown version</string>
+    <string name="unknown_packageName">Unknown package name</string>
+
+    <string name="copy_package_name">Copy package name</string>
+    <string name="copy_version_code">Copy version code</string>
+    <string name="copy_version_name">Copy version name</string>
+    <string name="copy_app_name">Copy app name</string>
+
+    <string name="accessibility_hap_basic_info_description">App name: %1$s, version name: %2$s, version code: %3$s, package name: %4$s.</string>
+
+    <string name="error_file_unreadable">The file is unreadable.</string>
+    <string name="error_uri_not_document">This URI is not a document.</string>
+    <string name="error_uri_not_valid">The URI is not valid.</string>
 </resources>

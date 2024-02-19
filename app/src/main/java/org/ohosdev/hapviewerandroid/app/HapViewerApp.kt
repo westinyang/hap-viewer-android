@@ -9,12 +9,17 @@ class HapViewerApp : Application() {
 
     override fun onCreate() {
         super.onCreate()
+        instance = this
         appPreference = AppPreference(this)
         deleteExternalFilesCaches()
     }
 
     private fun deleteExternalFilesCaches() {
-        FileUtil.del(File(cacheDir, DIR_PATH_EXTERNAL_FILES))
-        externalCacheDirs.forEach { FileUtil.del(File(it, DIR_PATH_EXTERNAL_FILES)) }
+        File(cacheDir, DIR_PATH_EXTERNAL_FILES).deleteRecursively()
+        externalCacheDirs.forEach { File(it, DIR_PATH_EXTERNAL_FILES).deleteRecursively() }
+    }
+
+    companion object {
+        lateinit var instance: HapViewerApp
     }
 }

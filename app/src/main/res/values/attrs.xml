@@ -1,10 +1,35 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <!-- System bars -->
     <attr name="windowLightStatusBar" format="boolean" />
     <attr name="windowLightNavigationBar" format="boolean" />
-    <attr name="paddingBottomFabSize" format="dimension" />
-    <attr name="cardPaddingVertical" format="dimension" />
+    <attr name="navigationBarColorCompatible" format="color" />
+
+    <attr name="enableDivider" format="boolean" />
+
+    <attr name="codeColorNumber" format="color" />
+    <attr name="codeColorString" format="color" />
+    <attr name="codeColorKeyword" format="color" />
+
+    <!-- Paddings & Margins -->
+    <attr name="paddingBottomWithFabSize" format="dimension" />
+    <attr name="cardMargin" format="dimension" />
+    <attr name="listPaddingVertical" format="dimension" />
+    <attr name="itemMargin" format="dimension" />
+
+    <!-- Icons -->
     <attr name="selectFileIcon" format="reference" />
     <attr name="dropFileIcon" format="reference" />
-    <attr name="enableDivider" format="boolean" />
+
+    <!-- Styles -->
+    <attr name="listItemGroupStyle" format="reference" />
+    <attr name="listItemStyle" format="reference" />
+    <attr name="listItemLayoutStyle" format="reference" />
+    <attr name="listItemSpacerStyle" format="reference" />
+
+    <declare-styleable name="ListItem">
+        <attr name="android:title" format="string" />
+        <attr name="android:value" format="string" />
+        <attr name="android:enabled" format="string" />
+    </declare-styleable>
 </resources>

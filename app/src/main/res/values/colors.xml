@@ -1,9 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-
-
     <color name="color_primary">#FF0c98e5</color>
     <color name="color_secondary">#FF81bd0a</color>
+
+    <color name="material_code_color_string">#43A047</color>
+    <color name="material_code_color_number">#1E88E5</color>
+    <color name="material_code_color_keyword">#5E35B1</color>
+
+    <color name="material3_code_color_string">#3b6939</color>
+    <color name="material3_code_color_number">#39608f</color>
+    <color name="material3_code_color_keyword">#66558e</color>
+
+    <color name="harmony_code_color_string">#64BB5C</color>
+    <color name="harmony_code_color_number">#46B1E3</color>
+    <color name="harmony_code_color_keyword">#AC49F5</color>
 
     <color name="system_window_scrim_light_black">#44000000</color>
     <color name="system_window_scrim">@color/background_emphasis_high_type</color>

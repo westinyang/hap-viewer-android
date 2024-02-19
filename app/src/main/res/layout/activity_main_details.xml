@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    tools:showIn="@layout/activity_main">
+
+    <org.ohosdev.hapviewerandroid.view.list.ListItemGroup
+        android:id="@+id/details_group"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:clipToPadding="false"
+        android:paddingVertical="?attr/listPaddingVertical">
+
+        <!-- <org.ohosdev.hapviewerandroid.view.list.ListItem
+            android:id="@+id/app_name_item"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:title="@string/info_appName" /> -->
+
+        <!-- <org.ohosdev.hapviewerandroid.view.list.ListItem
+            android:id="@+id/package_name_item"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:title="@string/info_appPackageName" /> -->
+
+        <!-- <org.ohosdev.hapviewerandroid.view.list.ListItem
+            android:id="@+id/version_name_item"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:title="@string/info_versionName" />
+
+        <org.ohosdev.hapviewerandroid.view.list.ListItem
+            android:id="@+id/version_code_item"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:title="@string/info_versionCode" /> -->
+
+        <org.ohosdev.hapviewerandroid.view.list.ListItem
+            android:id="@+id/target_item"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:title="@string/info_compileTarget" />
+
+        <org.ohosdev.hapviewerandroid.view.list.ListItem
+            android:id="@+id/tech_item"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:title="@string/info_tech" />
+
+        <org.ohosdev.hapviewerandroid.view.list.ListItem
+            android:id="@+id/more_info_item"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:enabled="false"
+            android:title="@string/more_info" />
+
+    </org.ohosdev.hapviewerandroid.view.list.ListItemGroup>
+</com.google.android.material.card.MaterialCardView>
