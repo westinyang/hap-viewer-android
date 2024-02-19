@@ -2,7 +2,7 @@ package org.ohosdev.hapviewerandroid.app
 
 const val DIR_PATH_EXTERNAL_FILES = "external_files"
 
-const val URL_HOME_WESTINYANG = "https://gitee.com/westinyang"
+const val URL_HOME_WESTINYANG = "https://kaihongpai.feishu.cn/wiki/CqWLwJRadibxztkrIWZcogWxnXd"
 const val URL_HOME_JESSE205 = "https://gitee.com/Jesse205"
 
 const val URL_REPOSITORY = "https://gitee.com/westinyang/hap-viewer-android"
