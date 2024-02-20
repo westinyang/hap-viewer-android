@@ -19,6 +19,7 @@
 ### 衍生项目
 
 - [hapv-cli](https://gitee.com/ericple/hapv-cli) `命令行版的hap查看器，目前由@ericple维护`
+- [HapViewer-iOS](https://github.com/F7YM/HapViewer-iOS) `iOS快捷指令版的hap查看器，目前由@F7YM维护`
 
 ## 下载安装
 
