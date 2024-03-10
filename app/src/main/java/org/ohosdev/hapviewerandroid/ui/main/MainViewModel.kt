@@ -12,6 +12,7 @@ import androidx.lifecycle.viewModelScope
 import cn.hutool.core.lang.UUID
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
+import kotlinx.coroutines.NonCancellable
 import kotlinx.coroutines.isActive
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -40,7 +41,6 @@ class MainViewModel(private val app: Application) : AndroidViewModel(app) {
     private var handelHapUriJob: Job? = null
 
     fun handelHapUri(uri: Uri) = viewModelScope.launch(Dispatchers.Main) {
-
         Log.i(TAG, "handelUri: $uri")
         isParsing.value = true
         val destroyLastHapInfo = autoDestroyHapInfoRunnable()
@@ -94,7 +94,6 @@ class MainViewModel(private val app: Application) : AndroidViewModel(app) {
         file
     }
 
-
     private suspend fun parseHap(file: File): HapInfo? = withContext(Dispatchers.Default) {
         runCatching {
             HapUtil.parse(file.absolutePath)
@@ -103,7 +102,6 @@ class MainViewModel(private val app: Application) : AndroidViewModel(app) {
             showSnackBar(R.string.parse_error_fail)
         }.getOrNull()
     }
-
 
     fun showSnackBar(@StringRes resId: Int) {
         snackBarEvent.postValue(SnackBarEvent(app, resId))
@@ -140,9 +138,9 @@ class MainViewModel(private val app: Application) : AndroidViewModel(app) {
                 showSnackBar(it.error ?: app.getString(R.string.unknown_error))
             }
         }
-        withContext(Dispatchers.Default) { autoDestroyHapInfoRunnable(hapInfo)() }
         hapInfo.isPreinstallation = false
         isInstalling.value = false
+        withContext(Dispatchers.Default) { autoDestroyHapInfoRunnable(hapInfo)() }
     }
 
     /**
