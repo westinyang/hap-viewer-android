@@ -420,7 +420,7 @@ class MainActivity : BaseActivity(), OnDragListener {
             }
             binding.basicInfo.apply {
                 nameText.setHapInfoText(it.appName, R.string.unknown_appName)
-                versionText.setHapInfoText(it.getVersionNameAndCode(unknownString), R.string.unknown_version)
+                versionText.setHapInfoText("v${it.getVersionNameAndCode(unknownString)}", R.string.unknown_version)
                 packageText.setHapInfoText(it.packageName, R.string.unknown_packageName)
                 root.contentDescription = getString(
                     R.string.accessibility_hap_basic_info_description,
