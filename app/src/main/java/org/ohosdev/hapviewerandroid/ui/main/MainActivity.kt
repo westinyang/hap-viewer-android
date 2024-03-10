@@ -42,7 +42,6 @@ import org.ohosdev.hapviewerandroid.extensions.getFirstUri
 import org.ohosdev.hapviewerandroid.extensions.getTechDesc
 import org.ohosdev.hapviewerandroid.extensions.getVersionNameAndCode
 import org.ohosdev.hapviewerandroid.extensions.hasFileMime
-import org.ohosdev.hapviewerandroid.extensions.init
 import org.ohosdev.hapviewerandroid.extensions.isGranted
 import org.ohosdev.hapviewerandroid.extensions.isPermissionGranted
 import org.ohosdev.hapviewerandroid.extensions.overrideAnimationDurationIfNeeded
@@ -58,7 +57,7 @@ import org.ohosdev.hapviewerandroid.ui.common.dialog.RequestPermissionDialogFrag
 import org.ohosdev.hapviewerandroid.util.ShizukuUtil
 import org.ohosdev.hapviewerandroid.util.ShizukuUtil.ShizukuLifecycleObserver
 import org.ohosdev.hapviewerandroid.util.SystemUtil
-import org.ohosdev.hapviewerandroid.util.SystemUtil.isDarkNavigationBarSupported
+import org.ohosdev.hapviewerandroid.util.SystemUtil.isLightNavigationBarSupported
 import org.ohosdev.hapviewerandroid.util.ohos.getOhosPermSortName
 import org.ohosdev.hapviewerandroid.view.AdvancedRecyclerView
 import org.ohosdev.hapviewerandroid.view.drawable.ShadowBitmapDrawable
@@ -129,11 +128,11 @@ class MainActivity : BaseActivity(), OnDragListener {
         // 在适当的安卓版本设置状态栏、导航栏透明
         window.statusBarColor = Color.TRANSPARENT
         val isLightNavigationBar = resolveBoolean(R.attr.windowLightNavigationBar, false)
-        if (isDarkNavigationBarSupported || !isLightNavigationBar) {
-            window.navigationBarColor = Color.TRANSPARENT
+        if (isLightNavigationBarSupported || !isLightNavigationBar) {
             WindowCompat.getInsetsController(window, window.decorView).also {
                 it.isAppearanceLightNavigationBars = isLightNavigationBar
             }
+            window.navigationBarColor = Color.TRANSPARENT
             bottomScrim.background =
                 ColorDrawable(getColor(this@MainActivity, R.attr.navigationBarColorCompatible, Color.RED))
         }
@@ -169,7 +168,7 @@ class MainActivity : BaseActivity(), OnDragListener {
                 registerForContextMenu(this)
                 setOnCreateContextMenuListener { menu, _, menuInfo ->
                     menu.setHeaderTitle(R.string.copy)
-                    if (!hapInfo.init) {
+                    if (!hapInfo.isInit) {
                         menuInflater.inflate(R.menu.menu_main_info_basic, menu)
                     }
                 }
@@ -184,7 +183,7 @@ class MainActivity : BaseActivity(), OnDragListener {
                         return@setOnCreateContextMenuListener
                     }
                     menu.setHeaderTitle(menuInfo.title)
-                    if (!hapInfo.init && !menuInfo.valueText.isNullOrEmpty()) {
+                    if (!hapInfo.isInit && !menuInfo.valueText.isNullOrEmpty()) {
                         menuInflater.inflate(R.menu.menu_main_info, menu)
                     }
                 }
@@ -270,7 +269,7 @@ class MainActivity : BaseActivity(), OnDragListener {
             findItem(R.id.action_install).apply {
                 isVisible = SystemUtil.isOhosSupported
                 isEnabled =
-                    model.run { !hapInfo.value?.init!! && !isParsing.value!! && !isInstalling.value!! }
+                    model.run { !hapInfo.value?.isInit!! && !isParsing.value!! && !isInstalling.value!! }
             }
         }
         return super.onPrepareOptionsMenu(menu)
@@ -353,7 +352,7 @@ class MainActivity : BaseActivity(), OnDragListener {
      * */
     private fun handelUri(uri: Uri?) {
         if (uri != null) {
-            model.handelUri(uri)
+            model.handelHapUri(uri)
         }
     }
 
@@ -407,12 +406,12 @@ class MainActivity : BaseActivity(), OnDragListener {
             applyHapIcon(it)
             // 自动根据 hapInfo 的当前状态（如：初始状态）设置 valueText
             fun ListItem.setHapInfoValue(value: String?) {
-                val enabled = !it.init && !value.isNullOrEmpty()
+                val enabled = !it.isInit && !value.isNullOrEmpty()
                 valueText = if (enabled) value else unknownString
             }
 
             fun TextView.setHapInfoText(value: String?, @StringRes unknownStringId: Int?) {
-                val enabled = !it.init && !value.isNullOrEmpty()
+                val enabled = !it.isInit && !value.isNullOrEmpty()
                 text = when {
                     enabled -> value
                     unknownStringId != null -> getString(unknownStringId)
@@ -432,13 +431,9 @@ class MainActivity : BaseActivity(), OnDragListener {
                 )
             }
             binding.detailsInfo.apply {
-                // appNameItem.setHapInfoValue(it.appName)
-                // packageNameItem.setHapInfoValue(it.packageName)
-                // versionNameItem.setHapInfoValue(it.versionName)
-                // versionCodeItem.setHapInfoValue(it.versionCode)
                 targetItem.setHapInfoValue("API ${it.targetAPIVersion} (${it.apiReleaseType})")
                 techItem.setHapInfoValue(it.getTechDesc(this@MainActivity) ?: unknownTechString)
-                moreInfoItem.isEnabled = !it.init && it.moreInfo != null
+                moreInfoItem.isEnabled = !it.isInit && it.moreInfo != null
             }
             permissionsAdapter.submitList(it.requestPermissionNames)
         }
@@ -472,7 +467,7 @@ class MainActivity : BaseActivity(), OnDragListener {
      * @param showRequestDialog 如果权限未给予，就显示授权对话框
      * */
     private fun installHap(hapInfo: HapInfo, showRequestDialog: Boolean = true) {
-        if (hapInfo.init) return
+        if (hapInfo.isInit) return
         if (!ShizukuUtil.checkPermission().isGranted) {
             if (showRequestDialog) {
                 RequestPermissionDialogFragment()

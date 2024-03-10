@@ -18,9 +18,7 @@ import org.ohosdev.hapviewerandroid.extensions.canRead
 import org.ohosdev.hapviewerandroid.extensions.deleteIfCache
 import org.ohosdev.hapviewerandroid.extensions.destroy
 import org.ohosdev.hapviewerandroid.extensions.getOrCopyFile
-import org.ohosdev.hapviewerandroid.extensions.init
 import org.ohosdev.hapviewerandroid.extensions.installToSelf
-import org.ohosdev.hapviewerandroid.extensions.installing
 import org.ohosdev.hapviewerandroid.extensions.toDocumentFile
 import org.ohosdev.hapviewerandroid.model.HapInfo
 import org.ohosdev.hapviewerandroid.util.event.SnackBarEvent
@@ -35,58 +33,63 @@ class MainViewModel(private val app: Application) : AndroidViewModel(app) {
     val isParsing = MutableLiveData(false)
     val isInstalling = MutableLiveData(false)
     val snackBarEvent = MutableLiveData<SnackBarEvent>()
-    private val isHapInfoInit get() = hapInfo.value!!.init
+    private val isHapInfoInit get() = hapInfo.value!!.isInit
 
     private val shizukuServiceHelper = ShizukuServiceHelper()
 
-    fun handelUri(uri: Uri) = viewModelScope.launch {
+    fun handelHapUri(uri: Uri) = viewModelScope.launch(Dispatchers.Main) {
         Log.i(TAG, "handelUri: $uri")
         isParsing.value = true
-        withContext(Dispatchers.IO) {
-            val documentFile = uri.toDocumentFile(app) ?: run {
-                showSnackBar("uri not legal")
-                return@withContext
+        val destroyLastHapInfo = autoDestroyHapInfoRunnable()
+        val isSuccess = run {
+            val file = obtainFile(uri) ?: return@run false
+            val hapInfo = parseHap(file)
+            if (hapInfo == null) {
+                file.deleteIfCache(app)
+                return@run false
             }
-            val isDocumentUri = DocumentsContract.isDocumentUri(app, uri)
-            // 第三方的实现可能有问题，所以需要判断uri。
-
-            if (isDocumentUri && !documentFile.isFile) {
-                showSnackBar(R.string.error_uri_not_document)
-                return@withContext
-            }
-            if (isDocumentUri && !uri.canRead(app)) {
-                showSnackBar(R.string.error_file_unreadable)
-                return@withContext
-            }
-            // TODO: 文件名校验
-            val fileName = documentFile.name ?: "unknown"
-            val randomName = "${UUID.randomUUID().toString(true)}_$fileName"
-            val file = documentFile.getOrCopyFile(app, randomName)
-            if (file == null) {
-                showSnackBar(R.string.parse_error_fail_obtain)
-                return@withContext
-            }
-            parseHap(file)
+            this@MainViewModel.hapInfo.value = hapInfo
+            return@run true
+        }
+        if (isSuccess) {
+            destroyLastHapInfo()
         }
         isParsing.value = false
     }
 
-
-    private suspend fun parseHap(file: File) = withContext(Dispatchers.Main) {
-        isParsing.value = true
-        withContext(Dispatchers.Default) {
-            val destroyLastHapInfo = autoDestroyHapInfoRunnable()
-            runCatching {
-                updateHapInfo(HapUtil.parse(file.absolutePath))
-            }.onFailure {
-                it.printStackTrace()
-                showSnackBar(R.string.parse_error_fail)
-                file.deleteIfCache(app)
-            }.onSuccess {
-                destroyLastHapInfo()
+    private suspend fun obtainFile(uri: Uri) = withContext(Dispatchers.IO) {
+        val documentFile = uri.toDocumentFile(app) ?: run {
+            showSnackBar(R.string.error_uri_not_valid)
+            return@withContext null
+        }
+        // 第三方的实现可能有问题，所以仅 DocumentUri 需要判断uri。
+        DocumentsContract.isDocumentUri(app, uri).also {
+            if (it && !documentFile.isFile) {
+                showSnackBar(R.string.error_uri_not_document)
+                return@withContext null
+            }
+            if (it && !uri.canRead(app)) {
+                showSnackBar(R.string.error_file_unreadable)
+                return@withContext null
             }
         }
-        isParsing.value = false
+
+        // TODO: 文件名校验
+        val fileName = documentFile.name ?: "unknown"
+        val randomName = "${UUID.randomUUID().toString(true)}_$fileName"
+        documentFile.getOrCopyFile(app, randomName) ?: run {
+            showSnackBar(R.string.parse_error_fail_obtain)
+            return@withContext null
+        }
+    }
+
+    private suspend fun parseHap(file: File): HapInfo? = withContext(Dispatchers.Default) {
+        runCatching {
+            HapUtil.parse(file.absolutePath)
+        }.onFailure {
+            it.printStackTrace()
+            showSnackBar(R.string.parse_error_fail)
+        }.getOrNull()
     }
 
 
@@ -103,42 +106,31 @@ class MainViewModel(private val app: Application) : AndroidViewModel(app) {
         isInstalling.value = true
         runCatching {
             shizukuServiceHelper.bindUserService {
-                viewModelScope.launch { installHap(hapInfo) }
+                installHap(hapInfo)
             }
         }.onFailure {
             it.printStackTrace()
             showSnackBar(it.message ?: app.getString(R.string.unknown_error))
             isInstalling.value = false
-            hapInfo.installing = false
+            hapInfo.isInstalling = false
         }
-    }
-
-    /**
-     * 在UI线程内更新hapInfo
-     * */
-    private suspend fun updateHapInfo(newHapInfo: HapInfo) = withContext(Dispatchers.Main) {
-        hapInfo.value = newHapInfo
     }
 
     @Throws(RemoteException::class)
-    private suspend fun installHap(
-        hapInfo: HapInfo = this@MainViewModel.hapInfo.value!!
-    ) = withContext(Dispatchers.Main) {
+    private fun installHap(hapInfo: HapInfo) = viewModelScope.launch(Dispatchers.Main) {
+        hapInfo.isPreinstallation = true
         isInstalling.value = true
-        hapInfo.installing = true
-        withContext(Dispatchers.Default) {
-            hapInfo.installToSelf(shizukuServiceHelper).also {
-                // 不知为何无法显示结果
-                if (it.isSuccess) {
-                    showSnackBar(R.string.install_finished)
-                } else {
-                    showSnackBar(it.error ?: app.getString(R.string.unknown_error))
-                }
+        hapInfo.installToSelf(shizukuServiceHelper).also {
+            // 不知为何无法显示真正的结果
+            if (it.isSuccess) {
+                showSnackBar(R.string.install_finished)
+            } else {
+                showSnackBar(it.error ?: app.getString(R.string.unknown_error))
             }
-            autoDestroyHapInfoRunnable(hapInfo)()
         }
+        withContext(Dispatchers.Default) { autoDestroyHapInfoRunnable(hapInfo)() }
+        hapInfo.isPreinstallation = false
         isInstalling.value = false
-        hapInfo.installing = false
     }
 
     /**
@@ -154,8 +146,9 @@ class MainViewModel(private val app: Application) : AndroidViewModel(app) {
     ): () -> Unit {
         return fun() {
             if ((this.hapInfo.value != hapInfo || ignoreCurrentHapInfo)
-                && !hapInfo.installing
-                && !hapInfo.init
+                && !hapInfo.isPreinstallation
+                && !hapInfo.isInstalling
+                && !hapInfo.isInit
             ) {
                 hapInfo.destroy(app)
             }
