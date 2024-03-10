@@ -11,6 +11,8 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import cn.hutool.core.lang.UUID
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.isActive
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import org.ohosdev.hapviewerandroid.R
@@ -34,10 +36,11 @@ class MainViewModel(private val app: Application) : AndroidViewModel(app) {
     val isInstalling = MutableLiveData(false)
     val snackBarEvent = MutableLiveData<SnackBarEvent>()
     private val isHapInfoInit get() = hapInfo.value!!.isInit
-
     private val shizukuServiceHelper = ShizukuServiceHelper()
+    private var handelHapUriJob: Job? = null
 
     fun handelHapUri(uri: Uri) = viewModelScope.launch(Dispatchers.Main) {
+
         Log.i(TAG, "handelUri: $uri")
         isParsing.value = true
         val destroyLastHapInfo = autoDestroyHapInfoRunnable()
@@ -55,6 +58,9 @@ class MainViewModel(private val app: Application) : AndroidViewModel(app) {
             destroyLastHapInfo()
         }
         isParsing.value = false
+    }.also {
+        handelHapUriJob?.cancel()
+        handelHapUriJob = it
     }
 
     private suspend fun obtainFile(uri: Uri) = withContext(Dispatchers.IO) {
@@ -77,11 +83,17 @@ class MainViewModel(private val app: Application) : AndroidViewModel(app) {
         // TODO: 文件名校验
         val fileName = documentFile.name ?: "unknown"
         val randomName = "${UUID.randomUUID().toString(true)}_$fileName"
-        documentFile.getOrCopyFile(app, randomName) ?: run {
+        val file = documentFile.getOrCopyFile(app, randomName) ?: run {
             showSnackBar(R.string.parse_error_fail_obtain)
             return@withContext null
         }
+        if (!isActive) {
+            file.deleteIfCache(app)
+            return@withContext null
+        }
+        file
     }
+
 
     private suspend fun parseHap(file: File): HapInfo? = withContext(Dispatchers.Default) {
         runCatching {
