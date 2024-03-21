@@ -16,11 +16,6 @@
 - 电脑版（跨平台）：[westinyang/hap-viewer](https://gitee.com/westinyang/hap-viewer)
 - **手机版（Android）**：[westinyang/hap-viewer-android](https://gitee.com/westinyang/hap-viewer-android)
 
-### 衍生项目
-
-- [hapv-cli](https://gitee.com/ericple/hapv-cli) `命令行版的hap查看器，目前由@ericple维护`
-- [HapViewer-iOS](https://github.com/F7YM/HapViewer-iOS) `iOS快捷指令版的hap查看器，目前由@F7YM维护`
-
 ## 下载安装
 
 - https://gitee.com/westinyang/hap-viewer-android/releases
