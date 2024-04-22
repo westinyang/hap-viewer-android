@@ -4,7 +4,7 @@
 
 ## 项目介绍
 
-安卓版的hap查看器，支持解析 OpenHarmony(开源鸿蒙)、HarmonyOS(鸿蒙) API9+(Stage模型) 的应用安装包，支持在 Android 7+ 的安卓设备上运行
+安卓版的hap查看器，支持解析 OpenHarmony(开源鸿蒙)、HarmonyOS(鸿蒙)、HarmonyOS NEXT(鸿蒙星河版) API9+(Stage模型)的应用安装包，支持在 Android 7+ 的安卓设备上运行
 
 开源仓库
 
@@ -15,6 +15,7 @@
 
 - 电脑版（跨平台）：[westinyang/hap-viewer](https://gitee.com/westinyang/hap-viewer)
 - **手机版（Android）**：[westinyang/hap-viewer-android](https://gitee.com/westinyang/hap-viewer-android)
+- 网页版（响应式）：[westinyang/hap-viewer-web](https://gitee.com/westinyang/hap-viewer-web)
 
 ## 下载安装
 
@@ -51,3 +52,7 @@
 
 - [westinyang](https://gitee.com/westinyang)
 - [Jesse205](https://gitee.com/Jesse205)
+
+## 技术交流
+
+[🐧 加入OpenHarmony技术交流群](https://kaihongpai.feishu.cn/wiki/R93ywdop6iuryDkJ5ACc0L3ynEc)
