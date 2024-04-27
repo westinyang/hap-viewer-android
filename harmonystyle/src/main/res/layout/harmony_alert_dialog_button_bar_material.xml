@@ -25,14 +25,15 @@
     <androidx.appcompat.widget.ButtonBarLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:divider="@drawable/harmony_divider_horizontal_buttons"
         android:gravity="bottom"
         android:layoutDirection="locale"
+        android:measureWithLargestChild="true"
         android:orientation="horizontal"
         android:paddingLeft="12dp"
         android:paddingTop="8dp"
         android:paddingRight="12dp"
         android:paddingBottom="16dp"
-        android:divider="@drawable/harmony_divider_horizontal_buttons"
         android:showDividers="middle">
 
         <Button
