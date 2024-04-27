@@ -21,8 +21,8 @@
     android:layout_height="wrap_content"
     android:fillViewport="true"
     android:scrollIndicators="top|bottom">
-    <!--suppress AndroidUnresolvableTag -->
-    <androidx.appcompat.widget.ButtonBarLayout
+
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:divider="@drawable/harmony_divider_horizontal_buttons"
@@ -60,6 +60,6 @@
             android:layout_marginHorizontal="4dp"
             android:layout_weight="1" />
 
-    </androidx.appcompat.widget.ButtonBarLayout>
+    </LinearLayout>
 
 </ScrollView>

@@ -94,7 +94,7 @@
 
     <style name="AlertDialog.Harmony" parent="AlertDialog.AppCompat">
         <item name="android:layout_gravity">bottom|center_horizontal</item>
-        <item name="android:layout">@layout/harmony_alert_dialog_material</item>
+        <item name="android:layout">@layout/harmony_alert_dialog</item>
         <item name="shapeAppearance">@style/ShapeAppearance.Harmony.AlertDialog</item>
         <item name="backgroundInsetStart">0dp</item>
         <item name="backgroundInsetTop">16dp</item>

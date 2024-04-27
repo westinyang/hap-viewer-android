@@ -15,9 +15,7 @@
      limitations under the License.
 -->
 
-<!-- 此类使用了 hide 注解，因此在 IDE 里面会报错，当 LinearLayout 用就行-->
-<!--suppress AndroidUnresolvableTag -->
-<androidx.appcompat.widget.AlertDialogLayout
+<org.ohosdev.hapviewerandroid.harmonystyle.dialog.AlertDialogLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/parentPanel"
@@ -26,7 +24,7 @@
     android:gravity="start|left|top"
     android:orientation="vertical">
 
-    <include layout="@layout/harmony_alert_dialog_title_material"/>
+    <include layout="@layout/harmony_alert_dialog_title"/>
 
     <FrameLayout
         android:id="@+id/contentPanel"
@@ -100,8 +98,8 @@
             android:layout_height="wrap_content"/>
     </FrameLayout>
 
-    <include layout="@layout/harmony_alert_dialog_button_bar_material"
+    <include layout="@layout/harmony_alert_dialog_button_bar"
              android:layout_width="match_parent"
              android:layout_height="wrap_content"/>
 
-</androidx.appcompat.widget.AlertDialogLayout>
+</org.ohosdev.hapviewerandroid.harmonystyle.dialog.AlertDialogLayout>
