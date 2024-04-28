@@ -37,7 +37,7 @@ class AboutDialogBuilder(context: Context) : AlertDialogBuilder<AboutDialogBuild
         }
         setMessage(HtmlCompat.fromHtml(messageHtml, HtmlCompat.FROM_HTML_MODE_LEGACY))
         setPositiveButton(android.R.string.ok, null)
-        setNeutralButton(R.string.legal_more, null)
+        setNeutralButton(R.string.legal_submenu, null)
     }
 
     @SuppressLint("ClickableViewAccessibility")

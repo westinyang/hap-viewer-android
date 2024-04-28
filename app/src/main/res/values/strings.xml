@@ -1,9 +1,10 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
+    <!-- App Information -->
     <string name="app_name">HAP Viewer</string>
     <string name="app_name_full">HAP Viewer for Android</string>
     <string name="app_description">Support for parsing OpenHarmony, HarmonyOS API 9+ (Stage model) application installation packages, support for running on Android devices with Android 7+.</string>
-    <string name="menu_about">About</string>
 
+    <!-- About Dialog -->
     <!-- The words in it are a bit different from other words in other languages, so they have to be singled out. -->
     <string name="about">About</string>
     <string name="about_version">Version</string>
@@ -11,55 +12,74 @@
     <string name="about_license">License</string>
     <string name="about_contributors">Contributors</string>
 
-    <string name="select_file_hap">Select HAP file</string>
-    <string name="permission_grant_fail">Permission request failed.</string>
-    <string name="exit_toast">Press the back button again to exit.</string>
+    <!-- Copy -->
     <string name="copy" tools:ignore="PrivateResource">Copy</string>
     <string name="copied">Copied.</string>
     <string name="copied_withName">Copied %s.</string>
-    <string name="parse_error_fail_obtain">File acquisition failure.</string>
-    <string name="parse_error_fail">Hap file parsing failed, currently only supports parsing API 9+ (Stage model) application installers.</string>
-    <string name="parse_error_type">Wrong file type, please select a hap file.</string>
-    <string name="separator">", "</string>
-    <string name="parse_continue_ignoreError">Ignore error, Continue parse</string>
-    <string name="menu_theme">Theme</string>
-    <string name="material2" translatable="false">Material 2</string>
-    <string name="material1" translatable="false">Material 1</string>
-    <string name="material3" translatable="false">Material 3</string>
-    <string name="drop_here">Drop here</string>
-    <string name="harmony" translatable="false">HarmonyOS</string>
-    <string name="permissions">Permissions</string>
-    <string name="permission_shizuku">Shizuku permission</string>
-    <string name="guide">Guide</string>
-    <string name="permission_request">Permissions request</string>
+
+    <!-- Symbols -->
+    <string name="symbol_separator">", "</string>
+    <string name="symbol_colon">": "</string>
+
+    <!-- Theme -->
+    <string name="theme_submenu">Theme…</string>
+    <string name="theme_material1" translatable="false">Material 1</string>
+    <string name="theme_material2" translatable="false">Material 2</string>
+    <string name="theme_material3" translatable="false">Material 3</string>
+    <string name="theme_harmony" translatable="false">HarmonyOS</string>
+
+    <!-- Install -->
     <string name="install">Install</string>
-    <string name="unknown_error">Unknown error</string>
     <string name="install_finished">Installation finished</string>
-    <string name="legal_more">Legal info…</string>
-    <string name="privacy_policy">Privacy policy</string>
-    <string name="open_source_licenses">Open source licenses</string>
     <string name="install_hap">Install HAP</string>
     <string name="install_hap_message">Installation of HAP requires the support of the operating system and must have the correct signature, so packages you download from unofficial application markets will most likely not install. For unknown reasons, it is not possible to determine whether the installation of the software was successful or not, so the software will always display \"Installation finished\".</string>
-    <string name="read_file_directly">Reading files directly</string>
+
+    <!-- Permissions -->
+    <string name="permissions">Permissions</string>
+    <string name="permission_request">Permissions request</string>
     <string name="permission_request_message">HAP Viewer needs %1$s in order for %2$s to work correctly. %3$s</string>
+    <string name="permission_request_fail">Permission request failed.</string>
+    <string name="permission_shizuku">Shizuku permission</string>
     <string name="permission_storage">Storage permission</string>
     <string name="permission_storage_additional">If you do not grant this permission, HAP Viewer will copy the file to private space before reading it.</string>
-    <string name="colon">": "</string>
-    <string name="more_info">More informations</string>
 
-    <string name="unknown">Unknown</string>
-    <string name="unknown_appName">Unknown app name</string>
-    <string name="unknown_version">Unknown version</string>
-    <string name="unknown_packageName">Unknown package name</string>
-
+    <!-- Copy texts -->
     <string name="copy_package_name">Copy package name</string>
     <string name="copy_version_code">Copy version code</string>
     <string name="copy_version_name">Copy version name</string>
     <string name="copy_app_name">Copy app name</string>
 
+    <!-- Legal -->
+    <string name="legal_submenu">Legal info…</string>
+    <string name="legal_privacy_policy">Privacy policy</string>
+    <string name="legal_open_source_licenses">Open source licenses</string>
+
+    <!-- Accessibility -->
     <string name="accessibility_hap_basic_info_description">App name: %1$s, version name: %2$s, version code: %3$s, package name: %4$s.</string>
 
+    <!-- Error Messages -->
     <string name="error_file_unreadable">The file is unreadable.</string>
     <string name="error_uri_not_document">This URI is not a document.</string>
     <string name="error_uri_not_valid">The URI is not valid.</string>
+
+    <!-- Parsing -->
+    <string name="parse_error_fail_obtain">File acquisition failure.</string>
+    <string name="parse_error_fail">Hap file parsing failed, currently only supports parsing API 9+ (Stage model) application installers.</string>
+    <string name="parse_error_type">Wrong file type, please select a hap file.</string>
+    <string name="parse_continue_ignoreError">Ignore error, Continue parse</string>
+
+    <!-- Unknown text -->
+    <string name="unknown">Unknown</string>
+    <string name="unknown_appName">Unknown app name</string>
+    <string name="unknown_version">Unknown version</string>
+    <string name="unknown_packageName">Unknown package name</string>
+    <string name="unknown_error">Unknown error</string>
+
+    <!-- Miscellaneous -->
+    <string name="drop_here">Drop here</string>
+    <string name="exit_toast">Press the back button again to exit.</string>
+    <string name="guide">Guide</string>
+    <string name="more_info">More information</string>
+    <string name="read_file_directly">Reading files directly</string>
+    <string name="select_file_hap">Select HAP file</string>
 </resources>

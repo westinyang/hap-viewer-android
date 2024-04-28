@@ -68,12 +68,12 @@ fun Context.copyText(text: CharSequence) {
 /**
  * 本地化的分隔符，中文为”，“，英文为“, ”
  * */
-val Context.localisedSeparator get() = getString(R.string.separator)
+val Context.localisedSeparator get() = getString(R.string.symbol_separator)
 
 /**
  * 本地化的冒号，中文为”：“，英文为“: ”
  * */
-val Context.localisedColon get() = getString(R.string.colon)
+val Context.localisedColon get() = getString(R.string.symbol_colon)
 
 /**
  * 返回所提供属性 `attributeResId` 的布尔值，如果属性不是布尔值或不存在于当前主题中，则返回 `defaultValue`。

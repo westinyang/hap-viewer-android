@@ -309,7 +309,7 @@ class MainActivity : BaseActivity(), OnDragListener {
             when (requestCode) {
                 // 可以在不获得权限的情况下选择文件
                 REQUEST_CODE_SELECT_FILE -> selectHapFile()
-                else -> showSnackBar(R.string.permission_grant_fail)
+                else -> showSnackBar(R.string.permission_request_fail)
             }
         }
     }
