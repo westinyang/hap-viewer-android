@@ -22,7 +22,7 @@
     <string name="symbol_colon">：</string>
 
     <!-- 主题 -->
-    <string name="theme_submenu">主题</string>
+    <string name="theme_submenu">主题…</string>
 
     <!-- 安装 -->
     <string name="install">安装</string>
