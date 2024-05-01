@@ -18,6 +18,7 @@ import androidx.core.content.res.TypedArrayUtils.obtainAttributes
 import org.ohosdev.hapviewerandroid.harmonystyle.R
 import org.xmlpull.v1.XmlPullParser
 
+@Suppress("unused")
 @Keep
 class ShadowDrawable : Drawable() {
 

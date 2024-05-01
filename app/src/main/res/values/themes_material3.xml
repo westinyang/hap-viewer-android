@@ -48,6 +48,8 @@
         <item name="listPreferredItemPaddingStart">16dp</item>
         <item name="listPreferredItemPaddingEnd">16dp</item>
         <item name="itemMargin">16dp</item>
+
+        <item name="appIconBackground">@drawable/bitmap_shadow_material</item>
     </style>
 
     <style name="Theme.HapViewerAndroid.Material3" parent="Base.Theme.HapViewerAndroid.Material3" />

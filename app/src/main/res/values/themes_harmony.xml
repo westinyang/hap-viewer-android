@@ -21,6 +21,8 @@
         <item name="cardMargin">@dimen/harmony_space_elements_card</item>
         <item name="paddingBottomWithFabSize">64dp</item>
         <item name="itemMargin">12dp</item>
+
+        <item name="appIconBackground">@drawable/bitmap_shadow_harmony</item>
     </style>
 
     <style name="Theme.HapViewerAndroid.Harmony" parent="Base.Theme.HapViewerAndroid.Harmony" />

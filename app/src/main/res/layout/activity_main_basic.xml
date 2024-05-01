@@ -16,7 +16,7 @@
             android:layout_width="@dimen/icon_width"
             android:layout_height="@dimen/icon_width"
             android:layout_margin="?itemMargin"
-            android:background="@drawable/bitmap_shadow"
+            android:background="?appIconBackground"
             android:contentDescription="@string/info_icon"
             android:src="@drawable/ic_default_new"
             app:layout_constraintBottom_toBottomOf="parent"

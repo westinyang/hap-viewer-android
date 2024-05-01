@@ -447,18 +447,14 @@ class MainActivity : BaseActivity(), OnDragListener {
      * */
     private fun applyHapIcon(hapInfo: HapInfo) {
         binding.basicInfo.hapIconImage.apply {
-            val iconBitmap = if (hapInfo.icon != null) {
-                setImageBitmap(hapInfo.icon)
-                hapInfo.icon
-            } else {
-                setImageResource(R.drawable.ic_default_new)
-                getBitmap(R.drawable.ic_default_new)!!
-            }
+            val iconBitmap = hapInfo.icon ?: getBitmap(R.drawable.ic_default_new)!!
+            setImageBitmap(iconBitmap)
             background.apply {
                 if (this is ShadowBitmapDrawable) {
-                    setShadowBitmap(iconBitmap, resources.getDimension(R.dimen.icon_shadow_radius))
+                    originBitmap = iconBitmap
                 }
             }
+            invalidate()
         }
     }
 
