@@ -52,7 +52,7 @@ public class HapUtil {
             JSONObject moduleObj = module.getJSONObject("module");
 
             // app.
-            hapInfo.packageName = appObj.getString("bundleName");
+            hapInfo.bundleName = appObj.getString("bundleName");
             hapInfo.versionName = appObj.getString("versionName");
             hapInfo.versionCode = appObj.getString("versionCode");
             hapInfo.vendor = appObj.getString("vendor");
@@ -146,7 +146,7 @@ public class HapUtil {
             // 更多信息
             hapInfo.moreInfo = new LinkedHashMap<>();
             hapInfo.moreInfo.put("appName", hapInfo.appName);
-            hapInfo.moreInfo.put("bundleName", hapInfo.packageName);
+            hapInfo.moreInfo.put("bundleName", hapInfo.bundleName);
             hapInfo.moreInfo.put("iconPath", hapInfo.iconPath);
             hapInfo.moreInfo.put("vendor", appObj.getString("vendor"));
             hapInfo.moreInfo.put("versionName", hapInfo.versionName);

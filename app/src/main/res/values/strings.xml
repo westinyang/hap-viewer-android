@@ -44,7 +44,7 @@
     <string name="permission_storage_additional">If you do not grant this permission, HAP Viewer will copy the file to private space before reading it.</string>
 
     <!-- Copy texts -->
-    <string name="copy_package_name">Copy package name</string>
+    <string name="copy_bundle_name">Copy bundle name</string>
     <string name="copy_version_code">Copy version code</string>
     <string name="copy_version_name">Copy version name</string>
     <string name="copy_app_name">Copy app name</string>
@@ -55,7 +55,7 @@
     <string name="legal_open_source_licenses">Open source licenses</string>
 
     <!-- Accessibility -->
-    <string name="accessibility_hap_basic_info_description">App name: %1$s, version name: %2$s, version code: %3$s, package name: %4$s.</string>
+    <string name="accessibility_hap_basic_info_description">App name: %1$s, version name: %2$s, version code: %3$s, bundle name: %4$s.</string>
 
     <!-- Error Messages -->
     <string name="error_file_unreadable">The file is unreadable.</string>
@@ -72,7 +72,7 @@
     <string name="unknown">Unknown</string>
     <string name="unknown_appName">Unknown app name</string>
     <string name="unknown_version">Unknown version</string>
-    <string name="unknown_packageName">Unknown package name</string>
+    <string name="unknown_bundleName">Unknown bundle name</string>
     <string name="unknown_error">Unknown error</string>
 
     <!-- Miscellaneous -->

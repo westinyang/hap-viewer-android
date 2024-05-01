@@ -40,7 +40,7 @@
     <string name="permission_storage_additional">如果您不授予该权限，HAP 查看器将先复制文件到私有空间后再读取。</string>
 
     <!-- 复制文本 -->
-    <string name="copy_package_name">复制包名</string>
+    <string name="copy_bundle_name">复制包名</string>
     <string name="copy_version_code">复制版本号</string>
     <string name="copy_version_name">复制版本名</string>
     <string name="copy_app_name">复制应用名</string>
@@ -68,7 +68,7 @@
     <string name="unknown">未知</string>
     <string name="unknown_appName">未知应用名</string>
     <string name="unknown_version">未知版本</string>
-    <string name="unknown_packageName">未知包名</string>
+    <string name="unknown_bundleName">未知包名</string>
     <string name="unknown_error">未知错误</string>
 
     <!-- 杂志 -->

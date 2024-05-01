@@ -244,7 +244,7 @@ class MainActivity : BaseActivity(), OnDragListener {
             R.id.action_copy_app_name -> Pair(R.string.info_appName, hapInfo.appName)
             R.id.action_copy_version_name -> Pair(R.string.info_versionName, hapInfo.versionName)
             R.id.action_copy_version_code -> Pair(R.string.info_versionCode, hapInfo.versionCode)
-            R.id.action_copy_package_name -> Pair(R.string.info_appPackageName, hapInfo.packageName)
+            R.id.action_copy_package_name -> Pair(R.string.info_appBundleName, hapInfo.bundleName)
             else -> return false
         }
         return copyAndShowSnackBar(content.second, getString(content.first))
@@ -421,13 +421,13 @@ class MainActivity : BaseActivity(), OnDragListener {
             binding.basicInfo.apply {
                 nameText.setHapInfoText(it.appName, R.string.unknown_appName)
                 versionText.setHapInfoText("v${it.getVersionNameAndCode(unknownString)}", R.string.unknown_version)
-                packageText.setHapInfoText(it.packageName, R.string.unknown_packageName)
+                bundleText.setHapInfoText(it.bundleName, R.string.unknown_bundleName)
                 root.contentDescription = getString(
                     R.string.accessibility_hap_basic_info_description,
                     hapInfo.appName ?: unknownString,
                     hapInfo.versionName ?: unknownString,
                     hapInfo.versionCode ?: unknownString,
-                    hapInfo.packageName ?: unknownString
+                    hapInfo.bundleName ?: unknownString
                 )
             }
             binding.detailsInfo.apply {

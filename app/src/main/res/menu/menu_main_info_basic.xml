@@ -11,5 +11,5 @@
         android:title="@string/copy_version_code" />
     <item
         android:id="@+id/action_copy_package_name"
-        android:title="@string/copy_package_name" />
+        android:title="@string/copy_bundle_name" />
 </menu>
