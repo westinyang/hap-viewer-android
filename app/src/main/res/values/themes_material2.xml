@@ -13,6 +13,7 @@
         <item name="android:listPreferredItemPaddingEnd">?listPreferredItemPaddingEnd</item>
 
         <item name="textAppearanceTitleMedium">?textAppearanceSubtitle2</item>
+        <item name="textAppearanceBodyMedium">?textAppearanceBody2</item>
     </style>
 
     <style name="Platform.Theme.HapViewerAndroid.Material2" parent="Platform.V23.Theme.HapViewerAndroid.Material2" />

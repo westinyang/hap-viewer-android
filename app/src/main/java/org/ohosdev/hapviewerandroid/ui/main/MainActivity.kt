@@ -436,6 +436,8 @@ class MainActivity : BaseActivity(), OnDragListener {
                 vendorItem.setHapInfoValue(it.vendor ?: unknownString)
                 moreInfoItem.isEnabled = !it.isInit && it.moreInfo != null
             }
+            binding.permissionsInfo.noPermissionsText.visibility =
+                if (it.requestPermissionNames.isNullOrEmpty()) View.VISIBLE else View.GONE
             permissionsAdapter.submitList(it.requestPermissionNames)
         }
 

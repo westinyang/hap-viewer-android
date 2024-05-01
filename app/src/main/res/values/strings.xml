@@ -82,4 +82,5 @@
     <string name="more_info">More information</string>
     <string name="read_file_directly">Reading files directly</string>
     <string name="select_file_hap">Select HAP file</string>
+    <string name="no_data">No data</string>
 </resources>

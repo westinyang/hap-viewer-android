@@ -78,4 +78,5 @@
     <string name="more_info">更多信息</string>
     <string name="read_file_directly">直接读取文件</string>
     <string name="select_file_hap">选择 HAP 文件</string>
+    <string name="no_data">空空如也</string>
 </resources>
