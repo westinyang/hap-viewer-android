@@ -433,6 +433,7 @@ class MainActivity : BaseActivity(), OnDragListener {
             binding.detailsInfo.apply {
                 targetItem.setHapInfoValue("API ${it.targetAPIVersion} (${it.apiReleaseType})")
                 techItem.setHapInfoValue(it.getTechDesc(this@MainActivity) ?: unknownTechString)
+                vendorItem.setHapInfoValue(it.vendor ?: unknownString)
                 moreInfoItem.isEnabled = !it.isInit && it.moreInfo != null
             }
             permissionsAdapter.submitList(it.requestPermissionNames)

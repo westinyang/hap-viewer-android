@@ -8,4 +8,5 @@
     <string name="info_compileTarget">Compile target</string>
     <string name="info_tech">Tech</string>
     <string name="info_tech_unknown">Native development or unknown development techniques</string>
+    <string name="info_vendor">Vendor</string>
 </resources>

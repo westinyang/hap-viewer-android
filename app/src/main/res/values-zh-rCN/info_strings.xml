@@ -8,4 +8,5 @@
     <string name="info_compileTarget">编译目标</string>
     <string name="info_tech">技术探测</string>
     <string name="info_tech_unknown">原生开发或未知开发技术</string>
+    <string name="info_vendor">供应商</string>
 </resources>
