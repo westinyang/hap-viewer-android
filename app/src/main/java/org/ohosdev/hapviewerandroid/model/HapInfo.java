@@ -28,7 +28,7 @@ public class HapInfo {
     public byte[] iconBytes;
     public String labelName;
     public String appName;
-    public String packageName;
+    public String bundleName;
     public String versionName;
     public String versionCode;
     public String vendor;

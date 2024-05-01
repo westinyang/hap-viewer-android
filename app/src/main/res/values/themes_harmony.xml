@@ -5,6 +5,7 @@
         <item name="windowNoTitle">true</item>
 
         <item name="textAppearanceTitleMedium">?textAppearanceSubtitle2</item>
+        <item name="textAppearanceBodyMedium">?textAppearanceBody2</item>
 
         <item name="codeColorString">@color/harmony_code_color_string</item>
         <item name="codeColorNumber">@color/harmony_code_color_number</item>
@@ -21,6 +22,8 @@
         <item name="cardMargin">@dimen/harmony_space_elements_card</item>
         <item name="paddingBottomWithFabSize">64dp</item>
         <item name="itemMargin">12dp</item>
+
+        <item name="appIconBackground">@drawable/bitmap_shadow_harmony</item>
     </style>
 
     <style name="Theme.HapViewerAndroid.Harmony" parent="Base.Theme.HapViewerAndroid.Harmony" />

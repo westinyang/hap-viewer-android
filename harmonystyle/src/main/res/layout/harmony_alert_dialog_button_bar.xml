@@ -21,18 +21,19 @@
     android:layout_height="wrap_content"
     android:fillViewport="true"
     android:scrollIndicators="top|bottom">
-    <!--suppress AndroidUnresolvableTag -->
-    <androidx.appcompat.widget.ButtonBarLayout
+
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:divider="@drawable/harmony_divider_horizontal_buttons"
         android:gravity="bottom"
         android:layoutDirection="locale"
+        android:measureWithLargestChild="true"
         android:orientation="horizontal"
         android:paddingLeft="12dp"
         android:paddingTop="8dp"
         android:paddingRight="12dp"
         android:paddingBottom="16dp"
-        android:divider="@drawable/harmony_divider_horizontal_buttons"
         android:showDividers="middle">
 
         <Button
@@ -59,6 +60,6 @@
             android:layout_marginHorizontal="4dp"
             android:layout_weight="1" />
 
-    </androidx.appcompat.widget.ButtonBarLayout>
+    </LinearLayout>
 
 </ScrollView>

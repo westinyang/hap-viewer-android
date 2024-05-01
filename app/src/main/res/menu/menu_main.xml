@@ -4,23 +4,23 @@
     tools:context="com.example.myapp.MainActivity">
     <item
         android:id="@+id/action_theme"
-        android:title="@string/menu_theme"
+        android:title="@string/theme_submenu"
         app:showAsAction="never">
         <menu>
             <group
                 android:checkableBehavior="single">
                 <item
                     android:id="@+id/action_theme_material1"
-                    android:title="@string/material1" />
+                    android:title="@string/theme_material1" />
                 <item
                     android:id="@+id/action_theme_material2"
-                    android:title="@string/material2" />
+                    android:title="@string/theme_material2" />
                 <item
                     android:id="@+id/action_theme_material3"
-                    android:title="@string/material3" />
+                    android:title="@string/theme_material3" />
                 <item
                     android:id="@+id/action_theme_harmony"
-                    android:title="@string/harmony" />
+                    android:title="@string/theme_harmony" />
             </group>
         </menu>
     </item>
@@ -30,6 +30,6 @@
         app:showAsAction="never" />
     <item
         android:id="@+id/action_about"
-        android:title="@string/menu_about"
+        android:title="@string/about"
         app:showAsAction="never" />
 </menu>

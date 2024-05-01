@@ -27,9 +27,19 @@
     <attr name="listItemLayoutStyle" format="reference" />
     <attr name="listItemSpacerStyle" format="reference" />
 
+    <attr name="appIconBackground" format="reference" />
+
     <declare-styleable name="ListItem">
         <attr name="android:title" format="string" />
         <attr name="android:value" format="string" />
         <attr name="android:enabled" format="string" />
+    </declare-styleable>
+
+    <declare-styleable name="ShadowBitmapDrawable">
+        <attr name="android:alpha" />
+        <attr name="shadowColor" format="color" />
+        <attr name="shadowRadius" format="dimension" />
+        <attr name="shadowX" format="dimension" />
+        <attr name="shadowY" format="dimension" />
     </declare-styleable>
 </resources>

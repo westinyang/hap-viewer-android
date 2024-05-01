@@ -244,7 +244,7 @@ class MainActivity : BaseActivity(), OnDragListener {
             R.id.action_copy_app_name -> Pair(R.string.info_appName, hapInfo.appName)
             R.id.action_copy_version_name -> Pair(R.string.info_versionName, hapInfo.versionName)
             R.id.action_copy_version_code -> Pair(R.string.info_versionCode, hapInfo.versionCode)
-            R.id.action_copy_package_name -> Pair(R.string.info_appPackageName, hapInfo.packageName)
+            R.id.action_copy_package_name -> Pair(R.string.info_appBundleName, hapInfo.bundleName)
             else -> return false
         }
         return copyAndShowSnackBar(content.second, getString(content.first))
@@ -309,7 +309,7 @@ class MainActivity : BaseActivity(), OnDragListener {
             when (requestCode) {
                 // 可以在不获得权限的情况下选择文件
                 REQUEST_CODE_SELECT_FILE -> selectHapFile()
-                else -> showSnackBar(R.string.permission_grant_fail)
+                else -> showSnackBar(R.string.permission_request_fail)
             }
         }
     }
@@ -421,20 +421,23 @@ class MainActivity : BaseActivity(), OnDragListener {
             binding.basicInfo.apply {
                 nameText.setHapInfoText(it.appName, R.string.unknown_appName)
                 versionText.setHapInfoText("v${it.getVersionNameAndCode(unknownString)}", R.string.unknown_version)
-                packageText.setHapInfoText(it.packageName, R.string.unknown_packageName)
+                bundleText.setHapInfoText(it.bundleName, R.string.unknown_bundleName)
                 root.contentDescription = getString(
                     R.string.accessibility_hap_basic_info_description,
                     hapInfo.appName ?: unknownString,
                     hapInfo.versionName ?: unknownString,
                     hapInfo.versionCode ?: unknownString,
-                    hapInfo.packageName ?: unknownString
+                    hapInfo.bundleName ?: unknownString
                 )
             }
             binding.detailsInfo.apply {
                 targetItem.setHapInfoValue("API ${it.targetAPIVersion} (${it.apiReleaseType})")
                 techItem.setHapInfoValue(it.getTechDesc(this@MainActivity) ?: unknownTechString)
+                vendorItem.setHapInfoValue(it.vendor ?: unknownString)
                 moreInfoItem.isEnabled = !it.isInit && it.moreInfo != null
             }
+            binding.permissionsInfo.noPermissionsText.visibility =
+                if (it.requestPermissionNames.isNullOrEmpty()) View.VISIBLE else View.GONE
             permissionsAdapter.submitList(it.requestPermissionNames)
         }
 
@@ -447,18 +450,14 @@ class MainActivity : BaseActivity(), OnDragListener {
      * */
     private fun applyHapIcon(hapInfo: HapInfo) {
         binding.basicInfo.hapIconImage.apply {
-            val iconBitmap = if (hapInfo.icon != null) {
-                setImageBitmap(hapInfo.icon)
-                hapInfo.icon
-            } else {
-                setImageResource(R.drawable.ic_default_new)
-                getBitmap(R.drawable.ic_default_new)!!
-            }
+            val iconBitmap = hapInfo.icon ?: getBitmap(R.drawable.ic_default_new)!!
+            setImageBitmap(iconBitmap)
             background.apply {
                 if (this is ShadowBitmapDrawable) {
-                    setShadowBitmap(iconBitmap, resources.getDimension(R.dimen.icon_shadow_radius))
+                    originBitmap = iconBitmap
                 }
             }
+            invalidate()
         }
     }
 

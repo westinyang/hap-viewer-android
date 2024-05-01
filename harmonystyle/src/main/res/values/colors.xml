@@ -19,6 +19,7 @@
     <color name="harmony_color_divider_dark">#33FFFFFF</color>
     <color name="harmony_color_common_light">#19000000</color>
     <color name="harmony_color_common_dark">#19FFFFFF</color>
+    <color name="harmony_color_shadow">#00001E</color>
 
     <!-- DayNight -->
     <color name="harmony_color_primary">@color/harmony_color_primary_light</color>

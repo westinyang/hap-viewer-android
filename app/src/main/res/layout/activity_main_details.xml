@@ -49,6 +49,12 @@
             android:title="@string/info_tech" />
 
         <org.ohosdev.hapviewerandroid.view.list.ListItem
+            android:id="@+id/vendor_item"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:title="@string/info_vendor" />
+
+        <org.ohosdev.hapviewerandroid.view.list.ListItem
             android:id="@+id/more_info_item"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

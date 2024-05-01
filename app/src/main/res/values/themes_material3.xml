@@ -2,7 +2,7 @@
 
     <style name="Platform.V23.Theme.HapViewerAndroid.Material3" parent="Theme.Material3.DynamicColors.DayNight">
         <item name="android:statusBarColor">@color/system_window_scrim</item>
-        <item name="android:navigationBarColor">@color/system_window_scrim_compat</item>
+        <item name="android:navigationBarColor">@color/system_window_scrim_navbar_compat</item>
         <item name="navigationBarColorCompatible">@color/system_window_scrim</item>
 
         <item name="android:windowLightStatusBar">?windowLightStatusBar</item>
@@ -48,6 +48,8 @@
         <item name="listPreferredItemPaddingStart">16dp</item>
         <item name="listPreferredItemPaddingEnd">16dp</item>
         <item name="itemMargin">16dp</item>
+
+        <item name="appIconBackground">@drawable/bitmap_shadow_material</item>
     </style>
 
     <style name="Theme.HapViewerAndroid.Material3" parent="Base.Theme.HapViewerAndroid.Material3" />

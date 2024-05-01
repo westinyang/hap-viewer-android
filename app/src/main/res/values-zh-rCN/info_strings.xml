@@ -2,10 +2,11 @@
 <resources>
     <string name="info_icon">应用图标</string>
     <string name="info_appName">应用名称</string>
-    <string name="info_appPackageName">应用包名</string>
+    <string name="info_appBundleName">应用包名</string>
     <string name="info_versionName">版本名称</string>
     <string name="info_versionCode">版本号码</string>
     <string name="info_compileTarget">编译目标</string>
     <string name="info_tech">技术探测</string>
     <string name="info_tech_unknown">原生开发或未知开发技术</string>
+    <string name="info_vendor">供应商</string>
 </resources>
