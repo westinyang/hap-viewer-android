@@ -29,7 +29,7 @@
                 android:nestedScrollingEnabled="false"
                 app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
                 tools:itemCount="5"
-                tools:listitem="@layout/item_list" />
+                tools:listitem="@layout/item_list_material" />
 
             <TextView
                 android:id="@+id/no_permissions_text"

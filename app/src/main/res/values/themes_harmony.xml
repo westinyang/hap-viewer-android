@@ -16,9 +16,7 @@
 
         <item name="liftOnScroll">false</item>
         <item name="listItemGroupStyle">@style/Widget.ListItemGroup.Harmony</item>
-        <item name="listItemStyle">@style/Widget.ListItem.Material</item>
-        <item name="listItemLayoutStyle">@style/Widget.ListItem.Layout.Harmony</item>
-        <item name="listItemSpacerStyle">@style/Widget.ListItem.Layout.Spacer.Harmony</item>
+        <item name="listItemStyle">@style/Widget.ListItem.Harmony</item>
         <item name="cardMargin">@dimen/harmony_space_elements_card</item>
         <item name="paddingBottomWithFabSize">64dp</item>
         <item name="itemMargin">12dp</item>
