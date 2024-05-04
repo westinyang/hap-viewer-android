@@ -1,14 +1,18 @@
 package org.ohosdev.hapviewerandroid.ui.main
 
 import android.content.Context
+import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
+import org.ohosdev.hapviewerandroid.view.AdvancedRecyclerView
+import org.ohosdev.hapviewerandroid.view.AdvancedRecyclerView.AdapterContextMenuInfo
 import org.ohosdev.hapviewerandroid.view.list.ListItem
 
 class PermissionsAdapter(val context: Context) :
-    ListAdapter<String, PermissionsAdapter.ViewHolder>(DIFF_CALLBACK) {
+    ListAdapter<String, PermissionsAdapter.ViewHolder>(DIFF_CALLBACK),
+    AdvancedRecyclerView.ContextMenuInfoProvider<AdapterContextMenuInfo<String>> {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int) =
         ViewHolder(ListItem(context))
@@ -18,7 +22,6 @@ class PermissionsAdapter(val context: Context) :
     }
 
     class ViewHolder(private val listItem: ListItem) : RecyclerView.ViewHolder(listItem) {
-        val title get() = listItem.title
         init {
             listItem.layoutParams = ViewGroup.LayoutParams(
                 ViewGroup.LayoutParams.MATCH_PARENT,
@@ -32,12 +35,15 @@ class PermissionsAdapter(val context: Context) :
         }
     }
 
+    override fun createContextMenuInfo(view: View, position: Int): AdapterContextMenuInfo<String> =
+        AdapterContextMenuInfo(KEY, position, getItem(position))
+
     companion object {
+        const val KEY = "permissions"
         val DIFF_CALLBACK = object : DiffUtil.ItemCallback<String>() {
             override fun areItemsTheSame(oldItem: String, newItem: String) = oldItem == newItem
 
             override fun areContentsTheSame(oldItem: String, newItem: String) = oldItem == newItem
         }
     }
-
 }

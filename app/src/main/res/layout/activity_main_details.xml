@@ -10,6 +10,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:clipToPadding="false"
+        android:key="basic"
         android:paddingVertical="?attr/listPaddingVertical">
 
         <!-- <org.ohosdev.hapviewerandroid.view.list.ListItem

@@ -29,6 +29,10 @@
 
     <attr name="appIconBackground" format="reference" />
 
+    <declare-styleable name="ListItemGroup">
+        <attr name="android:key" format="string" />
+    </declare-styleable>
+
     <declare-styleable name="ListItem">
         <attr name="android:title" format="string" />
         <attr name="android:value" format="string" />
