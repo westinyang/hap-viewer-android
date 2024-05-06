@@ -10,7 +10,6 @@ import android.net.Uri
 import android.os.Build
 import android.os.Bundle
 import android.util.Log
-import android.view.ContextMenu
 import android.view.DragEvent
 import android.view.Menu
 import android.view.MenuItem
@@ -48,6 +47,7 @@ import org.ohosdev.hapviewerandroid.extensions.overrideAnimationDurationIfNeeded
 import org.ohosdev.hapviewerandroid.extensions.requestShizukuPermission
 import org.ohosdev.hapviewerandroid.extensions.resolveBoolean
 import org.ohosdev.hapviewerandroid.extensions.setFragmentResultListener
+import org.ohosdev.hapviewerandroid.extensions.setOnCreateContextMenuListenerWithInfo
 import org.ohosdev.hapviewerandroid.extensions.thisApp
 import org.ohosdev.hapviewerandroid.model.HapInfo
 import org.ohosdev.hapviewerandroid.ui.about.AboutDialogFragment
@@ -59,7 +59,7 @@ import org.ohosdev.hapviewerandroid.util.ShizukuUtil.ShizukuLifecycleObserver
 import org.ohosdev.hapviewerandroid.util.SystemUtil
 import org.ohosdev.hapviewerandroid.util.SystemUtil.isLightNavigationBarSupported
 import org.ohosdev.hapviewerandroid.util.ohos.getOhosPermSortName
-import org.ohosdev.hapviewerandroid.view.AdvancedRecyclerView
+import org.ohosdev.hapviewerandroid.view.AdvancedRecyclerView.AdapterContextMenuInfo
 import org.ohosdev.hapviewerandroid.view.drawable.ShadowBitmapDrawable
 import org.ohosdev.hapviewerandroid.view.list.ListItem
 import org.ohosdev.hapviewerandroid.view.list.ListItemGroup
@@ -178,13 +178,10 @@ class MainActivity : BaseActivity(), OnDragListener {
             moreInfoItem.setOnClickListener { showMoreInfoDialog() }
             detailsGroup.apply {
                 registerForContextMenu(this)
-                setOnCreateContextMenuListener { menu, _, menuInfo: ContextMenu.ContextMenuInfo? ->
-                    if (menuInfo == null || menuInfo !is ListItemGroup.ContextMenuInfo) {
-                        return@setOnCreateContextMenuListener
-                    }
-                    menu.setHeaderTitle(menuInfo.title)
-                    if (!hapInfo.isInit && !menuInfo.valueText.isNullOrEmpty()) {
-                        menuInflater.inflate(R.menu.menu_main_info, menu)
+                setOnCreateContextMenuListenerWithInfo<ListItemGroup.ContextMenuInfo> {
+                    setHeaderTitle(it.title)
+                    if (!hapInfo.isInit && !it.valueText.isNullOrEmpty()) {
+                        menuInflater.inflate(R.menu.menu_main_info, this)
                     }
                 }
             }
@@ -195,31 +192,31 @@ class MainActivity : BaseActivity(), OnDragListener {
                 applyDividerIfEnabled()
                 itemAnimator = null
                 registerForContextMenu(this)
-                setOnCreateContextMenuListener { menu, _, menuInfo: ContextMenu.ContextMenuInfo? ->
-                    if (menuInfo == null || menuInfo !is AdvancedRecyclerView.ContextMenuInfo<*>) {
-                        return@setOnCreateContextMenuListener
-                    }
-                    @Suppress("UNCHECKED_CAST")
-                    menuInfo as AdvancedRecyclerView.ContextMenuInfo<PermissionsAdapter.ViewHolder>
-                    menu.setHeaderTitle(menuInfo.viewHolder.title?.let { it.getOhosPermSortName() ?: it })
-                    menuInflater.inflate(R.menu.menu_main_info, menu)
+                setOnCreateContextMenuListenerWithInfo<AdapterContextMenuInfo<String>> {
+                    setHeaderTitle(it.item.getOhosPermSortName() ?: it.item)
+                    menuInflater.inflate(R.menu.menu_main_info, this)
                 }
-
             }
         }
     }
 
-    override fun onContextItemSelected(item: MenuItem) = when (val menuInfo = item.menuInfo) {
-        // 将各自的事件传出去
-        is ListItemGroup.ContextMenuInfo -> onInfoContextItemSelected(item, menuInfo)
-        is AdvancedRecyclerView.ContextMenuInfo<*> ->
-            when (val viewHolder = menuInfo.viewHolder) {
-                is PermissionsAdapter.ViewHolder -> onPermissionItemSelected(item, viewHolder)
-                else -> super.onContextItemSelected(item)
+    override fun onContextItemSelected(item: MenuItem): Boolean {
+        val consumed = when (val menuInfo = item.menuInfo) {
+            // 将各自的事件传出去
+            is ListItemGroup.ContextMenuInfo -> when (menuInfo.key) {
+                "basic" -> onInfoContextItemSelected(item, menuInfo)
+                else -> false
             }
 
-        is BasicInfoCard.ContextMenuInfo -> onBasicInfoContentItemSelected(item)
-        else -> super.onContextItemSelected(item)
+            is AdapterContextMenuInfo<*> -> when (menuInfo.key) {
+                PermissionsAdapter.KEY -> onPermissionItemSelected(item, menuInfo.item as String)
+                else -> false
+            }
+
+            is BasicInfoCard.ContextMenuInfo -> onBasicInfoContentItemSelected(item)
+            else -> false
+        }
+        return consumed || super.onContextItemSelected(item)
     }
 
 
@@ -231,9 +228,9 @@ class MainActivity : BaseActivity(), OnDragListener {
         return true
     }
 
-    private fun onPermissionItemSelected(item: MenuItem, viewHolder: PermissionsAdapter.ViewHolder): Boolean {
-        when (item.itemId) {
-            R.id.action_copy -> copyAndShowSnackBar(viewHolder.title)
+    private fun onPermissionItemSelected(menuItem: MenuItem, adapterItem: String): Boolean {
+        when (menuItem.itemId) {
+            R.id.action_copy -> copyAndShowSnackBar(adapterItem)
             else -> return false
         }
         return true

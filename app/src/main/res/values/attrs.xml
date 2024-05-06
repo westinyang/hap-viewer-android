@@ -24,15 +24,20 @@
     <!-- Styles -->
     <attr name="listItemGroupStyle" format="reference" />
     <attr name="listItemStyle" format="reference" />
-    <attr name="listItemLayoutStyle" format="reference" />
-    <attr name="listItemSpacerStyle" format="reference" />
+    <!-- <attr name="listItemLayoutStyle" format="reference" />
+    <attr name="listItemSpacerStyle" format="reference" /> -->
 
     <attr name="appIconBackground" format="reference" />
+
+    <declare-styleable name="ListItemGroup">
+        <attr name="android:key" format="string" />
+    </declare-styleable>
 
     <declare-styleable name="ListItem">
         <attr name="android:title" format="string" />
         <attr name="android:value" format="string" />
         <attr name="android:enabled" format="string" />
+        <attr name="android:layout" />
     </declare-styleable>
 
     <declare-styleable name="ShadowBitmapDrawable">

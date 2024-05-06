@@ -9,17 +9,17 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:clipChildren="false">
+        android:clipChildren="false"
+        android:clipToPadding="false"
+        android:padding="?attr/itemMargin">
 
         <ImageView
             android:id="@+id/hap_icon_image"
             android:layout_width="@dimen/icon_width"
             android:layout_height="@dimen/icon_width"
-            android:layout_margin="?itemMargin"
             android:background="?appIconBackground"
             android:contentDescription="@string/info_icon"
             android:src="@drawable/ic_default_new"
-            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
@@ -28,26 +28,31 @@
             style="?textAppearanceListItem"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginHorizontal="?itemMargin"
+            android:layout_marginStart="?attr/itemMargin"
             android:textColor="?colorOnBackground"
             android:textIsSelectable="true"
+            app:layout_constrainedWidth="true"
             app:layout_constraintBottom_toTopOf="@+id/version_text"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0"
             app:layout_constraintStart_toEndOf="@+id/hap_icon_image"
-            app:layout_constraintTop_toTopOf="@+id/hap_icon_image"
+            app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintVertical_chainStyle="spread"
             tools:text="@string/info_appName" />
-
 
         <TextView
             android:id="@+id/version_text"
             style="?textAppearanceListItemSecondary"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginHorizontal="?itemMargin"
+            android:layout_marginStart="?attr/itemMargin"
             android:textColor="?android:textColorSecondary"
             android:textIsSelectable="true"
+            app:layout_constrainedWidth="true"
             app:layout_constraintBottom_toTopOf="@+id/bundle_text"
-            app:layout_constraintStart_toEndOf="@id/hap_icon_image"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0"
+            app:layout_constraintStart_toEndOf="@+id/hap_icon_image"
             app:layout_constraintTop_toBottomOf="@id/name_text"
             tools:text="@string/info_versionName" />
 
@@ -56,12 +61,16 @@
             style="?textAppearanceListItemSecondary"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginHorizontal="?itemMargin"
+            android:layout_marginStart="?attr/itemMargin"
             android:textColor="?android:textColorSecondary"
             android:textIsSelectable="true"
-            app:layout_constraintBottom_toBottomOf="@+id/hap_icon_image"
+            app:layout_constrainedWidth="true"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0"
             app:layout_constraintStart_toEndOf="@id/hap_icon_image"
             app:layout_constraintTop_toBottomOf="@id/version_text"
             tools:text="@string/info_appBundleName" />
+
     </androidx.constraintlayout.widget.ConstraintLayout>
 </org.ohosdev.hapviewerandroid.ui.main.BasicInfoCard>

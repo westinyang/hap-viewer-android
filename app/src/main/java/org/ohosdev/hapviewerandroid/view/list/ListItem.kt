@@ -4,14 +4,14 @@ import android.content.Context
 import android.util.AttributeSet
 import android.view.LayoutInflater
 import android.widget.FrameLayout
+import android.widget.TextView
 import org.ohosdev.hapviewerandroid.R
-import org.ohosdev.hapviewerandroid.databinding.ItemListBinding
 
 class ListItem : FrameLayout {
     var title: String? = null
         set(value) {
             field = value
-            binding.titleText.apply {
+            titleTextView?.apply {
                 visibility = if (value == null) GONE else VISIBLE
                 text = value
             }
@@ -19,16 +19,14 @@ class ListItem : FrameLayout {
     var valueText: String? = null
         set(value) {
             field = value
-            binding.valueText.apply {
+            valueTextView?.apply {
                 visibility = if (value == null) GONE else VISIBLE
                 text = value
             }
         }
 
-    private val binding: ItemListBinding =
-        ItemListBinding.inflate(LayoutInflater.from(context), this, false).apply {
-            addView(this.root)
-        }
+    private val titleTextView: TextView? by lazy { findViewById(R.id.titleText) }
+    private val valueTextView: TextView? by lazy { findViewById(R.id.valueText) }
 
     constructor(context: Context) : this(context, null)
     constructor(context: Context, attrs: AttributeSet?) : this(context, attrs, R.attr.listItemStyle)
@@ -39,7 +37,8 @@ class ListItem : FrameLayout {
     constructor(
         context: Context, attrs: AttributeSet?, defStyleAttr: Int, defStyleRes: Int
     ) : super(context, attrs, defStyleAttr, defStyleRes) {
-        context.obtainStyledAttributes(attrs, R.styleable.ListItem, defStyleAttr, 0).also {
+        context.obtainStyledAttributes(attrs, R.styleable.ListItem, defStyleAttr, defStyleRes).also {
+            LayoutInflater.from(context).inflate(it.getResourceId(R.styleable.ListItem_android_layout, R.layout.item_list_material),this)
             title = it.getString(R.styleable.ListItem_android_title)
             valueText = it.getString(R.styleable.ListItem_android_value)
             isEnabled = it.getBoolean(R.styleable.ListItem_android_enabled, true)
@@ -48,9 +47,8 @@ class ListItem : FrameLayout {
 
     override fun setEnabled(enabled: Boolean) {
         super.setEnabled(enabled)
-        binding.titleText.isEnabled = enabled
-        binding.valueText.isEnabled = enabled
-        binding.root.isEnabled = enabled
+        titleTextView?.isEnabled = enabled
+        valueTextView?.isEnabled = enabled
     }
 
 }

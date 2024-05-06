@@ -45,15 +45,7 @@
         <item name="android:clickable">true</item>
         <item name="android:longClickable">true</item>
         <item name="android:contextClickable">true</item>
+        <item name="android:layout">@layout/item_list_material</item>
     </style>
 
-    <style name="Widget.ListItem.Layout.Material" parent="">
-        <item name="android:padding">16dp</item>
-        <item name="android:minHeight">48dp</item>
-        <item name="android:orientation">vertical</item>
-    </style>
-
-    <style name="Widget.ListItem.Layout.Spacer.Material" parent="">
-        <item name="android:visibility">gone</item>
-    </style>
 </resources>
