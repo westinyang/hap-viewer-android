@@ -1,5 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <color name="color_primary">#29B6F6</color>
+    <color name="color_secondary">#66BB6A</color>
+
     <color name="system_window_scrim_navbar_compat">@color/system_window_scrim</color>
 
     <color name="material_code_color_string">#66BB6A</color>
