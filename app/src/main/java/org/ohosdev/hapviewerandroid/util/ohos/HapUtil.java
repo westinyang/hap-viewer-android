@@ -97,12 +97,13 @@ public class HapUtil {
             }
             if (targetAbility != null) {
                 String iconName = targetAbility.getString("icon").split(":")[1];
-                if ("layered_image".equals(iconName)) {
-                    iconName = "startIcon";
-                }
                 String iconPath = String.format("resources/base/media/%s.png", iconName);
-                hapInfo.iconPath = iconPath;
+                if (zipFile.getEntry(iconPath) == null) {
+                    iconName = appObj.getString("icon").split(":")[1];
+                    iconPath = String.format("resources/base/media/%s.png", iconName);
+                }
                 try {
+                    hapInfo.iconPath = iconPath;
                     hapInfo.iconBytes = getEntryToBytes(zipFile, iconPath);
                     hapInfo.icon = getEntryToImage(zipFile, iconPath);
                 } catch (Exception ignore) {}
